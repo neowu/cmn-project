@@ -10,7 +10,8 @@ subprojects {
 def awsVersion = '1.10.2'
 
 project(':cmn') {
-    apply from: file("${rootDir}/gradle/app.gradle")
+    apply plugin: 'application'
+    mainClassName = 'Main'
 
     afterEvaluate {
         startScripts {
