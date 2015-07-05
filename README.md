@@ -10,11 +10,12 @@ cmn is a AWS resource manager.
 none
 
 # Change log
-### 6/26/2015 - 7/2/2015 (1.5.0)
+### 6/26/2015 - 7/5/2015 (1.5.0)
 * updated AWS sdk version 
 * update nginx role to support custom conf
 * SQS supports China region
 * update EC2.availabilityZones() to return available ones
+* create IAM instanceProfile and cert with original env name as path
 
 ### 6/25/2015 (1.4.9)
 * provision will use ami() package-dir/playbook by default

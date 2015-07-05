@@ -21,7 +21,6 @@ public class ServerCertLoader implements LocalResourceLoader {
         Optional<String> chainPath = node.getString("chain");
 
         ServerCert serverCert = resources.add(new ServerCert(node.id));
-        serverCert.path = ServerCert.certPath(env);
         serverCert.name = env.name + "-" + node.id;
         serverCert.certificate = Files.text(env.envDir.resolve(certPath));
         serverCert.privateKey = Files.text(env.envDir.resolve(privateKeyPath));

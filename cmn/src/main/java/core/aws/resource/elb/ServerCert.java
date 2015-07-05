@@ -1,7 +1,6 @@
 package core.aws.resource.elb;
 
 import com.amazonaws.services.identitymanagement.model.ServerCertificate;
-import core.aws.env.Environment;
 import core.aws.resource.Resource;
 import core.aws.task.elb.CreateServerCertTask;
 import core.aws.task.elb.DeleteServerCertTask;
@@ -11,11 +10,6 @@ import core.aws.workflow.Tasks;
  * @author neo
  */
 public class ServerCert extends Resource {
-    public static String certPath(Environment env) {
-        return String.format("/%s/", env.name.replaceAll("-", ""));
-    }
-
-    public String path;
     public String name;
     public String certificate;
     public String privateKey;
