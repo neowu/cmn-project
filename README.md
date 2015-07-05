@@ -1,6 +1,7 @@
 cmn is a AWS resource manager.
 
 # TODO:
+* IAM is global not per region, update path with region specific and be backward compatible
 * rabbitmq conf is tied to ip, after bake, all conf is gone, if specify node name via https://www.rabbitmq.com/man/rabbitmq-env.conf.5.man.html
   the name will be conflict in cluster, think about how to manage rabbitmq cluster later
 * general linux tuning, like ulimit to sys 

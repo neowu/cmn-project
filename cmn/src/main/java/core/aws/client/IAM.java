@@ -108,7 +108,7 @@ public class IAM {
     public Optional<Policy> findRolePolicy(String roleName, String policyName) {
         logger.info("find role policy, roleName={}, policyName={}", roleName, policyName);
         try {
-            GetRolePolicyResult result = AWS.iam.iam.getRolePolicy(new GetRolePolicyRequest()
+            GetRolePolicyResult result = iam.getRolePolicy(new GetRolePolicyRequest()
                 .withRoleName(roleName)
                 .withPolicyName(policyName));
             String policyJSON = EncodingUtils.decodeURL(result.getPolicyDocument());
