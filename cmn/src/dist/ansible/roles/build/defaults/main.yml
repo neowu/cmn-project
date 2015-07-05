@@ -1,2 +1,2 @@
-build_cmn_url_prefix: https://s3.amazonaws.com/iguama-repo
+build_cmn_url_prefix: https://s3.amazonaws.com/neo-repo
 build_cmn_version: 1.5.0
