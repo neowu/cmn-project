@@ -6,7 +6,6 @@ sourceSets {
     main.compileClasspath += configurations.provided
     test.compileClasspath += configurations.provided
     test.runtimeClasspath += configurations.provided
-    javadoc.classpath += configurations.provided
 }
 
 apply plugin: 'idea'
@@ -17,14 +16,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     classifier 'sources'
 }
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
 artifacts {
     archives sourcesJar
-    archives javadocJar
 }
 
 afterEvaluate {

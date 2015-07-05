@@ -38,4 +38,3 @@ tasks.findAll { task -> task.name.startsWith('flyway') }.forEach { flywayTask ->
         logger.info("loading flyway properties, file=${project.file(flywayProperties)}")
     }
 }
-

@@ -57,16 +57,24 @@
 
         <!-- naming begin -->
         <module name="PackageName">
-            <property name="format" value="^[a-z0-9\.]*$"/>
+            <property name="format" value="^[a-z][a-z0-9\.]*$"/>
         </module>
 
-        <module name="TypeName"/>
+        <module name="TypeName">
+            <property name="format" value="^[A-Z][a-zA-Z0-9]*$"/>
+        </module>
 
-        <module name="MemberName"/>
+        <module name="MemberName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
 
-        <module name="MethodName"/>
+        <module name="MethodName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
 
-        <module name="ParameterName"/>
+        <module name="ParameterName">
+            <property name="format" value="^[a-z][a-zA-Z0-9]*$"/>
+        </module>
 
         <module name="ConstantName"/>
 
@@ -86,7 +94,7 @@
 
         <!--Checks the number of parameters that a method or constructor has.-->
         <module name="ParameterNumber">
-            <property name="max" value="5"/>
+            <property name="max" value="6"/>
         </module>
 
         <!--Checks that there is no whitespace before a token.-->
@@ -144,9 +152,6 @@
         <!--Checks that switch statement has "default" clause.-->
         <module name="MissingSwitchDefault"/>
 
-        <!--Verifies that both the java.lang.Deprecated annotation is present and the @deprecated Javadoc tag is present when either is present.-->
-        <module name="MissingDeprecated"/>
-
         <!--Verifies unchecked can only used on variable, parameter and method-->
         <module name="SuppressWarnings">
             <property name="format" value="^unchecked$"/>
@@ -159,7 +164,7 @@
 
     <!--Checks for long source files.-->
     <module name="FileLength">
-        <property name="max" value="300"/>
+        <property name="max" value="500"/>
     </module>
 
     <!--Checks to see if a file contains a tab character.-->
@@ -168,6 +173,4 @@
     <module name="SuppressionFilter">
         <property name="file" value="${configDir}/suppressions.xml"/>
     </module>
-
-    <module name="SuppressWarningsFilter"/>
 </module>

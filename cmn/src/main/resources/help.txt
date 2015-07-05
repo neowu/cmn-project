@@ -1,4 +1,4 @@
-cloud-manager-ng, v1.4
+cmn, v1.5
 USAGE: cmn ${goal} --{key}={value} --{key}={value}
 
 GOALS:
@@ -32,5 +32,5 @@ EXAMPLES:
   cmn exec --id={instanceId} --script={scriptPath}
   cmn upload --id={instanceId} --package-dir={packageDir}
   cmn ssh --id={instanceId} --i={optionalIndex}
-  cmn provision --id={instanceId} --playbook={playbookPath} --package-dir={optionalPackageDir}
+  cmn provision --id={instanceId} --playbook={optionalPlaybookPath} --package-dir={optionalPackageDir}
   cmn deploy --id={asGroupId}
