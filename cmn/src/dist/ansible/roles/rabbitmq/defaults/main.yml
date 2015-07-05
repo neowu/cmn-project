@@ -1,0 +1,2 @@
+rabbitmq_admin_user: "admin"
+rabbitmq_admin_password: "admin"

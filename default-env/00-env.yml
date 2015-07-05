@@ -1,0 +1,5 @@
+- env[default]:
+    region: us-east-1
+
+- subnet[default]:
+    cidr: 10.0.64.0/19

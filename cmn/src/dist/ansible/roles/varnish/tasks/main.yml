@@ -1,0 +1,18 @@
+- name: add varnish repo key
+  apt_key: url=https://repo.varnish-cache.org/ubuntu/GPG-key.txt state=present
+
+- name: add varnish repo
+  apt_repository: repo='deb https://repo.varnish-cache.org/ubuntu/ trusty varnish-4.0'
+
+- name: install varnish
+  apt: name={{item}}
+  with_items: [apt-transport-https, varnish]
+
+- name: update /etc/default/varnish
+  template: src=etc/default/varnish.j2 dest=/etc/default/varnish
+
+- name: update /etc/varnish/default.vcl
+  copy: src=etc/varnish/default.vcl dest=/etc/varnish/default.vcl
+
+- name: update varnish service
+  service: name=varnish state=restarted enabled=yes

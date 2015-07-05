@@ -1,0 +1,5 @@
+- name: install ntp
+  apt: name=ntp
+
+- name: enable ntp service
+  service: name=ntp enabled=yes

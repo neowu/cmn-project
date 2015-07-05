@@ -1,0 +1,19 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1429567122460",
+      "Action": [
+        "s3:CreateBucket",
+        "s3:DeleteBucket"
+      ],
+      "Effect": "Allow",
+      "Resource": "*",
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceIp": "10.0.0.1"
+        }
+      }
+    }
+  ]
+}

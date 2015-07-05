@@ -1,0 +1,5 @@
+- name: copy ssh private key
+  copy: content="{{sys_ssh_private_key}}" dest=/home/ubuntu/.ssh/id_rsa owner=ubuntu group=ubuntu mode=0600
+
+- name: copy ssh public key
+  copy: content="{{sys_ssh_public_key}}" dest=/home/ubuntu/.ssh/id_rsa.pub owner=ubuntu group=ubuntu

@@ -1,0 +1,23 @@
+<FindBugsFilter>
+    <!--refer to http://findbugs.sourceforge.net/bugDescriptions.html for all Bug code-->
+    <Match>
+        <!--RV: Method ignores return value, is this OK? (RV_RETURN_VALUE_IGNORED_INFERRED)-->
+        <!--EI: May expose internal representation by returning reference to mutable object (EI_EXPOSE_REP)-->
+        <!--EI2: May expose internal representation by incorporating reference to mutable object (EI_EXPOSE_REP2)-->
+        <!--Dm: DM_CONVERT_CASE: Consider using Locale parameterized version of invoked method -->
+        <!--CN: Class implements Cloneable but does not define or use clone method-->
+        <!--SIC: Deadly embrace of non-static inner class and thread local (SIC_THREADLOCAL_DEADLY_EMBRACE)-->
+        <!--UwF: Field not initialized in constructor but dereferenced without null check-->
+        <!--UrF: Unread public/protected field (URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD)-->
+        <!--NP: NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE: Parameter must be nonnull but is marked as nullable-->
+        <!--Nm: NM_SAME_SIMPLE_NAME_AS_SUPERCLASS: Class names shouldn't shadow simple name of superclass-->
+        <!--BC: BC_UNCONFIRMED_CAST: Unchecked/unconfirmed cast-->
+        <Bug code="RV,EI,EI2,Dm,CN,SIC,UwF,UrF,NP,Nm,BC"/>
+    </Match>
+
+    <Match>
+        <!-- MS: (for AWS clients) MS_CANNOT_BE_FINAL: Field isn't final and can't be protected from malicious code -->
+        <Bug code="MS"/>
+    </Match>
+
+</FindBugsFilter>

@@ -1,0 +1,12 @@
+/var/log/rabbitmq/*.log {
+    size 1k
+    olddir /opt/log/rabbitmq
+    dateext
+    dateformat -%Y-%m-%d-%s
+    missingok
+    notifempty
+    sharedscripts
+    postrotate
+        /etc/init.d/rabbitmq-server rotate-logs > /dev/null
+    endscript
+}

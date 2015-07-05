@@ -1,0 +1,8 @@
+/.idea/
+/classes
+/.gradle
+*.iml
+/build
+/target/
+aws.properties
+/neo-cn-test-env/

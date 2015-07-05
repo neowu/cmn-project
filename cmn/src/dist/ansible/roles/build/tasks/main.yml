@@ -1,0 +1,20 @@
+- name: install git
+  apt: name=git
+
+- name: create build folder
+  file: path=/opt/build owner=ubuntu group=ubuntu state=directory
+
+- name: download cmn
+  get_url: url="{{build_cmn_url_prefix}}/cmn-{{build_cmn_version}}.tar" dest=/tmp
+
+- name: extract cmn
+  unarchive: src=/tmp/cmn-{{build_cmn_version}}.tar dest=/opt/build/ copy=no
+
+- name: create cmn symlink
+  file: src=/opt/build/cmn-{{build_cmn_version}} dest=/opt/build/cmn state=link
+
+- name: create depot folder
+  file: path=/opt/build/depot owner=ubuntu group=ubuntu state=directory
+
+- name: install tmux
+  apt: name=tmux

@@ -1,0 +1,30 @@
+- name: install tomcat
+  apt: name={{item}}
+  with_items: [tomcat7, libtcnative-1]
+
+- name: remove tomcat unneeded files
+  command: "{{item}} removes=/var/lib/tomcat7/webapps/ROOT"
+  with_items:
+    - rm -rf /etc/cron.daily/tomcat7
+    - rm -rf /var/log/tomcat7/*
+    - rm -rf /var/lib/tomcat7/webapps/ROOT
+
+- name: update /etc/tomcat7/*
+  copy: src=etc/tomcat7/ dest=/etc/tomcat7 owner=root group=tomcat7 mode=644
+  notify: restart-tomcat
+
+- name: update /etc/default/tomcat7
+  template: src=etc/default/tomcat7.j2 dest=/etc/default/tomcat7
+  notify: restart-tomcat
+
+- name: create /opt/log/tomcat7
+  file: path=/opt/log/tomcat7 owner=tomcat7 group=tomcat7 mode=0755 state=directory
+
+- name: update /etc/logrotate.d/tomcat7
+  copy: src=etc/logrotate.d/tomcat7 dest=/etc/logrotate.d/tomcat7
+
+- name: add ubuntu to tomcat7 group for deployment
+  user: name=ubuntu groups=tomcat7 append=yes
+
+- name: enable tomcat7 service
+  service: name=tomcat7 enabled=yes

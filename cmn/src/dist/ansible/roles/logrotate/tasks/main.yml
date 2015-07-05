@@ -1,0 +1,14 @@
+- name: update /etc/logrotate.conf
+  copy: src=etc/logrotate.conf dest=/etc/logrotate.conf owner=root group=root mode=0644
+
+- name: remove /etc/cron.daily/logrotate
+  file: path=/etc/cron.daily/logrotate state=absent
+
+- name: update /usr/local/sbin/logrotate.sh
+  copy: src=usr/local/sbin/logrotate.sh dest=/usr/local/sbin/logrotate.sh owner=root group=root mode=0755
+
+- name: cron /usr/local/sbin/logrotate.sh
+  cron: name="logroatate" minute="01" hour="*" job="/usr/local/sbin/logrotate.sh" user=root
+
+- name: create /opt/log
+  file: path=/opt/log owner=ubuntu group=ubuntu mode=0777 state=directory

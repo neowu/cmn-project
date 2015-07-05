@@ -1,0 +1,9 @@
+/var/log/supervisor/*log {
+    size 1k
+    olddir /opt/log/supervisor
+    dateext
+    dateformat -%Y-%m-%d-%s
+    missingok
+    notifempty
+    copytruncate
+}

@@ -1,0 +1,26 @@
+- name: add rabbitmq repo key
+  apt_key: url=http://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+
+- name: add rabbitmq repo
+  apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main'
+
+- name: install rabbitmq
+  apt: name=rabbitmq-server
+
+- name: enable rabbitmq service
+  service: name=rabbitmq-server enabled=yes
+
+- name: create rabbitmq admin
+  rabbitmq_user: user={{rabbitmq_admin_user}} password={{rabbitmq_admin_password}} configure_priv=.* read_priv=.* write_priv=.* tags=administrator state=present
+
+- name: enable management plugin
+  rabbitmq_plugin: names=rabbitmq_management state=enabled
+
+- name: create /opt/log/rabbitmq
+  file: path=/opt/log/rabbitmq owner=rabbitmq group=rabbitmq mode=0755 state=directory
+
+- name: update /etc/logrotate.d/rabbitmq-server
+  copy: src=etc/logrotate.d/rabbitmq-server dest=/etc/logrotate.d/rabbitmq-server
+
+# create rabbitmq user use follwing in playbook
+# rabbitmq_user: user=rabbitmq password=rabbitmq configure_priv=.* read_priv=.* write_priv=.* state=present

@@ -1,0 +1,11 @@
+- name: update /opt/ec2/s3-upload-log.sh
+  template: src=opt/ec2/s3-upload-log.sh.j2 dest=/opt/ec2/s3-upload-log.sh owner=root group=root mode=0755
+
+- name: cron /opt/ec2/s3-upload-log.sh
+  cron: name="s3-upload-log" minute="04" hour="*" job="/opt/ec2/s3-upload-log.sh" user=root
+
+- name: update /opt/ec2/shutdown.sh
+  copy: src=opt/ec2/shutdown.sh dest=/opt/ec2/shutdown.sh owner=root group=root mode=0755
+
+- name: add shutdown hook
+  copy: src=etc/sysctl.d/10-ec2-shutdown-hook.conf dest=/etc/sysctl.d/10-ec2-shutdown-hook.conf owner=root group=root mode=0644

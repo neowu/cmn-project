@@ -1,0 +1,5 @@
+- name: update /opt/ec2/cloudwatch-linux.py
+  copy: src=opt/ec2/cloudwatch-linux.py dest=/opt/ec2/cloudwatch-linux.py owner=root group=root mode=0755
+
+- name: cron /opt/ec2/cloudwatch-linux.py
+  cron: name="cloudwatch-linux" minute="0-59/5" job="/opt/ec2/cloudwatch-linux.py" user=root
