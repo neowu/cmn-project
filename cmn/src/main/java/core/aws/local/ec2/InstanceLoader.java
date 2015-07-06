@@ -1,6 +1,5 @@
 package core.aws.local.ec2;
 
-import com.amazonaws.services.ec2.model.InstanceType;
 import core.aws.env.Environment;
 import core.aws.local.DependencyResolvers;
 import core.aws.local.LocalResourceLoader;
@@ -22,10 +21,7 @@ public class InstanceLoader implements LocalResourceLoader {
     @Override
     public void load(ResourceNode node, Resources resources, DependencyResolvers resolvers, Environment env) {
         String imageId = node.requiredString("ami");
-
         String instanceType = node.requiredString("instance-type");
-        InstanceType.fromValue(instanceType); // validate
-
         Optional<Integer> count = node.getInt("count");
         String securityGroupId = node.requiredString("security-group");
         String subnetId = node.requiredString("subnet");
