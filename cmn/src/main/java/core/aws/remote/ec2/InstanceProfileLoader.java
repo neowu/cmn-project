@@ -21,7 +21,7 @@ public class InstanceProfileLoader {
     }
 
     public void load() {
-        List<com.amazonaws.services.identitymanagement.model.InstanceProfile> instanceProfiles = AWS.iam.listInstanceProfiles(prefix());
+        List<com.amazonaws.services.identitymanagement.model.InstanceProfile> instanceProfiles = AWS.iam.listInstanceProfiles(InstanceProfile.instanceProfilePath(env));
 
         String prefix = env.name + "-";
         for (com.amazonaws.services.identitymanagement.model.InstanceProfile remoteInstanceProfile : instanceProfiles) {
@@ -35,12 +35,5 @@ public class InstanceProfileLoader {
             instanceProfile.remoteInstanceProfile = remoteInstanceProfile;
             instanceProfile.foundInRemote();
         }
-    }
-
-    // previously we use env.name.replaceAll("-", "")) to generate prefix, which is not necessary, to keep backward compatible, wider prefix
-    private String prefix() {
-        int index = env.name.indexOf('-');
-        if (index > 0) return "/" + env.name.substring(0, index);
-        return "/" + env.name + "/";
     }
 }

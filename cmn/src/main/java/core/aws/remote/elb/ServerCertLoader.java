@@ -22,7 +22,7 @@ public class ServerCertLoader {
     }
 
     public void load() {
-        List<ServerCertificateMetadata> certs = AWS.iam.listServerCerts(prefix());
+        List<ServerCertificateMetadata> certs = AWS.iam.listServerCerts(ServerCert.certPath(env));
 
         String prefix = env.name + "-";
         for (ServerCertificateMetadata cert : certs) {

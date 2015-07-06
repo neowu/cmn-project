@@ -1,5 +1,6 @@
 package core.aws.resource.ec2;
 
+import core.aws.env.Environment;
 import core.aws.resource.Resource;
 import core.aws.resource.ResourceStatus;
 import core.aws.resource.Resources;
@@ -13,6 +14,10 @@ import core.aws.workflow.Tasks;
  * @author neo
  */
 public class InstanceProfile extends Resource {
+    public static String instanceProfilePath(Environment env) {
+        return String.format("/%s/", env.name.replaceAll("-", ""));
+    }
+
     public String name;
     public String policy;
     public com.amazonaws.services.identitymanagement.model.InstanceProfile remoteInstanceProfile;
