@@ -1,4 +1,8 @@
-# Change log
+## Change log
+
+### 7/6/2015 (1.5.1)
+* remove InstanceType enum, use String instead, so support all types
+
 ### 6/26/2015 - 7/5/2015 (1.5.0)
 * updated AWS sdk version 
 * update nginx role to support custom conf

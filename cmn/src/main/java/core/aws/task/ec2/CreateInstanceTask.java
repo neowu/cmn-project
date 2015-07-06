@@ -36,7 +36,7 @@ public class CreateInstanceTask extends Task<Instance> {
     public void execute(Context context) throws Exception {
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(resource.keyPair.remoteKeyPair.getKeyName())
-            .withInstanceType(resource.instanceType.value)
+            .withInstanceType(resource.instanceType)
             .withImageId(resource.ami.imageId())
             .withMinCount(addedCount)
             .withMaxCount(addedCount)

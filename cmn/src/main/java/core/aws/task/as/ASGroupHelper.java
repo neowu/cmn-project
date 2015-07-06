@@ -31,7 +31,7 @@ public class ASGroupHelper {
         CreateLaunchConfigurationRequest request = new CreateLaunchConfigurationRequest()
             .withLaunchConfigurationName(launchConfigName)
             .withKeyName(launchConfig.keyPair.remoteKeyPair.getKeyName())
-            .withInstanceType(launchConfig.instanceType.value)
+            .withInstanceType(launchConfig.instanceType)
             .withImageId(launchConfig.ami.imageId())
             .withSecurityGroups(launchConfig.securityGroup.remoteSecurityGroup.getGroupId())
             .withUserData(Base64.encodeBase64String(Strings.bytes(userData(asGroup))));

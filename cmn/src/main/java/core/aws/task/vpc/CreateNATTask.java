@@ -4,13 +4,13 @@ import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceNetworkInterfaceSpecification;
+import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.ModifyInstanceAttributeRequest;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.env.Environment;
-import core.aws.resource.ec2.InstanceType;
 import core.aws.resource.vpc.NAT;
 import core.aws.task.ec2.EC2TagHelper;
 import core.aws.util.Randoms;
@@ -44,7 +44,7 @@ public class CreateNATTask extends Task<NAT> {
 
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(resource.keyPair.remoteKeyPair.getKeyName())
-            .withInstanceType(InstanceType.M3_MEDIUM.value)
+            .withInstanceType(InstanceType.M3Medium)
             .withImageId(resource.image.imageId())
             .withMinCount(1)
             .withMaxCount(1);

@@ -7,6 +7,7 @@ import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesResult;
+import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.Subnet;
@@ -15,7 +16,6 @@ import core.aws.env.Context;
 import core.aws.env.Environment;
 import core.aws.resource.ec2.Instance;
 import core.aws.resource.ec2.InstanceState;
-import core.aws.resource.ec2.InstanceType;
 import core.aws.resource.ec2.KeyPair;
 import core.aws.resource.image.Image;
 import core.aws.task.linux.AnsibleProvisioner;
@@ -131,7 +131,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
     private com.amazonaws.services.ec2.model.Instance createInstance(KeyPair keyPair, String sgId) throws Exception {
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(keyPair.remoteKeyPair.getKeyName())
-            .withInstanceType(bakeInstanceType().value)
+            .withInstanceType(bakeInstanceType())
             .withImageId(resource.baseAMI.imageId())
             .withMinCount(1)
             .withMaxCount(1)
@@ -145,9 +145,9 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
     private InstanceType bakeInstanceType() {
         if (region == Regions.CN_NORTH_1) {
             // aws beijing doesn't support M4 and C4 currently, update once it supports
-            return InstanceType.M3_LARGE;
+            return InstanceType.M3Large;
         }
-        return InstanceType.C4_LARGE;
+        return InstanceType.C4Large;
     }
 
     private KeyPair createKeyPair(Environment env) throws IOException {

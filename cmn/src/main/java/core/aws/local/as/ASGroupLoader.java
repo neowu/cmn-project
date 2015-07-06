@@ -1,6 +1,7 @@
 package core.aws.local.as;
 
 import com.amazonaws.services.cloudwatch.model.ComparisonOperator;
+import com.amazonaws.services.ec2.model.InstanceType;
 import core.aws.env.Environment;
 import core.aws.local.DependencyResolvers;
 import core.aws.local.LocalResourceLoader;
@@ -10,7 +11,6 @@ import core.aws.resource.Resources;
 import core.aws.resource.as.AutoScalingGroup;
 import core.aws.resource.as.AutoScalingPolicy;
 import core.aws.resource.ec2.InstanceProfile;
-import core.aws.resource.ec2.InstanceType;
 import core.aws.resource.ec2.KeyPair;
 import core.aws.resource.ec2.SecurityGroup;
 import core.aws.resource.elb.ELB;
@@ -31,7 +31,10 @@ public class ASGroupLoader implements LocalResourceLoader {
     @Override
     public void load(ResourceNode node, Resources resources, DependencyResolvers resolvers, Environment env) {
         String imageId = node.requiredString("ami");
-        InstanceType instanceType = InstanceType.parse(node.requiredString("instance-type"));
+
+        String instanceType = node.requiredString("instance-type");
+        InstanceType.fromValue(instanceType); // validate
+
         String securityGroupId = node.requiredString("security-group");
         String subnetId = node.requiredString("subnet");
 

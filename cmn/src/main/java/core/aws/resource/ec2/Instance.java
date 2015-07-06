@@ -32,7 +32,7 @@ public class Instance extends Resource implements ServerResource {
     public EBS ebs;
     public KeyPair keyPair;
     public AMI ami;
-    public InstanceType instanceType;
+    public String instanceType;
     public SecurityGroup securityGroup;
     public int count = 1;
     public Subnet subnet;
@@ -131,7 +131,7 @@ public class Instance extends Resource implements ServerResource {
     }
 
     private boolean changed(com.amazonaws.services.ec2.model.Instance instance) {
-        if (!instance.getInstanceType().equals(instanceType.value)) return true;
+        if (!instance.getInstanceType().equals(instanceType)) return true;
         if (!instance.getImageId().equals(ami.imageId())) return true;
         // check if instance profile added or removed
         boolean localHasInstanceProfile = instanceProfile != null;

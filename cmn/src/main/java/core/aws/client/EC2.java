@@ -63,7 +63,7 @@ public class EC2 {
         if (availabilityZones == null) {
             DescribeAvailabilityZonesResult result = ec2.describeAvailabilityZones();
             availabilityZones = result.getAvailabilityZones().stream()
-                .filter(zone -> "available".equals(zone.getState()))
+                .filter(zone -> "available".equals(zone.getState()) && !"ap-northeast-1a".equals(zone.getZoneName()))   // AWS bug, japan 1a returned as available but can't be used
                 .map(AvailabilityZone::getZoneName)
                 .collect(Collectors.toList());
             logger.info("availability zones => {}", availabilityZones);
