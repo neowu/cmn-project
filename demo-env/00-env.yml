@@ -1,0 +1,15 @@
+- env[demo]:
+    region: us-east-1
+    bake-subnet-id: subnet-53c49324
+
+- amis[us-east-1]:
+    nat: 'ami-f619c29f'             # nat ami, search thru ec2 AMI console with ami-vpc-nat
+    ubuntu-linux: 'ami-864d84ee'    # ubuntu server 14.04, http://cloud-images.ubuntu.com/releases/14.04/release/
+    openvpn:  'ami-641be70c'        # openvpn 2.0.8
+
+- amis[us-west-1]:
+    nat: 'ami-3bcc9e7e'
+
+- ami[base-linux]:
+    base-ami: ubuntu-linux
+    playbook: playbooks/base-linux.yml

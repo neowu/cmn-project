@@ -1,0 +1,15 @@
+- security-group[build]:
+    ingress:
+      - {cidr: 0.0.0.0/0, protocol: ssh}
+
+- instance[build]:
+    instance-type: c3.large
+    security-group: build
+    ami: base-linux
+    count: 1
+    instance-profile: build
+    ebs: {size: 60G}
+    subnet: public
+
+- instance-profile[build]:
+    policy: policies/build.json

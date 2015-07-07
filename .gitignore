@@ -6,3 +6,4 @@
 /target/
 aws.properties
 cmn/src/dev/
+/neo-test-env
