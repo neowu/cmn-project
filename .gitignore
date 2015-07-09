@@ -1,9 +1,7 @@
 /.idea/
-/classes
-/.gradle
+/.gradle/
 *.iml
-/build
-/target/
+/build/
+*/src/dev/java/
 aws.properties
-cmn/src/dev/
-/neo-test-env
+/neo-test-env/
