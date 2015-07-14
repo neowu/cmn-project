@@ -1,14 +1,14 @@
 package core.aws.task.linux;
 
+import com.amazonaws.services.ec2.model.DescribeTagsRequest;
+import com.amazonaws.services.ec2.model.Filter;
+import com.amazonaws.services.ec2.model.Tag;
+import com.amazonaws.services.ec2.model.TagDescription;
 import core.aws.client.AWS;
-import core.aws.env.Context;
 import core.aws.env.Environment;
 import core.aws.env.Param;
-import core.aws.resource.ResourceStatus;
-import core.aws.resource.Resources;
-import core.aws.resource.as.AutoScalingGroup;
-import core.aws.resource.ec2.Instance;
 import core.aws.resource.ec2.KeyPair;
+import core.aws.task.ec2.EC2TagHelper;
 import core.aws.util.Asserts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,51 +19,56 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * @author neo
  */
 public class SSHRunner {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(SSHRunner.class);
 
-    private final Resources resources;
     private final Environment env;
-    private final Context context;
+    private final String resourceId;
+    private final Integer instanceIndex;
 
-    public SSHRunner(Resources resources, Environment env, Context context) {
-        this.resources = resources;
+    public SSHRunner(Environment env, String resourceId, Integer instanceIndex) {
         this.env = env;
-        this.context = context;
+        this.resourceId = resourceId;
+        this.instanceIndex = instanceIndex;
     }
 
     public void run() throws IOException, InterruptedException {
-        String resourceId = context.requiredParam(Param.RESOURCE_ID);
-        Optional<Instance> instance = resources.find(Instance.class, resourceId);
-        if (instance.isPresent() && instance.get().status == ResourceStatus.LOCAL_REMOTE) {
-            logger.info("ssh to instance/{}", instance.get().id);
-            ssh(instance.get().remoteInstances);
-            return;
+        Tag tag = new EC2TagHelper(env).resourceId(resourceId);
+        DescribeTagsRequest request = new DescribeTagsRequest()
+            .withFilters(new Filter("key").withValues(tag.getKey()),
+                new Filter("value").withValues(tag.getValue()),
+                new Filter("resource-type").withValues("instance"));
+        List<TagDescription> remoteTags = AWS.ec2.describeTags(request);
+        List<String> instanceIds = remoteTags.stream().map(TagDescription::getResourceId).collect(Collectors.toList());
+
+        if (!instanceIds.isEmpty()) {
+            logger.info("ssh to instance/{}", resourceId);
+        } else {
+            com.amazonaws.services.autoscaling.model.AutoScalingGroup asGroup = AWS.as.describeASGroup(env.name + "-" + resourceId);
+            if (asGroup == null) throw new Error("can not find any running instance or asGroup, id=" + resourceId);
+
+            logger.info("ssh to asg/{}", resourceId);
+            instanceIds = asGroup.getInstances().stream()
+                .map(com.amazonaws.services.autoscaling.model.Instance::getInstanceId)
+                .collect(Collectors.toList());
         }
 
-        Optional<AutoScalingGroup> asGroup = resources.find(AutoScalingGroup.class, resourceId);
-        if (asGroup.isPresent() && asGroup.get().status == ResourceStatus.LOCAL_REMOTE) {
-            logger.info("ssh to asg/{}", asGroup.get().id);
-            List<String> instanceIds = asGroup.get().remoteASGroup.getInstances().stream().map(com.amazonaws.services.autoscaling.model.Instance::getInstanceId).collect(Collectors.toList());
-            List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.ec2.describeInstances(instanceIds);
-            ssh(remoteInstances);
-            return;
-        }
-
-        throw new IllegalStateException("can not find any running instance or asGroup, id=" + resourceId);
+        ssh(instanceIds);
     }
 
-    private void ssh(List<com.amazonaws.services.ec2.model.Instance> remoteInstances) throws IOException, InterruptedException {
-        int remoteInstanceCount = remoteInstances.size();
+    private void ssh(List<String> instanceIds) throws IOException, InterruptedException {
+        List<com.amazonaws.services.ec2.model.Instance> instances = AWS.ec2.describeInstances(instanceIds)
+            .stream().filter(instance -> "running".equals(instance.getState().getName())).collect(Collectors.toList());
 
-        for (int i = 0; i < remoteInstanceCount; i++) {
-            com.amazonaws.services.ec2.model.Instance remoteInstance = remoteInstances.get(i);
+        if (instances.isEmpty()) throw new Error("can not find any running instance, id=" + resourceId);
+
+        for (int i = 0; i < instances.size(); i++) {
+            com.amazonaws.services.ec2.model.Instance remoteInstance = instances.get(i);
             logger.info("index={}, instanceId={}, state={}, publicDNS={}, privateDNS={}",
                 i,
                 remoteInstance.getInstanceId(),
@@ -71,13 +76,8 @@ public class SSHRunner {
                 remoteInstance.getPublicDnsName(),
                 remoteInstance.getPrivateDnsName());
         }
-
-        Asserts.isTrue(remoteInstanceCount > 0, "there is no remoteInstance to ssh");
-
-        String index = context.param(Param.INSTANCE_INDEX);
-        Asserts.isTrue(remoteInstanceCount == 1 || index != null, "more than one remoteInstance, use --{} to specify index", Param.INSTANCE_INDEX.key);
-
-        com.amazonaws.services.ec2.model.Instance remoteInstance = remoteInstanceCount == 1 ? remoteInstances.get(0) : remoteInstances.get(Integer.parseInt(index));
+        Asserts.isTrue(instances.size() == 1 || instanceIndex != null, "more than one remoteInstance, use --{} to specify index", Param.INSTANCE_INDEX.key);
+        com.amazonaws.services.ec2.model.Instance remoteInstance = instances.size() == 1 ? instances.get(0) : instances.get(instanceIndex);
 
         String state = remoteInstance.getState().getName();
         Asserts.equals(state, "running", "remoteInstance is not running, state={}", state);

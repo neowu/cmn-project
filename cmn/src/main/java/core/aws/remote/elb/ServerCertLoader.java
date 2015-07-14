@@ -37,11 +37,4 @@ public class ServerCertLoader {
             serverCert.foundInRemote();
         }
     }
-
-    // previously we use env.name.replaceAll("-", "")) to generate prefix, which is not necessary, to keep backward compatible, wider prefix
-    private String prefix() {
-        int index = env.name.indexOf('-');
-        if (index > 0) return "/" + env.name.substring(0, index);
-        return "/" + env.name + "/";
-    }
 }

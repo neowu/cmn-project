@@ -1,5 +1,4 @@
 import core.aws.env.Cloud;
-import core.aws.env.CloudLoader;
 import core.aws.env.Context;
 import core.aws.env.Goal;
 import core.aws.env.Param;
@@ -36,8 +35,8 @@ public class Main {
         context.goal = Goal.parse(args[0]);
         parseParams(context);
 
-        Cloud cloud = new CloudLoader().load(context);
-        cloud.execute(context);
+        Cloud cloud = new Cloud(context);
+        cloud.execute();
     }
 
     private void parseParams(Context context) {

@@ -68,9 +68,11 @@ public class AutoScaling {
 
     public AutoScalingGroup describeASGroup(String asGroupName) {
         logger.info("describe auto scaling group, name={}", asGroupName);
-        return autoScaling.describeAutoScalingGroups(new DescribeAutoScalingGroupsRequest()
+        List<AutoScalingGroup> groups = autoScaling.describeAutoScalingGroups(new DescribeAutoScalingGroupsRequest()
             .withAutoScalingGroupNames(asGroupName))
-            .getAutoScalingGroups().get(0);
+            .getAutoScalingGroups();
+        if (groups.isEmpty()) return null;
+        return groups.get(0);
     }
 
     public LaunchConfiguration describeLaunchConfig(String launchConfigName) {

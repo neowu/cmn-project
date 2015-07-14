@@ -1,5 +1,8 @@
 ## Change log
 
+### 7/14/2015 (1.5.2)
+* for SSH goal, make minimal AWS calls
+
 ### 7/6/2015 (1.5.1)
 * remove InstanceType enum, use String instead, so support all types
 * IAM path can not contains '-' (AWS doc is wrong), revert path transform logic back 
