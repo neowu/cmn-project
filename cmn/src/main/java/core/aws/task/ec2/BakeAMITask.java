@@ -74,7 +74,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
             Asserts.isTrue(InstanceState.RUNNING.equalsTo(instance.getState()), "resume bake instance must be running, instanceId={}, currentState={}", instance.getInstanceId(), instance.getState().getName());
         } else {
             KeyPair keyPair = createKeyPair(context.env);
-            String sgId = createSG();
+            String sgId = createSG(context.env);
             instance = createInstance(keyPair, sgId);
         }
 
@@ -158,8 +158,9 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
         return keyPair;
     }
 
-    private String createSG() throws Exception {
-        CreateSecurityGroupRequest request = new CreateSecurityGroupRequest(resourceId, resourceId);
+    private String createSG(Environment env) throws Exception {
+        String sgName = env.name + ":" + resourceId;
+        CreateSecurityGroupRequest request = new CreateSecurityGroupRequest(sgName, sgName);
         if (bakeSubnet != null) request.setVpcId(bakeSubnet.getVpcId());
 
         String sgId = AWS.ec2.createSecurityGroup(request).getGroupId();

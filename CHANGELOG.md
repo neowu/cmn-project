@@ -1,5 +1,8 @@
 ## Change log
 
+### 7/14/2015 (1.5.3)
+* fix: bake AMI sg name should be unique across env
+
 ### 7/14/2015 (1.5.2)
 * for SSH goal, make minimal AWS calls
 

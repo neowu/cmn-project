@@ -4,6 +4,8 @@ cmn is a AWS resource manager. this tool is designed to support our own project,
 ## TODO:
 * rabbitmq conf is tied to ip, after bake, all conf is gone, if specify node name via https://www.rabbitmq.com/man/rabbitmq-env.conf.5.man.html
   the name will be conflict in cluster, think about how to manage rabbitmq cluster later
+* rabbitmq cluster
+* monitor, eval pcp.io?
 * general linux tuning, like ulimit to sys 
 
 ## Known issues
