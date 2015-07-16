@@ -1,5 +1,8 @@
 ## Change log
 
+### 7/15/2015 (1.5.4)
+* fix: strict linking between Image and unfinished bake instances, to clean up unfinished bake instances correctly
+
 ### 7/14/2015 (1.5.3)
 * fix: bake AMI sg name should be unique across env
 

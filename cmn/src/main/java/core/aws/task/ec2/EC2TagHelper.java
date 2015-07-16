@@ -33,6 +33,10 @@ public class EC2TagHelper {
         return new Tag(prefix() + ":type", type);
     }
 
+    public Tag amiImageId(String imageId) {
+        return new Tag(prefix() + ":ami-image-id", imageId);
+    }
+
     public String prefix() {
         return "cloud-manager:env:" + env.name;
     }

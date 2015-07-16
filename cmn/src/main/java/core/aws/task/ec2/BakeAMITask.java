@@ -1,6 +1,5 @@
 package core.aws.task.ec2;
 
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.model.CreateImageRequest;
 import com.amazonaws.services.ec2.model.CreateImageResult;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
@@ -27,9 +26,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author neo
@@ -44,7 +43,6 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
     private KeyPairHelper keyPairHelper;
     private EC2TagHelper tagHelper;
     private Subnet bakeSubnet;
-    private Regions region;
 
     public BakeAMITask(Image image, Instance resumeBakeInstance) {
         super(image);
@@ -53,7 +51,6 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
 
     @Override
     public void execute(Context context) throws Exception {
-        region = context.env.region;
         tagHelper = new EC2TagHelper(context.env);
         keyPairHelper = new KeyPairHelper(context.env);
 
@@ -64,7 +61,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
                 throw new Error("bake subnet does not auto assign public ip, please check the subnet setting, subnetId=" + bakeSubnetId);
         }
 
-        resourceId = "ami-" + resource.id + new SimpleDateFormat("-yyyyMMdd-HHmm").format(new Date());
+        resourceId = "ami-" + resource.id + LocalDateTime.now().format(DateTimeFormatter.ofPattern("-yyyyMMdd-HHmm"));
 
         com.amazonaws.services.ec2.model.Instance instance;
 
@@ -131,7 +128,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
     private com.amazonaws.services.ec2.model.Instance createInstance(KeyPair keyPair, String sgId) throws Exception {
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(keyPair.remoteKeyPair.getKeyName())
-            .withInstanceType(bakeInstanceType())
+            .withInstanceType(InstanceType.C4Large)
             .withImageId(resource.baseAMI.imageId())
             .withMinCount(1)
             .withMaxCount(1)
@@ -139,15 +136,12 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
 
         if (bakeSubnet != null) request.withSubnetId(bakeSubnet.getSubnetId());
 
-        return AWS.ec2.runInstances(request, tagHelper.name(resourceId), tagHelper.env(), tagHelper.resourceId(resourceId)).get(0);
-    }
-
-    private InstanceType bakeInstanceType() {
-        if (region == Regions.CN_NORTH_1) {
-            // aws beijing doesn't support M4 and C4 currently, update once it supports
-            return InstanceType.M3Large;
-        }
-        return InstanceType.C4Large;
+        return AWS.ec2.runInstances(request,
+            tagHelper.name(resourceId),
+            tagHelper.env(),
+            tagHelper.resourceId(resourceId),
+            tagHelper.type("ami"),
+            tagHelper.amiImageId(resource.id())).get(0);
     }
 
     private KeyPair createKeyPair(Environment env) throws IOException {

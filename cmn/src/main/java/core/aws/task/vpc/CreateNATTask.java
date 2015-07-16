@@ -64,14 +64,14 @@ public class CreateNATTask extends Task<NAT> {
         AWS.ec2.ec2.authorizeSecurityGroupIngress(new AuthorizeSecurityGroupIngressRequest()
             .withGroupId(sgId)
             .withIpPermissions(new IpPermission()
-                .withIpRanges("0.0.0.0/0")
+                .withIpRanges("10.0.0.0/16")
                 .withFromPort(80)
                 .withToPort(80)
                 .withIpProtocol("tcp")));
         AWS.ec2.ec2.authorizeSecurityGroupIngress(new AuthorizeSecurityGroupIngressRequest()
             .withGroupId(sgId)
             .withIpPermissions(new IpPermission()
-                .withIpRanges("0.0.0.0/0")
+                .withIpRanges("10.0.0.0/16")
                 .withFromPort(443)
                 .withToPort(443)
                 .withIpProtocol("tcp")));

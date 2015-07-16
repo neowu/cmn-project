@@ -10,16 +10,16 @@ import core.aws.resource.vpc.RouteTable;
 import core.aws.resource.vpc.Subnet;
 import core.aws.resource.vpc.VPC;
 import core.aws.util.Asserts;
+import core.aws.util.Maps;
 import core.aws.util.ToStringHelper;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author neo
  */
 public class EnvTag {
-    private static final Map<String, Class<? extends Resource>> RESOURCE_TYPES = new HashMap<>();
+    private static final Map<String, Class<? extends Resource>> RESOURCE_TYPES = Maps.newHashMap();
 
     static {
         RESOURCE_TYPES.put("instance", Instance.class);
@@ -33,17 +33,12 @@ public class EnvTag {
 
     public final Class<? extends Resource> resourceClass;
     public final String remoteResourceId;
-    private final Map<String, String> fields = new HashMap<>();
+    private final Map<String, String> fields = Maps.newHashMap();
 
-    public EnvTag(Class<? extends Resource> resourceClass, String remoteResourceId) {
-        this.resourceClass = resourceClass;
-        this.remoteResourceId = remoteResourceId;
-    }
-
-    public static EnvTag newTag(TagDescription remoteTag) {
-        String resourceType = remoteTag.getResourceType();
-        Class<? extends Resource> resourceClass = Asserts.notNull(RESOURCE_TYPES.get(resourceType), "not supported resourceType, type={}", resourceType);
-        return new EnvTag(resourceClass, remoteTag.getResourceId());
+    public EnvTag(TagDescription tag) {
+        String resourceType = tag.getResourceType();
+        resourceClass = Asserts.notNull(RESOURCE_TYPES.get(resourceType), "not supported resourceType, type={}", resourceType);
+        remoteResourceId = tag.getResourceId();
     }
 
     public void addField(TagDescription remoteTag) {
@@ -59,6 +54,10 @@ public class EnvTag {
 
     public String type() {
         return fields.get("type");
+    }
+
+    public String amiImageId() {
+        return fields.get("ami-image-id");
     }
 
     public Integer version() {

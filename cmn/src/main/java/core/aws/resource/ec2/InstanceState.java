@@ -7,7 +7,7 @@ public enum InstanceState {
     STOPPED("stopped"), TERMINATED("terminated"), RUNNING("running"), SHUTTING_DOWN("shutting-down");
     public final String name;
 
-    private InstanceState(String name) {
+    InstanceState(String name) {
         this.name = name;
     }
 

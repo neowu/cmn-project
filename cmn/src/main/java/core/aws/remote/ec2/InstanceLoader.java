@@ -8,6 +8,7 @@ import core.aws.resource.ec2.Instance;
 import core.aws.resource.ec2.InstanceState;
 import core.aws.resource.ec2.KeyPair;
 import core.aws.resource.ec2.SecurityGroup;
+import core.aws.resource.image.Image;
 import core.aws.util.StreamHelper;
 
 import java.util.HashMap;
@@ -25,41 +26,47 @@ public class InstanceLoader extends Loader {
 
     @Override
     public void load() {
-        Map<String, String> instanceIdLocalResourceIdMappings = new HashMap<>();
+        Map<String, EnvTag> instanceIdLocalResourceIdMappings = new HashMap<>();
 
         all(Instance.class)
             .filter(tag -> !"nat".equals(tag.type()))
-            .forEach(tag -> instanceIdLocalResourceIdMappings.put(tag.remoteResourceId, tag.resourceId()));
+            .forEach(tag -> instanceIdLocalResourceIdMappings.put(tag.remoteResourceId, tag));
 
         if (!instanceIdLocalResourceIdMappings.isEmpty())
             loadInstances(instanceIdLocalResourceIdMappings);
     }
 
-    private void loadInstances(Map<String, String> instanceIdLocalResourceIdMappings) {
+    private void loadInstances(Map<String, EnvTag> instanceIdLocalResourceIdMappings) {
         List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.ec2.describeInstances(instanceIdLocalResourceIdMappings.keySet());
-        for (com.amazonaws.services.ec2.model.Instance remoteInstance : remoteInstances) {
-            if (!InstanceState.TERMINATED.equalsTo(remoteInstance.getState()) && !InstanceState.SHUTTING_DOWN.equalsTo(remoteInstance.getState())) {
+        // link sg and key pair for remote only instances
+        remoteInstances.stream()
+            .filter(remoteInstance -> !InstanceState.TERMINATED.equalsTo(remoteInstance.getState())
+                && !InstanceState.SHUTTING_DOWN.equalsTo(remoteInstance.getState()))
+            .forEach(remoteInstance -> {
                 String instanceId = remoteInstance.getInstanceId();
-                String resourceId = instanceIdLocalResourceIdMappings.get(instanceId);
+                EnvTag tag = instanceIdLocalResourceIdMappings.get(instanceId);
+                String resourceId = tag.resourceId();
 
-                Optional<Instance> instance = resources.find(Instance.class, resourceId);
-                if (!instance.isPresent()) {
-                    instance = Optional.of(new Instance(resourceId));
+                Instance instance = resources.find(Instance.class, resourceId).orElseGet(() -> {
+                    Instance remoteOnlyInstance = new Instance(resourceId);
 
                     // link sg and key pair for remote only instances
-
                     String remoteSGId = remoteInstance.getSecurityGroups().get(0).getGroupId();
-                    linkSecurityGroup(instance.get(), remoteSGId);
-
+                    linkSecurityGroup(remoteOnlyInstance, remoteSGId);
                     String remoteKeyName = remoteInstance.getKeyName();
-                    linkKeyPair(instance.get(), remoteKeyName);
+                    linkKeyPair(remoteOnlyInstance, remoteKeyName);
 
-                    resources.add(instance.get());
+                    resources.add(remoteOnlyInstance);
+                    return remoteOnlyInstance;
+                });
+
+                if ("ami".equals(tag.type())) {
+                    resources.find(Image.class, tag.amiImageId()).ifPresent(image -> image.unfinishedBakeInstances.add(instance));
                 }
-                instance.get().foundInRemote();
-                instance.get().remoteInstances.add(remoteInstance);
-            }
-        }
+
+                instance.foundInRemote();
+                instance.remoteInstances.add(remoteInstance);
+            });
     }
 
     private void linkKeyPair(Instance instance, String remoteKeyName) {
