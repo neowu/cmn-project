@@ -1,7 +1,8 @@
 ## Change log
 
-### 7/18/2015 (1.5.5 ongoing)
+### 7/18/2015 - 7/20/2015 (1.5.5)
 * update elasticsearch role to 1.7
+* instance deploy, wait until InService
 
 ### 7/15/2015 (1.5.4)
 * fix: strict linking between Image and unfinished bake instances, to clean up unfinished bake instances correctly

@@ -107,8 +107,10 @@ public class ElasticLoadBalancing {
             .withInstances(instances));
     }
 
-    public void attachInstances(String elbName, List<String> instanceIds) throws InterruptedException {
+    public void attachInstances(String elbName, List<String> instanceIds, boolean waitUntilInService) throws InterruptedException {
         logger.info("attach instances to elb, elb={}, instances={}", elbName, instanceIds);
+
+        String expectedState = waitUntilInService ? "InService" : "Service";    // if not waitUntilInService, state can be InService or OutOfService
 
         List<Instance> instances = instanceIds.stream().map(Instance::new).collect(Collectors.toList());
 
@@ -127,11 +129,11 @@ public class ElasticLoadBalancing {
                 logger.info("instance elb state {} => {}", state.getInstanceId(), state.getState());
             }
 
-            boolean allAttached = states.stream().allMatch(state -> state.getState().contains("Service")); //InService or OutOfService
+            boolean allAttached = states.stream().allMatch(state -> state.getState().contains(expectedState));
             if (allAttached) {
                 logger.info("all instances are attached to elb");
                 break;
-            } else if (attempts >= 10) {
+            } else if (attempts >= 30) {
                 throw new Error("failed to wait all instances to be attached to elb, please check aws console for more details");
             } else {
                 logger.info("continue to wait, not all new instances are attached");

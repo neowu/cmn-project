@@ -26,10 +26,12 @@ import java.util.stream.Collectors;
 @Action("create-instance")
 public class CreateInstanceTask extends Task<Instance> {
     private final int addedCount;
+    private final boolean waitUntilInService;
 
-    public CreateInstanceTask(Instance instance, int addedCount) {
+    public CreateInstanceTask(Instance instance, int addedCount, boolean waitUntilInService) {
         super(instance);
         this.addedCount = addedCount;
+        this.waitUntilInService = waitUntilInService;
     }
 
     @Override
@@ -75,7 +77,7 @@ public class CreateInstanceTask extends Task<Instance> {
 
         if (resource.elb != null) {
             List<String> instanceIds = remoteInstances.stream().map(com.amazonaws.services.ec2.model.Instance::getInstanceId).collect(Collectors.toList());
-            AWS.elb.attachInstances(resource.elb.remoteELB.getLoadBalancerName(), instanceIds);
+            AWS.elb.attachInstances(resource.elb.remoteELB.getLoadBalancerName(), instanceIds, waitUntilInService);
         }
     }
 

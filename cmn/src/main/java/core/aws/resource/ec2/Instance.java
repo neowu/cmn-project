@@ -88,7 +88,7 @@ public class Instance extends Resource implements ServerResource {
 
     @Override
     protected void createTasks(Tasks tasks) {
-        tasks.add(new CreateInstanceTask(this, count));
+        tasks.add(new CreateInstanceTask(this, count, false));
     }
 
     @Override
@@ -110,7 +110,7 @@ public class Instance extends Resource implements ServerResource {
         remoteInstances.removeAll(deletedInstances);
 
         if (count > remoteInstances.size()) {
-            createInstanceTask = tasks.add(new CreateInstanceTask(this, count - remoteInstances.size()));
+            createInstanceTask = tasks.add(new CreateInstanceTask(this, count - remoteInstances.size(), isDeployment));
         } else if (count < remoteInstances.size()) {
             List<com.amazonaws.services.ec2.model.Instance> redundantInstances = new ArrayList<>(remoteInstances.subList(0, remoteInstances.size() - count));
             remoteInstances.removeAll(redundantInstances);
