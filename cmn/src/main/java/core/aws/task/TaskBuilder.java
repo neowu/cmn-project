@@ -8,7 +8,6 @@ import core.aws.resource.Resources;
 import core.aws.resource.ServerResource;
 import core.aws.resource.image.Image;
 import core.aws.util.Lists;
-import core.aws.util.StreamHelper;
 import core.aws.workflow.Tasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +53,16 @@ public class TaskBuilder {
     }
 
     private void serverTasks(List<String> resourceIds, Tasks tasks) {
-        resources.stream()
-            .filter(resource -> resource.status == ResourceStatus.LOCAL_REMOTE
-                && (resourceIds == null || resourceIds.contains(resource.id)))
-            .flatMap(StreamHelper.instanceOf(ServerResource.class))
-            .forEach(resource -> resource.serverTasks(goal, tasks));
+        resources.stream().filter(ServerResource.class::isInstance).forEach(resource -> {
+            if (resourceIds == null || resourceIds.contains(resource.id)) {
+                if (resource.status == ResourceStatus.LOCAL_REMOTE) {
+                    logger.info("build server task, goal={}, id={}", goal, resource.id);
+                    ((ServerResource) resource).serverTasks(goal, tasks);
+                } else {
+                    logger.info("resource is skipped due to status, id={}, status={}", resource.id, resource.status);
+                }
+            }
+        });
     }
 
     private void bakeAMITasks(List<String> resourceIds, Tasks tasks) {

@@ -34,7 +34,7 @@ public class Resources {
 
     public <T extends Resource> T get(Class<T> resourceClass, String resourceId) {
         return find(resourceClass, resourceId)
-            .orElseThrow(() -> new IllegalStateException("can not find resource, resourceClass=" + resourceClass + ", resourceId=" + resourceId));
+            .orElseThrow(() -> new Error("can not find resource, resourceClass=" + resourceClass + ", resourceId=" + resourceId));
     }
 
     public <T extends Resource> Optional<T> onlyOne(Class<T> resourceClass) {
