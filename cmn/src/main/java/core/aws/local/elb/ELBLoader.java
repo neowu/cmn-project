@@ -37,6 +37,7 @@ public class ELBLoader implements LocalResourceLoader {
         Optional<String> accessLogBucketId = node.getString("access-log-s3-bucket");
 
         final ELB elb = resources.add(new ELB(node.id));
+        elb.name = env.name + "-" + node.id;
         elb.listenHTTP = listenHTTP;
         elb.listenHTTPS = listenHTTPS;
         elb.healthCheckURL = healthCheckURL;

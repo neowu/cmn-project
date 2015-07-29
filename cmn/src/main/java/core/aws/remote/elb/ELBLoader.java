@@ -30,6 +30,7 @@ public class ELBLoader {
                 String resourceId = elbName.substring(prefix.length());
                 Optional<ELB> result = resources.find(ELB.class, resourceId);
                 ELB elb = result.isPresent() ? result.get() : resources.add(new ELB(resourceId));
+                elb.name = elbName;
                 elb.remoteELB = remoteELB;
                 elb.foundInRemote();
             }

@@ -33,9 +33,8 @@ public class CreateELBTask extends Task<ELB> {
 
     @Override
     public void execute(Context context) throws Exception {
-        String elbName = context.env.name + "-" + resource.id;
         CreateLoadBalancerRequest request = new CreateLoadBalancerRequest()
-            .withLoadBalancerName(elbName)
+            .withLoadBalancerName(resource.name)
             .withScheme(resource.scheme.orElse(null))
             .withTags(new Tag().withKey("cloud-manager:env").withValue(context.env.name));
 
@@ -62,14 +61,14 @@ public class CreateELBTask extends Task<ELB> {
 
         resource.remoteELB = AWS.elb.createELB(request);
 
-        configureELB(elbName, context.env.region);
+        configureELB(context.env.region);
 
-        configureHealthCheck(elbName);
+        configureHealthCheck();
 
         context.output(String.format("elb/%s/DNS", resource.id), resource.remoteELB.getDNSName());
     }
 
-    private void configureELB(String elbName, Regions region) {
+    private void configureELB(Regions region) {
         LoadBalancerAttributes attributes = new LoadBalancerAttributes()
             .withConnectionDraining(new ConnectionDraining().withEnabled(true).withTimeout(30));
 
@@ -83,7 +82,7 @@ public class CreateELBTask extends Task<ELB> {
         }
 
         AWS.elb.modifyELBAttributes(new ModifyLoadBalancerAttributesRequest()
-            .withLoadBalancerName(elbName)
+            .withLoadBalancerName(resource.name)
             .withLoadBalancerAttributes(attributes));
     }
 
@@ -98,7 +97,7 @@ public class CreateELBTask extends Task<ELB> {
             .withS3BucketPrefix("elb/" + resource.id));
     }
 
-    private void configureHealthCheck(String elbName) {
+    private void configureHealthCheck() {
         // optimize for high load the instances take longer to response, especially in Multi-AZ,
         // there are multiple ELB instances send health check requests same time
         HealthCheck healthCheck = new HealthCheck()
@@ -107,6 +106,6 @@ public class CreateELBTask extends Task<ELB> {
             .withInterval(20)
             .withTimeout(15)
             .withTarget("HTTP:80" + resource.healthCheckURL);
-        AWS.elb.elb.configureHealthCheck(new ConfigureHealthCheckRequest(elbName, healthCheck));
+        AWS.elb.elb.configureHealthCheck(new ConfigureHealthCheckRequest(resource.name, healthCheck));
     }
 }

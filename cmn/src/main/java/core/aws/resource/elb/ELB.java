@@ -24,6 +24,7 @@ import java.util.Optional;
  */
 public class ELB extends Resource {
     public LoadBalancerDescription remoteELB;
+    public String name;
     public boolean listenHTTP;
     public boolean listenHTTPS;
     public ServerCert cert;
@@ -41,6 +42,11 @@ public class ELB extends Resource {
     public void validate(Resources resources) {
         if (status == ResourceStatus.LOCAL_ONLY && subnet.type == SubnetType.PRIVATE) {
             Asserts.isFalse(scheme.isPresent(), "ELB in private subnet doesn't need scheme, it will be internal by default");
+        }
+
+        if (status == ResourceStatus.LOCAL_ONLY) {
+            Asserts.isTrue(name.length() <= 32, "max length of elb name is 32");
+            Asserts.isTrue(name.matches("[a-zA-Z0-9\\-]+"), "elb name can only contain alphanumeric, and '-'");
         }
     }
 

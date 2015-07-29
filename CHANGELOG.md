@@ -1,5 +1,8 @@
 ## Change log
 
+### 7/29/2015 (1.5.6, not release yet)
+* validate ELB name
+
 ### 7/18/2015 - 7/20/2015 (1.5.5)
 * update elasticsearch role to 1.7
 * instance deploy, wait until InService
