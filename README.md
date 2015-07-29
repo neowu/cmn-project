@@ -2,14 +2,56 @@
 cmn is a AWS resource manager. this tool is designed to support our own project, not to be a generic aws tool.
 
 ## TODO:
-* rabbitmq conf is tied to ip, after bake, all conf is gone, if specify node name via https://www.rabbitmq.com/man/rabbitmq-env.conf.5.man.html
-  the name will be conflict in cluster, think about how to manage rabbitmq cluster later
-* rabbitmq cluster
 * monitor, eval pcp.io?
-* general linux tuning, like ulimit to sys 
+* general linux tuning, like ulimit to sys
+* redis clustering
+* mongo clustering
+* docker
 
 ## Known issues
 * some aws resource is globally, such as IAM/S3, do not use same env name on multiple region
 
 ## Change log
 please check [CHANGELOG.md](CHANGELOG.md)
+
+## References
+[doc/rabbitmq.md](doc/rabbitmq.md)
+
+## Usage
+```
+cmn ${goal} --{key}={value} --{key}={value}
+
+GOALS:
+  sync        # sync local config to aws, create/delete resources accordingly (use --dry-run to check the impacts)
+  del         # delete all remote resources
+  desc        # describe resources
+  bake        # bake ami for specified image resource
+  start       # start all ec2 instances
+  stop        # stop all ec2 instances
+  exec        # execute command remotely via ssh
+  upload      # scp local package dir to remote /opt/packages
+  provision   # run playbook remotely via ssh
+  ssh         # start ssh terminal for specified instance resource
+  deploy      # rolling update instance or auto scaling group
+
+CONTEXTS:
+  env:              # specify env folder or use current folder if absent
+  id:               # only execute goal on specific resource, useful for bake ami and execute command, multiple id uses comma delimited string
+  dry-run:          # print the tasks will be executed
+  cmd:              # shell command to run
+  script:           # exec can use command or script
+  package-dir:      # upload dir to /opt/packages
+  i:                # specify index of instance if multiple
+  resume-bake:      # resume bake ami by using previous instance, for troubleshooting purpose
+
+EXAMPLES:
+  cmn desc
+  cmn sync --dry-run=true
+  cmn bake --id={imageId}
+  cmn exec --id={instanceId} --cmd={command}
+  cmn exec --id={instanceId} --script={scriptPath}
+  cmn upload --id={instanceId} --package-dir={packageDir}
+  cmn ssh --id={instanceId} --i={optionalIndex}
+  cmn provision --id={instanceId} --playbook={optionalPlaybookPath} --package-dir={optionalPackageDir}
+  cmn deploy --id={asGroupId}
+```
