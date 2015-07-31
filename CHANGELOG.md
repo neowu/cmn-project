@@ -1,7 +1,8 @@
 ## Change log
 
-### 7/29/2015 (1.5.6, not release yet)
+### 7/29/2015 - 7/31/2015 (1.5.6, not release yet)
 * validate ELB name
+* updated AWS sdk to 1.10.8
 
 ### 7/18/2015 - 7/20/2015 (1.5.5)
 * update elasticsearch role to 1.7
