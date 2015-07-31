@@ -3,7 +3,7 @@ package core.aws.task.as;
 import com.amazonaws.services.autoscaling.model.UpdateAutoScalingGroupRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
 
@@ -11,8 +11,8 @@ import core.aws.workflow.Task;
  * @author neo
  */
 @Action("stop-asg")
-public class StopASGroupTask extends Task<AutoScalingGroup> {
-    public StopASGroupTask(AutoScalingGroup asGroup) {
+public class StopASGroupTask extends Task<ASGroup> {
+    public StopASGroupTask(ASGroup asGroup) {
         super(asGroup);
     }
 

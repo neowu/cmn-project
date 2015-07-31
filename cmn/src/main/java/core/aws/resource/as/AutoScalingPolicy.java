@@ -12,7 +12,7 @@ import core.aws.workflow.Tasks;
  */
 public class AutoScalingPolicy extends Resource {
     public ScalingPolicy remotePolicy;
-    public AutoScalingGroup autoScalingGroup;
+    public ASGroup asGroup;
     public ComparisonOperator comparisonOperator;
     public int lastMinutes;
     public double cpuUtilizationPercentage;

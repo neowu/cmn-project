@@ -3,7 +3,7 @@ package core.aws.task.as;
 import com.amazonaws.services.autoscaling.model.UpdateAutoScalingGroupRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
 
@@ -11,8 +11,8 @@ import core.aws.workflow.Task;
  * @author neo
  */
 @Action("update-asg")
-public class UpdateASGroupTask extends Task<AutoScalingGroup> {
-    public UpdateASGroupTask(AutoScalingGroup asGroup) {
+public class UpdateASGroupTask extends Task<ASGroup> {
+    public UpdateASGroupTask(ASGroup asGroup) {
         super(asGroup);
     }
 
@@ -32,7 +32,7 @@ public class UpdateASGroupTask extends Task<AutoScalingGroup> {
         AWS.as.updateASGroup(new UpdateAutoScalingGroupRequest()
             .withAutoScalingGroupName(asGroupName)
             .withLaunchConfigurationName(resource.launchConfig.remoteLaunchConfig.getLaunchConfigurationName())
-            .withTerminationPolicies(AutoScalingGroup.TERMINATE_POLICY_OLDEST_INSTANCE)
+            .withTerminationPolicies(ASGroup.TERMINATE_POLICY_OLDEST_INSTANCE)
             .withDesiredCapacity(resource.desiredSize)
             .withMinSize(resource.minSize)
             .withMaxSize(resource.maxSize));

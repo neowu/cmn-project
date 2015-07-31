@@ -3,7 +3,7 @@ package core.aws.task.as;
 import com.amazonaws.services.autoscaling.model.Instance;
 import core.aws.client.AWS;
 import core.aws.env.Context;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.task.linux.LinuxCommandRunner;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
  * @author neo
  */
 @Action("exec-asg")
-public class RunCommandTask extends Task<AutoScalingGroup> {
+public class RunCommandTask extends Task<ASGroup> {
     private final Logger logger = LoggerFactory.getLogger(RunCommandTask.class);
 
-    public RunCommandTask(AutoScalingGroup asGroup) {
+    public RunCommandTask(ASGroup asGroup) {
         super(asGroup);
     }
 

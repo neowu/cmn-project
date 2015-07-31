@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author neo
  */
-public class AutoScalingGroup extends Resource implements ServerResource {
+public class ASGroup extends Resource implements ServerResource {
     public static final String TERMINATE_POLICY_OLDEST_INSTANCE = "OldestInstance";
 
     public com.amazonaws.services.autoscaling.model.AutoScalingGroup remoteASGroup;
@@ -32,7 +32,7 @@ public class AutoScalingGroup extends Resource implements ServerResource {
     public int desiredSize;
     public Subnet subnet;
 
-    public AutoScalingGroup(String id) {
+    public ASGroup(String id) {
         super(id);
     }
 

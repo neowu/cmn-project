@@ -21,7 +21,7 @@ public class CreatePolicyTask extends Task<AutoScalingPolicy> {
 
     @Override
     public void execute(Context context) throws Exception {
-        String asGroupName = resource.autoScalingGroup.remoteASGroup.getAutoScalingGroupName();
+        String asGroupName = resource.asGroup.remoteASGroup.getAutoScalingGroupName();
 
         String policyARN = AWS.as.createPolicy(new PutScalingPolicyRequest()
             .withPolicyName(resource.id)

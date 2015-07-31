@@ -3,7 +3,7 @@ package core.aws.task.as;
 import com.amazonaws.services.autoscaling.model.Instance;
 import core.aws.client.AWS;
 import core.aws.env.Context;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
 
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
  * @author neo
  */
 @Action("desc-asg")
-public class DescribeASGroupTask extends Task<AutoScalingGroup> {
-    public DescribeASGroupTask(AutoScalingGroup asGroup) {
+public class DescribeASGroupTask extends Task<ASGroup> {
+    public DescribeASGroupTask(ASGroup asGroup) {
         super(asGroup);
     }
 

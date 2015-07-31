@@ -3,7 +3,6 @@ package core.aws.util;
 /**
  * @author neo
  */
-@SuppressWarnings("PMD")
 public final class ToStringHelper {
     StringBuilder builder;
     boolean first = true;

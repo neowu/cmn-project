@@ -24,7 +24,7 @@ import com.amazonaws.services.identitymanagement.model.ServerCertificateMetadata
 import com.amazonaws.services.identitymanagement.model.UploadServerCertificateRequest;
 import com.amazonaws.services.identitymanagement.model.UploadServerCertificateResult;
 import core.aws.util.Asserts;
-import core.aws.util.EncodingUtils;
+import core.aws.util.Encodings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -111,7 +111,7 @@ public class IAM {
             GetRolePolicyResult result = iam.getRolePolicy(new GetRolePolicyRequest()
                 .withRoleName(roleName)
                 .withPolicyName(policyName));
-            String policyJSON = EncodingUtils.decodeURL(result.getPolicyDocument());
+            String policyJSON = Encodings.decodeURL(result.getPolicyDocument());
             return Optional.of(Policy.fromJson(policyJSON));
         } catch (NoSuchEntityException e) {
             return Optional.empty();

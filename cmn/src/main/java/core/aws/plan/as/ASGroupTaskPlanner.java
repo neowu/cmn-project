@@ -1,7 +1,7 @@
 package core.aws.plan.as;
 
 import core.aws.plan.Planner;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.task.as.CreateASGroupTask;
 import core.aws.task.as.CreatePolicyTask;
 import core.aws.task.as.DeleteASGroupTask;
@@ -56,7 +56,7 @@ public class ASGroupTaskPlanner extends Planner {
 
     private void linkDeleteTasks() {
         for (DeleteASGroupTask asGroupTask : all(DeleteASGroupTask.class)) {
-            AutoScalingGroup asGroup = asGroupTask.resource;
+            ASGroup asGroup = asGroupTask.resource;
 
             if (asGroup.elb != null) {
                 find(DeleteELBTask.class, asGroup.elb)
@@ -73,7 +73,7 @@ public class ASGroupTaskPlanner extends Planner {
 
     private void linkCreateTasks() {
         all(CreateASGroupTask.class).forEach(asGroupTask -> {
-            AutoScalingGroup asGroup = asGroupTask.resource;
+            ASGroup asGroup = asGroupTask.resource;
 
             find(CreateSGTask.class, asGroup.launchConfig.securityGroup)
                 .ifPresent(asGroupTask::dependsOn);
@@ -96,7 +96,7 @@ public class ASGroupTaskPlanner extends Planner {
         });
 
         all(CreatePolicyTask.class).forEach(policyTask ->
-            find(CreateASGroupTask.class, policyTask.resource.autoScalingGroup)
+            find(CreateASGroupTask.class, policyTask.resource.asGroup)
                 .ifPresent(policyTask::dependsOn));
     }
 }

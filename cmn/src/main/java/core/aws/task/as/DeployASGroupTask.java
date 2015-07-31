@@ -8,7 +8,7 @@ import com.amazonaws.services.elasticloadbalancing.model.InstanceState;
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.env.Environment;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.util.Threads;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
@@ -32,14 +32,14 @@ import java.util.stream.Collectors;
  * @author neo
  */
 @Action("deploy-asg")
-public class DeployASGroupTask extends Task<AutoScalingGroup> {
+public class DeployASGroupTask extends Task<ASGroup> {
     private final Logger logger = LoggerFactory.getLogger(DeployASGroupTask.class);
 
     String oldLaunchConfigName;
     String asGroupName;
     List<String> oldInstanceIds;
 
-    public DeployASGroupTask(AutoScalingGroup resource) {
+    public DeployASGroupTask(ASGroup resource) {
         super(resource);
     }
 

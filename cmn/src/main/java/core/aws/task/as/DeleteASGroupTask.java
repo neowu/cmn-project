@@ -2,7 +2,7 @@ package core.aws.task.as;
 
 import core.aws.client.AWS;
 import core.aws.env.Context;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
 
@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
  * @author neo
  */
 @Action("del-asg")
-public class DeleteASGroupTask extends Task<AutoScalingGroup> {
-    public DeleteASGroupTask(AutoScalingGroup asGroup) {
+public class DeleteASGroupTask extends Task<ASGroup> {
+    public DeleteASGroupTask(ASGroup asGroup) {
         super(asGroup);
     }
 

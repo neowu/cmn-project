@@ -5,19 +5,19 @@ import com.amazonaws.services.autoscaling.model.Tag;
 import com.amazonaws.services.ec2.model.Subnet;
 import core.aws.client.AWS;
 import core.aws.env.Context;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
+import core.aws.util.Lists;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author neo
  */
 @Action("create-asg")
-public class CreateASGroupTask extends Task<AutoScalingGroup> {
-    public CreateASGroupTask(AutoScalingGroup asGroup) {
+public class CreateASGroupTask extends Task<ASGroup> {
+    public CreateASGroupTask(ASGroup asGroup) {
         super(asGroup);
     }
 
@@ -34,7 +34,7 @@ public class CreateASGroupTask extends Task<AutoScalingGroup> {
             .withMaxSize(resource.maxSize)
             .withDefaultCooldown(60)
             .withHealthCheckGracePeriod(300)    // give 5 mins for server and application startup
-            .withTerminationPolicies(AutoScalingGroup.TERMINATE_POLICY_OLDEST_INSTANCE)      // always remove oldest instance, OldestLaunchConfiguration should not be used due to during deployment the old LaunchConfig can be deleted first, the ASG will fail to compare, which may terminate unwanted instance
+            .withTerminationPolicies(ASGroup.TERMINATE_POLICY_OLDEST_INSTANCE)      // always remove oldest instance, OldestLaunchConfiguration should not be used due to during deployment the old LaunchConfig can be deleted first, the ASG may fail to compare, and terminate unwanted instance
             .withTags(new Tag().withKey("cloud-manager:env").withValue(context.env.name).withPropagateAtLaunch(true),
                 helper.nameTag(resource));
 
@@ -45,7 +45,7 @@ public class CreateASGroupTask extends Task<AutoScalingGroup> {
             request.withHealthCheckType("EC2");
         }
 
-        List<String> availabilityZones = new ArrayList<>();
+        List<String> availabilityZones = Lists.newArrayList();
         StringBuilder subnetIds = new StringBuilder();
         int index = 0;
         for (Subnet remoteSubnet : resource.subnet.remoteSubnets) {

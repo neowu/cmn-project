@@ -15,16 +15,21 @@ import com.amazonaws.services.autoscaling.model.DeletePolicyRequest;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsRequest;
 import com.amazonaws.services.autoscaling.model.DescribeAutoScalingGroupsResult;
 import com.amazonaws.services.autoscaling.model.DescribeLaunchConfigurationsRequest;
+import com.amazonaws.services.autoscaling.model.DescribePoliciesRequest;
 import com.amazonaws.services.autoscaling.model.LaunchConfiguration;
 import com.amazonaws.services.autoscaling.model.PutScalingPolicyRequest;
+import com.amazonaws.services.autoscaling.model.ScalingPolicy;
 import com.amazonaws.services.autoscaling.model.Tag;
 import com.amazonaws.services.autoscaling.model.TerminateInstanceInAutoScalingGroupRequest;
 import com.amazonaws.services.autoscaling.model.UpdateAutoScalingGroupRequest;
+import core.aws.util.Exceptions;
+import core.aws.util.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author neo
@@ -75,11 +80,32 @@ public class AutoScaling {
         return groups.get(0);
     }
 
+    public Map<String, LaunchConfiguration> describeLaunchConfigs(List<String> launchConfigNames) {
+        logger.info("describe launch configs, names={}", launchConfigNames);
+
+        Map<String, LaunchConfiguration> results = Maps.newHashMap();
+
+        autoScaling.describeLaunchConfigurations(new DescribeLaunchConfigurationsRequest()
+            .withLaunchConfigurationNames(launchConfigNames))
+            .getLaunchConfigurations()
+            .forEach(config -> results.put(config.getLaunchConfigurationName(), config));
+
+        if (results.size() != launchConfigNames.size())
+            throw Exceptions.error("some launch config does not exist, foundNames={}", results.keySet());
+
+        return results;
+    }
+
     public LaunchConfiguration describeLaunchConfig(String launchConfigName) {
         logger.info("describe launch config, name={}", launchConfigName);
         return autoScaling.describeLaunchConfigurations(new DescribeLaunchConfigurationsRequest()
             .withLaunchConfigurationNames(launchConfigName))
             .getLaunchConfigurations().get(0);
+    }
+
+    public List<ScalingPolicy> describeScalingPolicies(String asGroupName) {
+        logger.info("describe auto scaling policies, asGroupName={}", asGroupName);
+        return autoScaling.describePolicies(new DescribePoliciesRequest().withAutoScalingGroupName(asGroupName)).getScalingPolicies();
     }
 
     public void updateASGroup(UpdateAutoScalingGroupRequest request) {
@@ -92,10 +118,11 @@ public class AutoScaling {
         return autoScaling.putScalingPolicy(request).getPolicyARN();
     }
 
-    public void deletePolicy(String policyName, String asGroupName) {
-        logger.info("delete scaling policy, policy={}, asGroup={}", policyName, asGroupName);
-        autoScaling.deletePolicy(new DeletePolicyRequest().withPolicyName(policyName)
-            .withAutoScalingGroupName(asGroupName));
+    public void deletePolicy(String asGroupName, String policyName) {
+        logger.info("delete scaling policy, asGroup={}, policy={}", asGroupName, policyName);
+        autoScaling.deletePolicy(new DeletePolicyRequest()
+            .withAutoScalingGroupName(asGroupName)
+            .withPolicyName(policyName));
     }
 
     public void updateTag(String asGroupName, Tag tag) {

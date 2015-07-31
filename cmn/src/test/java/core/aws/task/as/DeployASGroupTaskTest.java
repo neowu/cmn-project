@@ -1,6 +1,6 @@
 package core.aws.task.as;
 
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class DeployASGroupTaskTest {
 
     @Before
     public void createDeployASGroupTask() {
-        task = new DeployASGroupTask(new AutoScalingGroup("test"));
+        task = new DeployASGroupTask(new ASGroup("test"));
     }
 
     @Test

@@ -26,6 +26,6 @@ public class DeletePolicyTask extends Task<AutoScalingPolicy> {
             .collect(Collectors.toList());
 
         AWS.cloudWatch.deleteAlarms(alarmNames);
-        AWS.as.deletePolicy(resource.remotePolicy.getPolicyName(), resource.remotePolicy.getAutoScalingGroupName());
+        AWS.as.deletePolicy(resource.remotePolicy.getAutoScalingGroupName(), resource.remotePolicy.getPolicyName());
     }
 }

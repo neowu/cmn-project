@@ -7,7 +7,7 @@ import core.aws.local.LocalResourceLoader;
 import core.aws.local.ResourceNode;
 import core.aws.local.ec2.EBSBuilder;
 import core.aws.resource.Resources;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.resource.as.AutoScalingPolicy;
 import core.aws.resource.ec2.InstanceProfile;
 import core.aws.resource.ec2.KeyPair;
@@ -42,7 +42,7 @@ public class ASGroupLoader implements LocalResourceLoader {
         Optional<String> elbId = node.getString("elb");
         Optional<String> instanceProfileId = node.getString("instance-profile");
 
-        AutoScalingGroup asGroup = resources.add(new AutoScalingGroup(node.id));
+        ASGroup asGroup = resources.add(new ASGroup(node.id));
         asGroup.launchConfig.instanceType = instanceType;
         asGroup.launchConfig.ebs = new EBSBuilder().build(node.mapField("ebs"));
         asGroup.launchConfig.keyPair = resources.find(KeyPair.class, node.id)
@@ -65,7 +65,7 @@ public class ASGroupLoader implements LocalResourceLoader {
         List<AutoScalingPolicy> policies = loadPolicies(node);
         for (AutoScalingPolicy policy : policies) {
             resources.add(policy);
-            policy.autoScalingGroup = asGroup;
+            policy.asGroup = asGroup;
         }
     }
 

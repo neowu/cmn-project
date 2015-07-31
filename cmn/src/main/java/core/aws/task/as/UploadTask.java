@@ -3,7 +3,7 @@ package core.aws.task.as;
 import com.amazonaws.services.autoscaling.model.Instance;
 import core.aws.client.AWS;
 import core.aws.env.Context;
-import core.aws.resource.as.AutoScalingGroup;
+import core.aws.resource.as.ASGroup;
 import core.aws.task.linux.LinuxUploader;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
  * @author neo
  */
 @Action("upload-asg")
-public class UploadTask extends Task<AutoScalingGroup> {
+public class UploadTask extends Task<ASGroup> {
     private final Logger logger = LoggerFactory.getLogger(UploadTask.class);
 
-    public UploadTask(AutoScalingGroup asGroup) {
+    public UploadTask(ASGroup asGroup) {
         super(asGroup);
     }
 
