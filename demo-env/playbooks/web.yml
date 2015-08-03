@@ -1,9 +1,9 @@
 - hosts: localhost
-  roles: [sys, ec2, jdk, nginx, tomcat, logrotate]
+  roles: [sys, ec2, tomcat, nginx]
   vars:
     tomcat_java_opts: '-XX:+UseG1GC -Xms2300m -Xmx2300m -Xss256k -Djava.awt.headless=true'
-    logrotate_s3_bucket: demo-log
-    logrotate_s3_prefix: web
+    ec2_log_s3_bucket: demo-log
+    ec2_cloudwatch_metrics: [java, linux]
 
   tasks:
     - name: deploy war
