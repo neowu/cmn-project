@@ -1,9 +1,10 @@
 ## Change log
 
-### 7/29/2015 - 7/31/2015 (1.5.6, not release yet)
+### 7/29/2015 - 8/6/2015 (1.5.6)
 * validate ELB name
 * updated AWS sdk to 1.10.8
 * optimized ASG loading, use one request to load all LaunchConfig
+* fix ASG delete planner, to use remote resource only for sync with deletion
 
 ### 7/18/2015 - 7/20/2015 (1.5.5)
 * update elasticsearch role to 1.7

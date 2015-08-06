@@ -17,6 +17,7 @@ import core.aws.task.vpc.DeleteSubnetTask;
 import core.aws.workflow.Tasks;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -58,16 +59,21 @@ public class ASGroupTaskPlanner extends Planner {
         for (DeleteASGroupTask asGroupTask : all(DeleteASGroupTask.class)) {
             ASGroup asGroup = asGroupTask.resource;
 
-            if (asGroup.elb != null) {
-                find(DeleteELBTask.class, asGroup.elb)
-                    .ifPresent(task -> task.dependsOn(asGroupTask));
+            List<String> elbNames = asGroup.remoteASGroup.getLoadBalancerNames();
+            if (!elbNames.isEmpty()) {
+                all(DeleteELBTask.class).stream()
+                    .filter(task -> elbNames.contains(task.resource.remoteELB.getLoadBalancerName()))
+                    .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
             }
 
-            find(DeleteSubnetTask.class, asGroup.subnet)
-                .ifPresent(task -> task.dependsOn(asGroupTask));
+            String subnetIds = asGroup.remoteASGroup.getVPCZoneIdentifier();
+            all(DeleteSubnetTask.class).stream()
+                .filter(task -> subnetIds.contains(task.resource.remoteSubnets.get(0).getSubnetId()))
+                .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
 
-            find(DeleteSGTask.class, asGroup.launchConfig.securityGroup)
-                .ifPresent(task -> task.dependsOn(asGroupTask));
+            all(DeleteSGTask.class).stream()
+                .filter(task -> asGroup.launchConfig.remoteLaunchConfig.getSecurityGroups().contains(task.resource.remoteSecurityGroup.getGroupName()))
+                .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
         }
     }
 
