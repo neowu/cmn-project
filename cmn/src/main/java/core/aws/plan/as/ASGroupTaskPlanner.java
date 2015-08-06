@@ -71,8 +71,9 @@ public class ASGroupTaskPlanner extends Planner {
                 .filter(task -> subnetIds.contains(task.resource.remoteSubnets.get(0).getSubnetId()))
                 .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
 
+            List<String> sgIds = asGroup.launchConfig.remoteLaunchConfig.getSecurityGroups();
             all(DeleteSGTask.class).stream()
-                .filter(task -> asGroup.launchConfig.remoteLaunchConfig.getSecurityGroups().contains(task.resource.remoteSecurityGroup.getGroupId()))
+                .filter(task -> sgIds.contains(task.resource.remoteSecurityGroup.getGroupId()))
                 .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
         }
     }
