@@ -72,7 +72,7 @@ public class ASGroupTaskPlanner extends Planner {
                 .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
 
             all(DeleteSGTask.class).stream()
-                .filter(task -> asGroup.launchConfig.remoteLaunchConfig.getSecurityGroups().contains(task.resource.remoteSecurityGroup.getGroupName()))
+                .filter(task -> asGroup.launchConfig.remoteLaunchConfig.getSecurityGroups().contains(task.resource.remoteSecurityGroup.getGroupId()))
                 .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
         }
     }
