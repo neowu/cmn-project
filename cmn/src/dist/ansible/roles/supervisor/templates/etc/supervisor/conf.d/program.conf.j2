@@ -4,6 +4,6 @@ command={{value.command}}
 user=ubuntu
 stdout_logfile=/var/log/supervisor/{{key}}-stdout.log
 stderr_logfile=/var/log/supervisor/{{key}}-stderr.log
-environment={{value.env}}
+environment={{value.env|default('')}}
 
 {% endfor %}
