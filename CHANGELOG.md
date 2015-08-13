@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.5.7 (8/13/2015 - )
+* ansible: supervisor supports empty env
+
 ### 7/29/2015 - 8/6/2015 (1.5.6)
 * validate ELB name
 * updated AWS sdk to 1.10.8
