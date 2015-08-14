@@ -1,15 +1,16 @@
 ## Change log
 
-### 1.5.7 (8/13/2015 - )
+### 1.5.7 (8/13/2015 - 8/14/2015)
 * ansible: supervisor supports empty env
+* logrotate: keep 7 days old log if not move to S3
 
-### 7/29/2015 - 8/6/2015 (1.5.6)
+### 1.5.6 (7/29/2015 - 8/6/2015)
 * validate ELB name
 * updated AWS sdk to 1.10.8
 * optimized ASG loading, use one request to load all LaunchConfig
 * fix ASG delete planner, to use remote resource only for sync with deletion
 
-### 7/18/2015 - 7/20/2015 (1.5.5)
+### 1.5.5 (7/18/2015 - 7/20/2015)
 * update elasticsearch role to 1.7
 * instance deploy, wait until InService
 
