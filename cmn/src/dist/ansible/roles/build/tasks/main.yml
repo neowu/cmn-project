@@ -5,7 +5,7 @@
   file: path=/opt/build owner=ubuntu group=ubuntu state=directory
 
 - name: download cmn
-  get_url: url="{{build_cmn_url_prefix}}/cmn-{{build_cmn_version}}.tar" dest=/tmp
+  get_url: url="{{build_cmn_url_prefix}}/cmn-{{build_cmn_version}}.tar" dest=/tmp timeout=60
 
 - name: extract cmn
   unarchive: src=/tmp/cmn-{{build_cmn_version}}.tar dest=/opt/build/ copy=no
