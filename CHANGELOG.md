@@ -1,8 +1,9 @@
 ## Change log
 
-### 1.5.7 (8/13/2015 - 8/14/2015)
+### 1.5.7 (8/13/2015 - 8/17/2015)
 * ansible: supervisor supports empty env
-* logrotate: keep 7 days old log if not move to S3
+* ansible: logrotate keep 7 days old log if not move to S3
+* ansible: add kibana role
 
 ### 1.5.6 (7/29/2015 - 8/6/2015)
 * validate ELB name
