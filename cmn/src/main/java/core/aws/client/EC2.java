@@ -118,14 +118,14 @@ public class EC2 {
     }
 
     public void stopInstances(List<String> instanceIds) throws InterruptedException {
-        if (instanceIds.isEmpty()) throw new IllegalArgumentException("instanceIds cannot be empty");
+        if (instanceIds.isEmpty()) throw new Error("instanceIds must not be empty");
         logger.info("stop instances, instanceIds={}", instanceIds);
         ec2.stopInstances(new StopInstancesRequest().withInstanceIds(instanceIds));
         waitUntil(instanceIds, InstanceState.STOPPED);
     }
 
     public void startInstances(List<String> instanceIds) throws InterruptedException {
-        if (instanceIds.isEmpty()) throw new IllegalArgumentException("instanceIds cannot be empty");
+        if (instanceIds.isEmpty()) throw new Error("instanceIds must not be empty");
         logger.info("start instances, instanceIds={}", instanceIds);
         ec2.startInstances(new StartInstancesRequest().withInstanceIds(instanceIds));
         waitUntilRunning(instanceIds);

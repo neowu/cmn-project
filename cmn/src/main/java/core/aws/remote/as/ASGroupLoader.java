@@ -34,6 +34,8 @@ public class ASGroupLoader {
             .filter(group -> group.getAutoScalingGroupName().startsWith(prefix))
             .collect(Collectors.toList());
 
+        if (asGroups.isEmpty()) return;
+
         // load remote launch config in one request to maximize the speed
         List<String> launchConfigNames = asGroups.stream().map(AutoScalingGroup::getLaunchConfigurationName).collect(Collectors.toList());
         Map<String, LaunchConfiguration> configs = AWS.as.describeLaunchConfigs(launchConfigNames);

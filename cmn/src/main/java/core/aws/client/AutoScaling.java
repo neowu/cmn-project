@@ -81,6 +81,7 @@ public class AutoScaling {
     }
 
     public Map<String, LaunchConfiguration> describeLaunchConfigs(List<String> launchConfigNames) {
+        if (launchConfigNames.isEmpty()) throw new Error("launchConfigNames must not be empty");
         logger.info("describe launch configs, names={}", launchConfigNames);
 
         Map<String, LaunchConfiguration> results = Maps.newHashMap();
