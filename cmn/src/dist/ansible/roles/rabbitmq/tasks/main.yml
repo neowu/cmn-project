@@ -16,6 +16,9 @@
 - name: enable management plugin
   rabbitmq_plugin: names=rabbitmq_management state=enabled
 
+- name: install rabbitmqadmin
+  get_url: url=http://localhost:15672/cli/rabbitmqadmin dest=/usr/local/bin timeout=60 mode=0755
+
 - name: create /opt/log/rabbitmq
   file: path=/opt/log/rabbitmq owner=rabbitmq group=rabbitmq mode=0755 state=directory
 

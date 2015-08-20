@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.5.8 (8/20/2015)
+* ansible: rabbitmq install rabbitmq admin script
+
 ### 1.5.7 (8/13/2015 - 8/17/2015)
 * ansible: supervisor supports empty env
 * ansible: logrotate keep 7 days old log if not move to S3
