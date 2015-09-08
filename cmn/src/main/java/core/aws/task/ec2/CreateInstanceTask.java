@@ -52,7 +52,7 @@ public class CreateInstanceTask extends Task<Instance> {
 
         request.getNetworkInterfaces().add(new InstanceNetworkInterfaceSpecification()
             .withDeviceIndex(0)
-            .withSubnetId(resource.subnet.remoteSubnets.get(0).getSubnetId())
+            .withSubnetId(resource.subnet.firstRemoteSubnet().getSubnetId())
             .withGroups(sgId)
             .withAssociatePublicIpAddress(resource.subnet.type == SubnetType.PUBLIC));
 

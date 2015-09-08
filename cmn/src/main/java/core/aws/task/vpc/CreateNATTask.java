@@ -51,7 +51,7 @@ public class CreateNATTask extends Task<NAT> {
 
         request.getNetworkInterfaces().add(new InstanceNetworkInterfaceSpecification()
             .withDeviceIndex(0)
-            .withSubnetId(resource.publicSubnet.remoteSubnets.get(0).getSubnetId())
+            .withSubnetId(resource.publicSubnet.firstRemoteSubnet().getSubnetId())
             .withGroups(sgId)
             .withAssociatePublicIpAddress(true));
 

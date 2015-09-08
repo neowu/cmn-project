@@ -68,7 +68,7 @@ public class ASGroupTaskPlanner extends Planner {
 
             String subnetIds = asGroup.remoteASGroup.getVPCZoneIdentifier();
             all(DeleteSubnetTask.class).stream()
-                .filter(task -> subnetIds.contains(task.resource.remoteSubnets.get(0).getSubnetId()))
+                .filter(task -> subnetIds.contains(task.resource.firstRemoteSubnet().getSubnetId()))
                 .findAny().ifPresent(task -> task.dependsOn(asGroupTask));
 
             List<String> sgIds = asGroup.launchConfig.remoteLaunchConfig.getSecurityGroups();

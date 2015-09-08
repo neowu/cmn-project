@@ -1,30 +1,50 @@
 package core.aws.util;
 
-import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UncheckedIOException;
+import java.util.Arrays;
 
 /**
  * @author neo
  */
 public final class InputStreams {
-    public static byte[] bytes(InputStream stream) {
-        final int bufferSize = 0x1000; // 4K
-
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-        byte[] buf = new byte[bufferSize];
-        int len;
-        try {
-            while (true) {
-                len = stream.read(buf);
-                if (len < 0) break;
-                output.write(buf, 0, len);
-            }
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
+    // by following rule: who created InputStream close it, the place to close InputStream needs to handle IOException anyway
+    public static byte[] readAllWithExpectedSize(InputStream stream, int size) throws IOException {
+        byte[] bytes = new byte[size];
+        int position = 0;
+        while (position < size) {
+            int bytesRead = stream.read(bytes, position, size - position);
+            if (bytesRead < 0) break;
+            position += bytesRead;
         }
+        if (position < size) {
+            throw new EOFException("stream ends prematurely, expected=" + size + ", actual=" + position);
+        } else if (stream.read() != -1) {
+            throw new IOException("stream does not end as expected, expected=" + size);
+        }
+        return bytes;
+    }
 
-        return output.toByteArray();
+    // java.io.ByteArrayOutputStream is slow impl due to synchronization, refer to sun.misc.IOUtils.readFully
+    public static byte[] readAll(InputStream stream) throws IOException {
+        byte[] bytes = new byte[16384];     // use 16k as default buffer
+        int position = 0;
+        while (true) {
+            int bytesToRead;
+            if (position >= bytes.length) {
+                bytesToRead = bytes.length;    // double the buffer
+                bytes = Arrays.copyOf(bytes, position + bytesToRead);
+            } else {
+                bytesToRead = bytes.length - position;
+            }
+            int bytesRead = stream.read(bytes, position, bytesToRead);
+            if (bytesRead < 0) {
+                bytes = Arrays.copyOf(bytes, position);
+                break;
+            }
+            position += bytesRead;
+        }
+        return bytes;
     }
 }

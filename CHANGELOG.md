@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.5.9 (9/8/2015)
+* subnet: sort subnet by AZ, to make "instance" resource always uses first AZ, (deterministic behavior to make reserved instance easier to plan)
+
 ### 1.5.8 (8/20/2015)
 * ansible: rabbitmq install rabbitmq admin script
 
