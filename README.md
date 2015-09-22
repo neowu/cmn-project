@@ -3,7 +3,7 @@ cmn is a AWS resource manager. this tool is designed to support our own project,
 
 ## TODO:
 * make Task not tied to resource, deleteTask should pass remoteResource only, refactory Task/Workflow
-* monitor, eval pcp.io? collectd
+* monitor, eval pcp.io? collectd (server/client) to rabbitmq to ES
 * elasticsearch AWS plugin
 * general linux tuning, like ulimit to sys
 * redis clustering
