@@ -1,7 +1,8 @@
 ## Change log
 
-### 1.6.0 (9/21/2015 - )
+### 1.6.0 (9/21/2015 - 10/14/2015)
 * lib: update lib up to date
+* nginx: updated gzip type
 
 ### 1.5.9 (9/8/2015)
 * subnet: sort subnet by AZ, to make "instance" resource always uses first AZ, (deterministic behavior to make reserved instance easier to plan)
