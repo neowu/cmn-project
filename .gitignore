@@ -4,4 +4,4 @@
 /build/
 */src/dev/java/
 aws.properties
-/neo-test-env/
+/test-env/
