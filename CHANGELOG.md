@@ -1,5 +1,9 @@
 ## Change log
 
+### 1.6.1 (10/19/2015)
+* lib: update aws lib to latest
+* bake: remote AMI can be in non available state, load remote images state during loading, to old delete out dated available AMI during bake
+
 ### 1.6.0 (9/21/2015 - 10/14/2015)
 * lib: update lib up to date
 * nginx: updated gzip type

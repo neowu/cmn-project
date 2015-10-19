@@ -7,8 +7,6 @@ import core.aws.workflow.Tasks;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -30,29 +28,26 @@ public class ImageTest {
 
     @Test
     public void nextVersion() {
-        image.remoteImageIds.put(1, "image1");
-        image.remoteImageIds.put(3, "image3");
-        image.remoteImageIds.put(2, "image2");
+        image.remoteImages.put(1, new com.amazonaws.services.ec2.model.Image().withName("image1"));
+        image.remoteImages.put(3, new com.amazonaws.services.ec2.model.Image().withName("image3"));
+        image.remoteImages.put(2, new com.amazonaws.services.ec2.model.Image().withName("image2"));
 
         assertThat(image.nextVersion(), equalTo(4));
     }
 
     @Test
     public void deleteOldAMI() {
-        image.remoteImageIds.put(1, "image1");
-        image.remoteImageIds.put(2, "image2");
-        image.remoteImageIds.put(3, "image3");
-        image.remoteImageIds.put(4, "image4");
-        image.remoteImageIds.put(5, "image5");
+        image.remoteImages.put(1, new com.amazonaws.services.ec2.model.Image().withName("image1"));
+        image.remoteImages.put(2, new com.amazonaws.services.ec2.model.Image().withName("image2"));
+        image.remoteImages.put(5, new com.amazonaws.services.ec2.model.Image().withName("image5"));
+        image.remoteImages.put(3, new com.amazonaws.services.ec2.model.Image().withName("image3"));
+        image.remoteImages.put(4, new com.amazonaws.services.ec2.model.Image().withName("image4"));
 
         Tasks tasks = new Tasks();
-        while (image.remoteImageIds.size() >= 5) {
-            Map.Entry<Integer, String> entry = image.remoteImageIds.pollFirstEntry();
-            tasks.add(new DeleteImageTask(image, entry.getValue()));
-        }
+        image.bakeTasks(tasks, false);
 
-        assertThat(tasks.size(), equalTo(1));
-        DeleteImageTask task = (DeleteImageTask) tasks.stream().reduce(StreamHelper.onlyOne()).get();
-        assertThat(task.imageId, equalTo("image1"));
+        assertThat(tasks.size(), equalTo(2));
+        DeleteImageTask task = (DeleteImageTask) tasks.stream().filter(t -> t instanceof DeleteImageTask).reduce(StreamHelper.onlyOne()).get();
+        assertThat(task.deletedImage.getName(), equalTo("image1"));
     }
 }

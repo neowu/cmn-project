@@ -27,7 +27,7 @@ import java.util.TreeMap;
  * @author neo
  */
 public class Image extends Resource implements AMI {
-    public final NavigableMap<Integer, String> remoteImageIds = new TreeMap<>();
+    public final NavigableMap<Integer, com.amazonaws.services.ec2.model.Image> remoteImages = new TreeMap<>();
     public final List<Instance> unfinishedBakeInstances = Lists.newArrayList();
 
     public AMI baseAMI;
@@ -50,14 +50,14 @@ public class Image extends Resource implements AMI {
 
     @Override
     public String imageId() {
-        if (remoteImageIds.isEmpty()) return baseAMI.imageId();
-        return remoteImageIds.lastEntry().getValue();
+        if (remoteImages.isEmpty()) return baseAMI.imageId();
+        return remoteImages.lastEntry().getValue().getImageId();
     }
 
     @Override
     public Optional<Integer> version() {
-        if (remoteImageIds.isEmpty()) return Optional.of(0);
-        return Optional.of(remoteImageIds.lastKey());
+        if (remoteImages.isEmpty()) return Optional.of(0);
+        return Optional.of(remoteImages.lastKey());
     }
 
     public String name() {
@@ -98,8 +98,8 @@ public class Image extends Resource implements AMI {
 
         tasks.add(new BakeAMITask(this, resumeBakeInstance));
 
-        while (remoteImageIds.size() >= 5) {
-            Map.Entry<Integer, String> entry = remoteImageIds.pollFirstEntry();
+        while (remoteImages.size() >= 5) {
+            Map.Entry<Integer, com.amazonaws.services.ec2.model.Image> entry = remoteImages.pollFirstEntry();
             tasks.add(new DeleteImageTask(this, entry.getValue()));
         }
     }

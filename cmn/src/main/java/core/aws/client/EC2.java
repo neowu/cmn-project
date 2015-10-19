@@ -15,12 +15,15 @@ import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.amazonaws.services.ec2.model.DeleteSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
+import com.amazonaws.services.ec2.model.DescribeImagesRequest;
+import com.amazonaws.services.ec2.model.DescribeImagesResult;
 import com.amazonaws.services.ec2.model.DescribeInstanceStatusRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesRequest;
 import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
 import com.amazonaws.services.ec2.model.DescribeTagsRequest;
 import com.amazonaws.services.ec2.model.DescribeTagsResult;
+import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceStatus;
 import com.amazonaws.services.ec2.model.IpPermission;
@@ -50,8 +53,8 @@ import java.util.stream.Collectors;
  * @author neo
  */
 public class EC2 {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     public final AmazonEC2 ec2;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private volatile List<String> availabilityZones;
 
     public EC2(AWSCredentialsProvider credentials, Region region) {
@@ -194,6 +197,14 @@ public class EC2 {
         return result.getReservations().stream()
             .flatMap(reservation -> reservation.getInstances().stream())
             .collect(Collectors.toList());
+    }
+
+    public List<Image> describeImages(Collection<String> imageIds) {
+        if (imageIds.isEmpty())
+            throw new IllegalArgumentException("imageIds can not be empty, otherwise it requires all images");
+        logger.info("describe images, imageIds={}", imageIds);
+        DescribeImagesResult result = ec2.describeImages(new DescribeImagesRequest().withImageIds(imageIds));
+        return result.getImages();
     }
 
     public void waitUntilRunning(List<String> instanceIds) throws InterruptedException {
