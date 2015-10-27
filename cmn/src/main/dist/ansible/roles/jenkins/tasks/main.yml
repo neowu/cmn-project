@@ -1,5 +1,5 @@
 - name: add jenkins repo key
-  apt_key: url=http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
+  apt_key: url=https://jenkins-ci.org/debian/jenkins-ci.org.key
 
 - name: add jenkins repo
   apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/'

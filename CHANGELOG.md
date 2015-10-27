@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.6.2 (10/27/2015)
+* ansible: update jenkins key url according to https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
+
 ### 1.6.1 (10/19/2015)
 * lib: update aws lib to latest
 * bake: remote AMI can be in non available state, load remote images state during loading, to old delete out dated available AMI during bake
