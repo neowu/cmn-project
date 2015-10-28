@@ -102,8 +102,7 @@ public class EC2 {
         RunInstancesResult result = new Runner<RunInstancesResult>()
             .maxAttempts(3)
             .retryInterval(Duration.ofSeconds(20))
-            .retryOn(e -> e instanceof AmazonServiceException
-                && ((AmazonServiceException) e).getErrorMessage().contains("iamInstanceProfile.name"))
+            .retryOn(this::retryOnRunInstance)
             .run(() -> ec2.runInstances(request));
 
         Threads.sleepRoughly(Duration.ofSeconds(5)); // wait little bit to make sure instance is visible to tag service
@@ -118,6 +117,18 @@ public class EC2 {
         waitUntilRunning(instanceIds);
 
         return describeInstances(instanceIds);
+    }
+
+    private boolean retryOnRunInstance(Exception e) {
+        if (!(e instanceof AmazonServiceException)) {
+            return false;
+        }
+        AmazonServiceException awsException = (AmazonServiceException) e;
+        if (awsException.getErrorMessage().contains("iamInstanceProfile.name"))
+            return true; // iam may not be visible immediately after creation
+        if ("RequestLimitExceeded".equals(awsException.getErrorCode()))
+            return true; // retry if request rate limit exceeds, this seems depends on load on AWS side, and may happen if bake many instances same time.
+        return false;
     }
 
     public void stopInstances(List<String> instanceIds) throws InterruptedException {
