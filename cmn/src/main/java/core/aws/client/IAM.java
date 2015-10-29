@@ -1,5 +1,6 @@
 package core.aws.client;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.regions.Region;
@@ -25,9 +26,11 @@ import com.amazonaws.services.identitymanagement.model.UploadServerCertificateRe
 import com.amazonaws.services.identitymanagement.model.UploadServerCertificateResult;
 import core.aws.util.Asserts;
 import core.aws.util.Encodings;
+import core.aws.util.Runner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +38,8 @@ import java.util.Optional;
  * @author neo
  */
 public class IAM {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     public final AmazonIdentityManagement iam;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Region region;
 
     public IAM(AWSCredentialsProvider credentials, Region region) {
@@ -52,9 +55,18 @@ public class IAM {
             .withCertificateChain(request.getCertificateChain());
     }
 
-    public void deleteServerCert(String name) {
+    public void deleteServerCert(String name) throws Exception {
         logger.info("delete server cert, name={}", name);
-        iam.deleteServerCertificate(new DeleteServerCertificateRequest(name));
+
+        // after delete ELB listener, it may not be visible to IAM immediately
+        new Runner<Void>()
+            .maxAttempts(3)
+            .retryInterval(Duration.ofSeconds(20))
+            .retryOn(e -> e instanceof AmazonServiceException && "DeleteConflict".equals(((AmazonServiceException) e).getErrorCode()))
+            .run(() -> {
+                iam.deleteServerCertificate(new DeleteServerCertificateRequest(name));
+                return null;
+            });
     }
 
     public List<ServerCertificateMetadata> listServerCerts(String path) {

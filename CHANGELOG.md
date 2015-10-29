@@ -1,5 +1,9 @@
 ## Change log
 
+### 1.6.3 (10/29/2015)
+* elb: check cert local config if specified
+* elb: AWS IAM cert deletion behavior changed, make update cert to delete ELB listener first
+
 ### 1.6.2 (10/27/2015 - 10/28/2015)
 * ansible: update jenkins key url according to https://wiki.jenkins-ci.org/display/JENKINS/Installing+Jenkins+on+Ubuntu
 * ec2: retry runInstance if request rate limit exceeds, (may happen on baking many instances during build)

@@ -44,7 +44,7 @@ public class ELBLoader implements LocalResourceLoader {
         elb.scheme = scheme;
 
         resolvers.add(node, () -> {
-            if (elb.listenHTTPS) {
+            if (serverCertId.isPresent()) {
                 elb.cert = resources.get(ServerCert.class, serverCertId.get());
             }
 

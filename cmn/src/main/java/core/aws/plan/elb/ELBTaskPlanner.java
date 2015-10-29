@@ -3,11 +3,12 @@ package core.aws.plan.elb;
 import core.aws.plan.Planner;
 import core.aws.task.ec2.CreateSGTask;
 import core.aws.task.ec2.DeleteSGTask;
+import core.aws.task.elb.CreateELBListenerTask;
 import core.aws.task.elb.CreateELBTask;
 import core.aws.task.elb.CreateServerCertTask;
+import core.aws.task.elb.DeleteELBListenerTask;
 import core.aws.task.elb.DeleteELBTask;
 import core.aws.task.elb.DeleteServerCertTask;
-import core.aws.task.elb.UpdateELBListenerTask;
 import core.aws.task.elb.UpdateELBSGTask;
 import core.aws.task.s3.CreateBucketTask;
 import core.aws.task.vpc.CreateSubnetTask;
@@ -37,10 +38,17 @@ public class ELBTaskPlanner extends Planner {
                 .ifPresent(updateELBSGTask::dependsOn);
         }
 
-        for (UpdateELBListenerTask listenerTask : all(UpdateELBListenerTask.class)) {
+        for (CreateELBListenerTask listenerTask : all(CreateELBListenerTask.class)) {
             if (listenerTask.resource.cert != null) {
                 find(CreateServerCertTask.class, listenerTask.resource.cert)
                     .ifPresent(listenerTask::dependsOn);
+            }
+        }
+
+        for (DeleteELBListenerTask listenerTask : all(DeleteELBListenerTask.class)) {
+            if (listenerTask.resource.cert != null) {
+                find(DeleteServerCertTask.class, listenerTask.resource.cert)
+                    .ifPresent(task -> task.dependsOn(listenerTask));
             }
         }
     }

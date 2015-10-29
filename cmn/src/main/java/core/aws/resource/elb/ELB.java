@@ -9,14 +9,17 @@ import core.aws.resource.ec2.SecurityGroup;
 import core.aws.resource.s3.Bucket;
 import core.aws.resource.vpc.Subnet;
 import core.aws.resource.vpc.SubnetType;
+import core.aws.task.elb.CreateELBListenerTask;
 import core.aws.task.elb.CreateELBTask;
+import core.aws.task.elb.DeleteELBListenerTask;
 import core.aws.task.elb.DeleteELBTask;
 import core.aws.task.elb.DescribeELBTask;
-import core.aws.task.elb.UpdateELBListenerTask;
 import core.aws.task.elb.UpdateELBSGTask;
 import core.aws.util.Asserts;
+import core.aws.util.Lists;
 import core.aws.workflow.Tasks;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,8 +64,18 @@ public class ELB extends Resource {
             tasks.add(new UpdateELBSGTask(this));
         }
 
-        if (listenerChanged()) {
-            tasks.add(new UpdateELBListenerTask(this));
+        List<String> addedProtocols = Lists.newArrayList();
+        if (httpListenerAdded()) addedProtocols.add("HTTP");
+        if (httpsListenerAdded() || httpsCertChanged()) addedProtocols.add("HTTPS");
+        if (!addedProtocols.isEmpty()) {
+            tasks.add(new CreateELBListenerTask(this, addedProtocols));
+        }
+
+        List<String> deletedProtocols = Lists.newArrayList();
+        if (httpListenerRemoved()) deletedProtocols.add("HTTP");
+        if (httpsListenerRemoved() || httpsCertChanged()) deletedProtocols.add("HTTPS");
+        if (!deletedProtocols.isEmpty()) {
+            tasks.add(new DeleteELBListenerTask(this, deletedProtocols));
         }
     }
 
@@ -112,10 +125,6 @@ public class ELB extends Resource {
             if (cert.changed()) return true;
         }
         return false;
-    }
-
-    private boolean listenerChanged() {
-        return httpListenerAdded() || httpListenerRemoved() || httpsListenerAdded() || httpsListenerRemoved() || httpsCertChanged();
     }
 
     private boolean hasRemoteHTTPListener() {
