@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.6.5 (10/30/2015 - )
+* elasticsearch: update to 2.0
+
 ### 1.6.4 (10/30/2015)
 * task: validate resourceId passed in
 * deploy: wait random time before deploy to avoid AWS ASG rate limit
