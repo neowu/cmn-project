@@ -52,6 +52,8 @@ public class DeployASGroupTask extends Task<ASGroup> {
 
         oldInstanceIds = listOldInstances();
 
+        Threads.sleepRoughly(Duration.ofSeconds(5));    // shuffle asg deployment, to avoid request rate limitation of AWS ASG
+
         updateLaunchConfigIfChanged(context.env);
 
         int capacityDuringDeployment = capacityDuringDeployment(resource.remoteASGroup.getDesiredCapacity(), resource.desiredSize);

@@ -1,5 +1,9 @@
 ## Change log
 
+### 1.6.4 (10/30/2015)
+* task: validate resourceId passed in
+* deploy: wait random time before deploy to avoid AWS ASG rate limit
+
 ### 1.6.3 (10/29/2015)
 * elb: check cert local config if specified
 * elb: AWS IAM cert deletion behavior changed, make update cert to delete ELB listener first

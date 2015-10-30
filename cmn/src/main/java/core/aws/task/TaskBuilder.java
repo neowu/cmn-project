@@ -7,6 +7,7 @@ import core.aws.resource.ResourceStatus;
 import core.aws.resource.Resources;
 import core.aws.resource.ServerResource;
 import core.aws.resource.image.Image;
+import core.aws.util.Exceptions;
 import core.aws.util.Lists;
 import core.aws.workflow.Tasks;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author neo
@@ -53,6 +55,12 @@ public class TaskBuilder {
     }
 
     private void serverTasks(List<String> resourceIds, Tasks tasks) {
+        if (resourceIds != null) {
+            Optional<String> invalidResourceId = resourceIds.stream().filter(resourceId -> !resources.stream().anyMatch(resource -> resource.id.equals(resourceId))).findFirst();
+            if (invalidResourceId.isPresent())
+                throw Exceptions.error("resourceId is invalid, resourceId={}", invalidResourceId.get());
+        }
+
         resources.stream().filter(ServerResource.class::isInstance).forEach(resource -> {
             if (resourceIds == null || resourceIds.contains(resource.id)) {
                 if (resource.status == ResourceStatus.LOCAL_REMOTE) {
