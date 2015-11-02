@@ -27,6 +27,3 @@
 
 - name: enable elasticsearch service
   service: name=elasticsearch enabled=yes
-
-- name: install elasticsearch head
-  command: /usr/share/elasticsearch/bin/plugin install mobz/elasticsearch-head creates=/usr/share/elasticsearch/plugins/head
