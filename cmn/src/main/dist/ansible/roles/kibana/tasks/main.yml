@@ -2,7 +2,7 @@
   apt_key: url=https://packages.elasticsearch.org/GPG-KEY-elasticsearch
 
 - name: add kibana repo
-  apt_repository: repo='deb http://packages.elasticsearch.org/kibana/4.1/debian stable main'
+  apt_repository: repo='deb http://packages.elastic.co/kibana/4.1/debian stable main'
 
 - name: install kibana
   apt: name=kibana
