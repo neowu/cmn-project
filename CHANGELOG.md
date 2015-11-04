@@ -1,7 +1,8 @@
 ## Change log
 
-### 1.6.5 (10/30/2015 - 11/02/2015)
+### 1.6.5 (10/30/2015 - 11/04/2015)
 * elasticsearch: update to 2.0
+* elasticsearch: general tuning settings
 
 ### 1.6.4 (10/30/2015)
 * task: validate resourceId passed in
