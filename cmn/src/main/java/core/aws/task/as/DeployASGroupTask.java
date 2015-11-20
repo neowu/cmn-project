@@ -71,9 +71,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
             .withDesiredCapacity(capacityDuringDeployment)
             .withMaxSize(Math.max(resource.maxSize, capacityDuringDeployment)));
 
-        if (oldLaunchConfigName != null) {
-            AWS.as.deleteLaunchConfig(oldLaunchConfigName);
-        }
+        if (oldLaunchConfigName != null) AWS.as.deleteLaunchConfig(oldLaunchConfigName);
 
         while (true) {
             waitUntilAllNewInstancesReady();
