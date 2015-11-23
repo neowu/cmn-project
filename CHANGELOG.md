@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.6.6 (11/23/2015)
+* ec2: start instance will reattach instance to ELB, due to ELB will not refresh instance if its IP changed
+
 ### 1.6.5 (10/30/2015 - 11/04/2015)
 * elasticsearch: update to 2.0
 * elasticsearch: general tuning settings
