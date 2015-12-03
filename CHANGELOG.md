@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.6.7 (12/03/2015)
+* nginx: update gzip type (remove text/html since it's default)
+
 ### 1.6.6 (11/23/2015)
 * ec2: start instance will reattach instance to ELB, due to ELB will not refresh instance if its IP changed
 

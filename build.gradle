@@ -4,7 +4,7 @@ subprojects {
     apply from: file("${rootDir}/gradle/quality.gradle")
 
     group = 'core.aws'
-    version = '1.6.6'
+    version = '1.6.7'
 }
 
 def awsVersion = '1.10.27'
