@@ -44,7 +44,7 @@ public class CreateNATTask extends Task<NAT> {
 
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(resource.keyPair.remoteKeyPair.getKeyName())
-            .withInstanceType(InstanceType.M3Medium)
+            .withInstanceType(InstanceType.T2Small)
             .withImageId(resource.image.imageId())
             .withMinCount(1)
             .withMaxCount(1);
