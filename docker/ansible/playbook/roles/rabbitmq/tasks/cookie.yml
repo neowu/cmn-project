@@ -1,0 +1,8 @@
+- name: stop rabbitmq service
+  service: name=rabbitmq-server state=stopped
+
+- name: update /var/lib/rabbitmq/.erlang.cookie
+  copy: content="{{rabbitmq_erlang_cookie}}" dest=/var/lib/rabbitmq/.erlang.cookie owner=rabbitmq group=rabbitmq mode=0400
+
+- name: start rabbitmq service
+  service: name=rabbitmq-server state=started

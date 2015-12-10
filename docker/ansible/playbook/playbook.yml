@@ -1,0 +1,20 @@
+- hosts: localhost
+  roles: [sys, rabbitmq]
+  vars:
+    rabbitmq_erlang_cookie: DDDTIOFCNHHJPAUZYHAS
+#    elasticsearch_heap_size: 1g
+#    supervisor_programs:
+#      demo:
+#        command: '/opt/app/demo-service-3.0.0/bin/demo-service'
+#        env: 'JAVA_OPTS="-XX:+UseG1GC -Xms100m -Xmx100m"'
+    # nginx_default_conf: "{{lookup('file','/vagrant/nginx.conf')}}"
+
+  tasks:
+#    - service: name=puppet enabled=no state=stopped
+#    - service: name=chef-client enabled=no state=stopped
+
+#    - rabbitmq_user: user=rabbitmq password=rabbitmq read_priv=.* write_priv=.* state=present
+
+#    - service: name=mongod enabled=no state=stopped
+#    - service: name=rabbitmq-server enabled=no state=stopped
+#    - service: name=mysql enabled=no state=stopped

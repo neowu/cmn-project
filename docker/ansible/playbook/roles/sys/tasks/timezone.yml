@@ -1,0 +1,3 @@
+- name: update /etc/timezone
+  template: src=etc/timezone.j2 dest=/etc/timezone owner=root group=root mode=0644
+  notify: update-timezone
