@@ -4,7 +4,6 @@ import core.aws.plan.as.ASGroupTaskPlanner;
 import core.aws.plan.ec2.InstanceTaskPlanner;
 import core.aws.plan.ec2.SGTaskPlanner;
 import core.aws.plan.elb.ELBTaskPlanner;
-import core.aws.plan.sns.SNSTaskPlanner;
 import core.aws.plan.vpc.InternetGatewayTaskPlanner;
 import core.aws.plan.vpc.NATTaskPlanner;
 import core.aws.plan.vpc.RouteTableTaskPlanner;
@@ -24,6 +23,5 @@ public class TaskPlanner {
         new InternetGatewayTaskPlanner(tasks).plan();
         new ELBTaskPlanner(tasks).plan();
         new ASGroupTaskPlanner(tasks).plan();
-        new SNSTaskPlanner(tasks).plan();
     }
 }

@@ -27,8 +27,6 @@ public class AWS {
     public static ElasticLoadBalancing elb;
     public static IAM iam;
     public static AutoScaling as;
-    public static SQS sqs;
-    public static SNS sns;
     public static CloudWatch cloudWatch;
 
     public static void initialize(Environment env) throws IOException {
@@ -42,9 +40,7 @@ public class AWS {
         elb = new ElasticLoadBalancing(provider, region);
         s3 = new S3(provider, region);
         iam = new IAM(provider, region);
-        sqs = new SQS(provider, region);
         as = new AutoScaling(provider, region);
-        sns = new SNS(provider, region);
         cloudWatch = new CloudWatch(provider, region);
     }
 

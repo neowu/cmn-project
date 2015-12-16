@@ -12,8 +12,6 @@ import core.aws.local.env.EnvLoader;
 import core.aws.local.image.AMILoader;
 import core.aws.local.image.AMIsLoader;
 import core.aws.local.s3.S3Loader;
-import core.aws.local.sns.SNSLoader;
-import core.aws.local.sqs.SQSLoader;
 import core.aws.local.vpc.SubnetLoader;
 import core.aws.resource.Resource;
 import core.aws.resource.Resources;
@@ -50,8 +48,6 @@ public class ResourcesLoader {
         localResourceLoaders.put("cert", new ServerCertLoader());
         localResourceLoaders.put("elb", new ELBLoader());
         localResourceLoaders.put("instance-profile", new InstanceProfileLoader());
-        localResourceLoaders.put("sns", new SNSLoader());
-        localResourceLoaders.put("sqs", new SQSLoader());
         localResourceLoaders.put("auto-scaling", new ASGroupLoader());
     }
 

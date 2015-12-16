@@ -3,6 +3,7 @@
 ### 1.6.8 (12/10/2015 - )
 * ansible: removed varnish, don't plan to use
 * docker: added docker folder for local dev
+* sns: removed sns and sqs support
 
 ### 1.6.7 (12/03/2015)
 * nginx: update gzip type (remove text/html since it's default)

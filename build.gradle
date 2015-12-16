@@ -30,8 +30,6 @@ project(':cmn') {
                 "com.amazonaws:aws-java-sdk-cloudwatch:${awsVersion}",
                 "com.amazonaws:aws-java-sdk-iam:${awsVersion}",
                 "com.amazonaws:aws-java-sdk-s3:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-sns:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-sqs:${awsVersion}",
                 'org.slf4j:slf4j-api:1.7.12',
                 'org.slf4j:jcl-over-slf4j:1.7.12',
                 'ch.qos.logback:logback-classic:1.1.3',
