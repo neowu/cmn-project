@@ -1,10 +1,11 @@
 ## Change log
 
-### 1.6.8 (12/10/2015 - )
+### 1.6.8 (12/10/2015 - 12/17/2015)
 * ansible: removed varnish, don't plan to use
 * docker: added docker folder for local dev
 * sns: removed sns and sqs support
 * tag: AWS bugs, the tag system may return old AMI id, put fix to ignore and warning if it happens
+* elasticsearch: update default bulk queue_size from 50 to 500
 
 ### 1.6.7 (12/03/2015)
 * nginx: update gzip type (remove text/html since it's default)
