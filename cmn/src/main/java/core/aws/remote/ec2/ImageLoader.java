@@ -30,8 +30,11 @@ public class ImageLoader extends Loader {
                 image.get().foundInRemote();
 
                 com.amazonaws.services.ec2.model.Image remoteImage = remoteImages.get(tag.remoteResourceId);
-                if ("available".equals(remoteImage.getState()))
+                if (remoteImage != null && "available".equals(remoteImage.getState())) {
                     image.get().remoteImages.put(tag.version(), remoteImage);
+                } else {
+                    logger.warn("ami is inconsistent with tag, please check aws, resourceId={}, version={}, amiId={}", tag.resourceId(), tag.version(), tag.remoteResourceId);
+                }
             } else {
                 logger.warn("found unused image, name={}, version={}", tag.resourceId(), tag.version());
             }
