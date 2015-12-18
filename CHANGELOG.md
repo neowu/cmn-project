@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.6.9 (12/18/2015 - )
+* iam: handle deleting instance profile but without role (not expected state, but make cmn ignore it)
+
 ### 1.6.8 (12/10/2015 - 12/17/2015)
 * ansible: removed varnish, don't plan to use
 * docker: added docker folder for local dev
