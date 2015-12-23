@@ -1,2 +1,1 @@
-ec2_cloudwatch_metrics: []
 ec2_log_s3_bucket: ""

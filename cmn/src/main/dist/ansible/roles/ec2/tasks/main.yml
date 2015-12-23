@@ -4,15 +4,8 @@
 - name: install pip
   apt: name=python-pip
 
-- name: install awscli/boto
-  pip: name={{item}}
-  with_items: [awscli, boto]
+- name: install awscli
+  pip: name=awscli
 
 - include: s3-upload-log.yml
   when: ec2_log_s3_bucket != ""
-
-- include: cloudwatch-linux.yml
-  when: '"linux" in ec2_cloudwatch_metrics'
-
-- include: cloudwatch-java.yml
-  when: '"java" in ec2_cloudwatch_metrics'

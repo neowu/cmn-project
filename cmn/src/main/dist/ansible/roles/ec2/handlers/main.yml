@@ -1,2 +1,0 @@
-- name: mount-ephemeral
-  script: /opt/ec2/mount-ephemeral.sh

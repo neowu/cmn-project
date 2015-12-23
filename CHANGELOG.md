@@ -2,6 +2,7 @@
 
 ### 1.6.9 (12/18/2015 - )
 * iam: handle deleting instance profile but without role (not expected state, but make cmn ignore it)
+* cloudwatch: removed ec2_cloudwatch_metrics, not useful to us
 
 ### 1.6.8 (12/10/2015 - 12/17/2015)
 * ansible: removed varnish, don't plan to use
