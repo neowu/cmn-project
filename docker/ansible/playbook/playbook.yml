@@ -1,7 +1,7 @@
 - hosts: localhost
-  roles: [sys, rabbitmq]
+  roles: [sys, elasticsearch]
   vars:
-    rabbitmq_erlang_cookie: DDDTIOFCNHHJPAUZYHAS
+#    rabbitmq_erlang_cookie: DDDTIOFCNHHJPAUZYHAS
 #    elasticsearch_heap_size: 1g
 #    supervisor_programs:
 #      demo:

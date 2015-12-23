@@ -1,0 +1,29 @@
+- name: add elasticsearch repo key
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch
+
+- name: add elasticsearch repo
+  apt_repository: repo='deb http://packages.elastic.co/elasticsearch/2.x/debian stable main'
+
+- name: install elasticsearch
+  apt: name=elasticsearch
+
+- name: update /etc/elasticsearch/elasticsearch.yml
+  template: src=etc/elasticsearch/elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
+  notify: restart-elasticsearch
+
+- name: create /opt/log/elasticsearch
+  file: path=/opt/log/elasticsearch owner=elasticsearch group=elasticsearch mode=0755 state=directory
+
+- name: update /etc/elasticsearch/logging.yml
+  copy: src=etc/elasticsearch/logging.yml dest=/etc/elasticsearch/logging.yml
+  notify: restart-elasticsearch
+
+- name: update /etc/logrotate.d/elasticsearch
+  copy: src=etc/logrotate.d/elasticsearch dest=/etc/logrotate.d/elasticsearch
+
+- name: update /etc/default/elasticsearch
+  template: src=etc/default/elasticsearch.j2 dest=/etc/default/elasticsearch
+  notify: restart-elasticsearch
+
+- name: enable elasticsearch service
+  service: name=elasticsearch enabled=yes
