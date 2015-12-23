@@ -8,7 +8,7 @@ node name can be configured via via https://www.rabbitmq.com/man/rabbitmq-env.co
 currently it's not necessary to maintain thru cmn.
 
 ## cluster
-port 4369, 25672 needs to open between cluster nodes, typical sg setup is like following
+* port 4369, 25672 needs to open between cluster nodes, typical sg setup is like following
 ```
 - security-group[queue]:
     ingress:
@@ -16,7 +16,12 @@ port 4369, 25672 needs to open between cluster nodes, typical sg setup is like f
       - {security-group: queue, protocol: [4369, 25672]}
 ```
 
-on new server, following commands is to join cluster (as root)
+* erlang cookie need to be specified for all nodes
+```
+rabbitmq_erlang_cookie: "xxx"
+```
+
+* on new server, following commands is to join cluster (as root)
 ```
 rabbitmqctl stop_app
 rabbitmqctl join_cluster rabbit@master
