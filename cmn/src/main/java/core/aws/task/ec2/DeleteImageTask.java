@@ -1,5 +1,6 @@
 package core.aws.task.ec2;
 
+import com.amazonaws.services.ec2.model.DeleteSnapshotRequest;
 import com.amazonaws.services.ec2.model.DeregisterImageRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
@@ -22,9 +23,12 @@ public class DeleteImageTask extends core.aws.workflow.Task<Image> {
 
     @Override
     public void execute(Context context) throws Exception {
-        AWS.ec2.ec2.deregisterImage(new DeregisterImageRequest(deletedImage.getImageId()));
+        String snapshotId = deletedImage.getBlockDeviceMappings().get(0).getEbs().getSnapshotId();  // our image always uses EBS as first and only drive
 
-        context.output("ami/" + resource.id, Strings.format("deletedImageId={}, deletedImageName={}", deletedImage.getImageId(), deletedImage.getName()));
+        AWS.ec2.ec2.deregisterImage(new DeregisterImageRequest(deletedImage.getImageId()));
+        AWS.ec2.ec2.deleteSnapshot(new DeleteSnapshotRequest(snapshotId));
+
+        context.output("ami/" + resource.id, Strings.format("deletedImageId={}, deletedImageName={}, deletedSnapshotId={}", deletedImage.getImageId(), deletedImage.getName(), snapshotId));
     }
 
     @Override
