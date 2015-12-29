@@ -7,6 +7,7 @@ import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.AmazonEC2Client;
 import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.AvailabilityZone;
+import com.amazonaws.services.ec2.model.BlockDeviceMapping;
 import com.amazonaws.services.ec2.model.CreateKeyPairRequest;
 import com.amazonaws.services.ec2.model.CreateKeyPairResult;
 import com.amazonaws.services.ec2.model.CreateSecurityGroupRequest;
@@ -14,6 +15,8 @@ import com.amazonaws.services.ec2.model.CreateSecurityGroupResult;
 import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.amazonaws.services.ec2.model.DeleteSecurityGroupRequest;
+import com.amazonaws.services.ec2.model.DeleteSnapshotRequest;
+import com.amazonaws.services.ec2.model.DeregisterImageRequest;
 import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesResult;
@@ -23,6 +26,7 @@ import com.amazonaws.services.ec2.model.DescribeInstancesResult;
 import com.amazonaws.services.ec2.model.DescribeKeyPairsRequest;
 import com.amazonaws.services.ec2.model.DescribeTagsRequest;
 import com.amazonaws.services.ec2.model.DescribeTagsResult;
+import com.amazonaws.services.ec2.model.EbsBlockDevice;
 import com.amazonaws.services.ec2.model.Image;
 import com.amazonaws.services.ec2.model.Instance;
 import com.amazonaws.services.ec2.model.InstanceStatus;
@@ -216,6 +220,23 @@ public class EC2 {
         logger.info("describe images, imageIds={}", imageIds);
         DescribeImagesResult result = ec2.describeImages(new DescribeImagesRequest().withImageIds(imageIds));
         return result.getImages();
+    }
+
+    public void deleteImage(Image image) {
+        String imageId = image.getImageId();
+        logger.info("delete image, imageId={}", imageId);
+        ec2.deregisterImage(new DeregisterImageRequest(imageId));
+
+        // our image always uses EBS as first and only drive
+        List<BlockDeviceMapping> mappings = image.getBlockDeviceMappings();
+        if (!mappings.isEmpty()) {
+            EbsBlockDevice ebs = mappings.get(0).getEbs();
+            if (ebs != null) {
+                String snapshotId = ebs.getSnapshotId();
+                logger.info("delete snapshot, snapshotId={}", snapshotId);
+                ec2.deleteSnapshot(new DeleteSnapshotRequest(snapshotId));
+            }
+        }
     }
 
     public void waitUntilRunning(List<String> instanceIds) throws InterruptedException {
