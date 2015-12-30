@@ -5,7 +5,7 @@ import core.aws.plan.ec2.InstanceTaskPlanner;
 import core.aws.plan.ec2.SGTaskPlanner;
 import core.aws.plan.elb.ELBTaskPlanner;
 import core.aws.plan.vpc.InternetGatewayTaskPlanner;
-import core.aws.plan.vpc.NATTaskPlanner;
+import core.aws.plan.vpc.NATGatewayTaskPlanner;
 import core.aws.plan.vpc.RouteTableTaskPlanner;
 import core.aws.plan.vpc.SubnetTaskPlanner;
 import core.aws.workflow.Tasks;
@@ -19,7 +19,7 @@ public class TaskPlanner {
         new InstanceTaskPlanner(tasks).plan();
         new SubnetTaskPlanner(tasks).plan();
         new RouteTableTaskPlanner(tasks).plan();
-        new NATTaskPlanner(tasks).plan();
+        new NATGatewayTaskPlanner(tasks).plan();
         new InternetGatewayTaskPlanner(tasks).plan();
         new ELBTaskPlanner(tasks).plan();
         new ASGroupTaskPlanner(tasks).plan();

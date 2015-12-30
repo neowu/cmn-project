@@ -36,7 +36,7 @@ public class CreateRouteTableTask extends Task<RouteTable> {
         } else {
             AWS.vpc.ec2.createRoute(new CreateRouteRequest()
                 .withRouteTableId(resource.remoteRouteTable.getRouteTableId())
-                .withInstanceId(resource.nat.remoteInstance.getInstanceId())
+                .withNatGatewayId(resource.nat.remoteNATGateway.getNatGatewayId())
                 .withDestinationCidrBlock("0.0.0.0/0"));
         }
 

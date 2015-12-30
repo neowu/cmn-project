@@ -4,11 +4,11 @@ import com.amazonaws.services.ec2.model.Route;
 import core.aws.plan.Planner;
 import core.aws.resource.vpc.RouteTable;
 import core.aws.task.vpc.CreateInternetGatewayTask;
-import core.aws.task.vpc.CreateNATTask;
+import core.aws.task.vpc.CreateNATGatewayTask;
 import core.aws.task.vpc.CreateRouteTableTask;
 import core.aws.task.vpc.CreateVPCTask;
 import core.aws.task.vpc.DeleteInternetGatewayTask;
-import core.aws.task.vpc.DeleteNATTask;
+import core.aws.task.vpc.DeleteNATGatewayTask;
 import core.aws.task.vpc.DeleteRouteTableTask;
 import core.aws.task.vpc.DeleteVPCTask;
 import core.aws.workflow.Tasks;
@@ -39,9 +39,9 @@ public class RouteTableTaskPlanner extends Planner {
                     all(DeleteInternetGatewayTask.class).stream()
                         .filter(task -> task.resource.remoteInternetGatewayId.equals(route.getGatewayId()))
                         .findAny().ifPresent(task -> task.dependsOn(routeTableTask));
-                } else if (route.getInstanceId() != null) {
-                    all(DeleteNATTask.class).stream()
-                        .filter(task -> task.resource.remoteInstance.getInstanceId().equals(route.getInstanceId()))
+                } else if (route.getNatGatewayId() != null) {
+                    all(DeleteNATGatewayTask.class).stream()
+                        .filter(task -> task.resource.remoteNATGateway.getNatGatewayId().equals(route.getNatGatewayId()))
                         .findAny().ifPresent(task -> task.dependsOn(routeTableTask));
                 }
             }
@@ -55,7 +55,7 @@ public class RouteTableTaskPlanner extends Planner {
             RouteTable routeTable = routeTableTask.resource;
 
             if (routeTable.nat != null) {
-                find(CreateNATTask.class)
+                find(CreateNATGatewayTask.class)
                     .ifPresent(routeTableTask::dependsOn);
             }
 

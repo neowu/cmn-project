@@ -29,7 +29,6 @@ public class InstanceLoader extends Loader {
         Map<String, EnvTag> instanceIdLocalResourceIdMappings = new HashMap<>();
 
         all(Instance.class)
-            .filter(tag -> !"nat".equals(tag.type()))
             .forEach(tag -> instanceIdLocalResourceIdMappings.put(tag.remoteResourceId, tag));
 
         if (!instanceIdLocalResourceIdMappings.isEmpty())

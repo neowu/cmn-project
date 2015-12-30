@@ -10,10 +10,14 @@ import com.amazonaws.services.ec2.model.AllocateAddressRequest;
 import com.amazonaws.services.ec2.model.AllocateAddressResult;
 import com.amazonaws.services.ec2.model.AssociateAddressRequest;
 import com.amazonaws.services.ec2.model.AttachInternetGatewayRequest;
+import com.amazonaws.services.ec2.model.CreateNatGatewayRequest;
 import com.amazonaws.services.ec2.model.CreateSubnetRequest;
 import com.amazonaws.services.ec2.model.CreateVpcRequest;
+import com.amazonaws.services.ec2.model.DeleteNatGatewayRequest;
 import com.amazonaws.services.ec2.model.DescribeAddressesRequest;
 import com.amazonaws.services.ec2.model.DescribeAddressesResult;
+import com.amazonaws.services.ec2.model.DescribeNatGatewaysRequest;
+import com.amazonaws.services.ec2.model.DescribeNatGatewaysResult;
 import com.amazonaws.services.ec2.model.DescribeRouteTablesRequest;
 import com.amazonaws.services.ec2.model.DescribeSubnetsRequest;
 import com.amazonaws.services.ec2.model.DescribeVpcsRequest;
@@ -22,6 +26,7 @@ import com.amazonaws.services.ec2.model.DisassociateAddressRequest;
 import com.amazonaws.services.ec2.model.Filter;
 import com.amazonaws.services.ec2.model.InternetGateway;
 import com.amazonaws.services.ec2.model.ModifyVpcAttributeRequest;
+import com.amazonaws.services.ec2.model.NatGateway;
 import com.amazonaws.services.ec2.model.ReleaseAddressRequest;
 import com.amazonaws.services.ec2.model.RouteTable;
 import com.amazonaws.services.ec2.model.Vpc;
@@ -119,5 +124,47 @@ public class EC2VPC {
     public List<RouteTable> describeRouteTables(Collection<String> routeTableIds) {
         logger.info("describe route tables, routeTableIds={}", routeTableIds);
         return ec2.describeRouteTables(new DescribeRouteTablesRequest().withRouteTableIds(routeTableIds)).getRouteTables();
+    }
+
+    public NatGateway createNATGateway(String subnetId, String ip) {
+        logger.info("create nat gateway, subnetId={}, ip={}", subnetId, ip);
+
+        List<Address> addresses = AWS.vpc.ec2.describeAddresses(new DescribeAddressesRequest().withPublicIps(ip)).getAddresses();
+        if (addresses.isEmpty()) throw new Error("cannot find eip, ip=" + ip);
+        Address address = addresses.get(0);
+        if (address.getAssociationId() != null) throw new Error("eip must not associated with other resource, ip=" + ip);
+
+        CreateNatGatewayRequest request = new CreateNatGatewayRequest()
+            .withSubnetId(subnetId)
+            .withAllocationId(address.getAllocationId());
+        String gatewayId = ec2.createNatGateway(request).getNatGateway().getNatGatewayId();
+
+        while (true) {
+            Threads.sleepRoughly(Duration.ofSeconds(30));
+            NatGateway gateway = describeNATGateway(gatewayId);
+            String state = gateway.getState();
+            if ("pending".equals(state)) continue;
+            if (!"available".equals(state)) throw new Error("failed to create nat gateway, gatewayId=" + gatewayId + ", state=" + state);
+            return gateway;
+        }
+    }
+
+    public void deleteNATGateway(String gatewayId) {
+        logger.info("delete nat gateway, natGatewayId={}", gatewayId);
+        AWS.vpc.ec2.deleteNatGateway(new DeleteNatGatewayRequest().withNatGatewayId(gatewayId));
+
+        while (true) {
+            Threads.sleepRoughly(Duration.ofSeconds(30));
+            NatGateway gateway = AWS.vpc.describeNATGateway(gatewayId);
+            String state = gateway.getState();
+            if ("deleting".equals(state)) continue;
+            if (!"deleted".equals(state)) throw new Error("failed to delete nat gateway, gatewayId=" + gatewayId + ", state=" + state);
+            return;
+        }
+    }
+
+    private NatGateway describeNATGateway(String gatewayId) {
+        DescribeNatGatewaysResult result = ec2.describeNatGateways(new DescribeNatGatewaysRequest().withNatGatewayIds(gatewayId));
+        return result.getNatGateways().get(0);
     }
 }

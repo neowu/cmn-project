@@ -7,7 +7,7 @@ import core.aws.task.elb.DeleteELBTask;
 import core.aws.task.vpc.CreateInternetGatewayTask;
 import core.aws.task.vpc.CreateVPCTask;
 import core.aws.task.vpc.DeleteInternetGatewayTask;
-import core.aws.task.vpc.DeleteNATTask;
+import core.aws.task.vpc.DeleteNATGatewayTask;
 import core.aws.task.vpc.DeleteVPCTask;
 import core.aws.workflow.Tasks;
 
@@ -32,7 +32,7 @@ public class InternetGatewayTaskPlanner extends Planner {
                 .ifPresent(task -> task.dependsOn(internetGatewayTask));
 
             // to remove internet gateway requires all mapped public ip deleted
-            all(DeleteNATTask.class).forEach(internetGatewayTask::dependsOn);
+            all(DeleteNATGatewayTask.class).forEach(internetGatewayTask::dependsOn);
 
             // simply wait until all instance terminated, in theory only need to wait all public subnet instances
             all(DeleteInstanceTask.class).forEach(internetGatewayTask::dependsOn);

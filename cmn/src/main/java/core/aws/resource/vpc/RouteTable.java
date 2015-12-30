@@ -12,7 +12,7 @@ public class RouteTable extends Resource {
     public static final String PUBLIC_ROUTE_TABLE_RESOURCE_ID = "public";
     public static final String PRIVATE_ROUTE_TABLE_RESOURCE_ID = "private";
     public com.amazonaws.services.ec2.model.RouteTable remoteRouteTable;
-    public NAT nat;
+    public NATGateway nat;
     public InternetGateway internetGateway;
     public VPC vpc;
 

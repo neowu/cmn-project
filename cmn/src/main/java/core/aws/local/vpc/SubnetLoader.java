@@ -5,9 +5,8 @@ import core.aws.local.DependencyResolvers;
 import core.aws.local.LocalResourceLoader;
 import core.aws.local.ResourceNode;
 import core.aws.resource.Resources;
-import core.aws.resource.ec2.KeyPair;
 import core.aws.resource.vpc.InternetGateway;
-import core.aws.resource.vpc.NAT;
+import core.aws.resource.vpc.NATGateway;
 import core.aws.resource.vpc.RouteTable;
 import core.aws.resource.vpc.Subnet;
 import core.aws.resource.vpc.SubnetType;
@@ -37,8 +36,14 @@ public class SubnetLoader implements LocalResourceLoader {
         if (type == SubnetType.PUBLIC) {
             addInternetGateway(node, resources, resolvers);
             addPublicRouteTable(node, resources, resolvers);
+
+            node.getString("nat").ifPresent(ip -> {
+                final NATGateway nat = resources.add(new NATGateway());
+                nat.subnet = subnet;
+                nat.ip = ip;
+            });
+
         } else {
-            addNAT(node, resources, resolvers, env);
             addPrivateRouteTable(node, resources, resolvers);
         }
 
@@ -56,20 +61,7 @@ public class SubnetLoader implements LocalResourceLoader {
             final RouteTable routeTable = resources.add(new RouteTable(RouteTable.PRIVATE_ROUTE_TABLE_RESOURCE_ID));
             resolvers.add(node, () -> {
                 routeTable.vpc = resources.vpc;
-                routeTable.nat = resources.find(NAT.class, NAT.RESOURCE_ID).get();
-            });
-        }
-    }
-
-    private void addNAT(ResourceNode node, Resources resources, DependencyResolvers resolvers, Environment env) {
-        if (!resources.find(NAT.class, NAT.RESOURCE_ID).isPresent()) {
-            final NAT nat = resources.add(new NAT(NAT.RESOURCE_ID));
-            nat.keyPair = resources.find(KeyPair.class, NAT.RESOURCE_ID)
-                .orElseGet(() -> resources.add(new KeyPair(NAT.RESOURCE_ID, env.name + ":" + NAT.RESOURCE_ID)));
-            resolvers.add(node, () -> {
-                nat.vpc = resources.vpc;
-                nat.publicSubnet = resources.firstPublicSubnet().get();
-                nat.image = resources.ami(env.region, "nat");
+                routeTable.nat = resources.onlyOne(NATGateway.class).get();
             });
         }
     }
