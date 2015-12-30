@@ -76,12 +76,11 @@ public class EC2VPC {
         return result.getVpcs().get(0);
     }
 
-    public String createInternetGateway(String vpcId) {
+    public InternetGateway createInternetGateway(String vpcId) {
         logger.info("create internet gateway, vpcId={}", vpcId);
         InternetGateway internetGateway = ec2.createInternetGateway().getInternetGateway();
-        String internetGatewayId = internetGateway.getInternetGatewayId();
-        ec2.attachInternetGateway(new AttachInternetGatewayRequest().withVpcId(vpcId).withInternetGatewayId(internetGatewayId));
-        return internetGatewayId;
+        ec2.attachInternetGateway(new AttachInternetGatewayRequest().withVpcId(vpcId).withInternetGatewayId(internetGateway.getInternetGatewayId()));
+        return internetGateway;
     }
 
     private void enableVPCDNS(String vpcId) {

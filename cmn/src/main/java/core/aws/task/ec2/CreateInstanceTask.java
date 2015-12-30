@@ -3,7 +3,6 @@ package core.aws.task.ec2;
 import com.amazonaws.services.ec2.model.BlockDeviceMapping;
 import com.amazonaws.services.ec2.model.EbsBlockDevice;
 import com.amazonaws.services.ec2.model.IamInstanceProfileSpecification;
-import com.amazonaws.services.ec2.model.InstanceNetworkInterfaceSpecification;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.Tag;
 import core.aws.client.AWS;
@@ -36,10 +35,14 @@ public class CreateInstanceTask extends Task<Instance> {
 
     @Override
     public void execute(Context context) throws Exception {
+        String sgId = resource.securityGroup.remoteSecurityGroup.getGroupId();
+
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(resource.keyPair.remoteKeyPair.getKeyName())
             .withInstanceType(resource.instanceType)
             .withImageId(resource.ami.imageId())
+            .withSubnetId(resource.subnet.firstRemoteSubnet().getSubnetId())
+            .withSecurityGroupIds(sgId)
             .withMinCount(addedCount)
             .withMaxCount(addedCount)
             .withUserData(Base64.encodeBase64String(Strings.bytes(userData(context.env))));
@@ -47,14 +50,6 @@ public class CreateInstanceTask extends Task<Instance> {
         if (resource.instanceProfile != null)
             request.withIamInstanceProfile(new IamInstanceProfileSpecification()
                 .withName(resource.instanceProfile.remoteInstanceProfile.getInstanceProfileName()));
-
-        String sgId = resource.securityGroup.remoteSecurityGroup.getGroupId();
-
-        request.getNetworkInterfaces().add(new InstanceNetworkInterfaceSpecification()
-            .withDeviceIndex(0)
-            .withSubnetId(resource.subnet.firstRemoteSubnet().getSubnetId())
-            .withGroups(sgId)
-            .withAssociatePublicIpAddress(resource.subnet.type == SubnetType.PUBLIC));
 
         if (resource.ebs.rootVolumeSize != null) {
             request.getBlockDeviceMappings().add(new BlockDeviceMapping()

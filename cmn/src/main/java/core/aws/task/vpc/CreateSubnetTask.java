@@ -38,7 +38,8 @@ public class CreateSubnetTask extends Task<Subnet> {
 
         for (int i = 0; i < resource.cidrs.size(); i++) {
             String cidr = resource.cidrs.get(i);
-            com.amazonaws.services.ec2.model.Subnet subnet = AWS.vpc.createSubnet(new CreateSubnetRequest(resource.vpc.remoteVPC.getVpcId(), cidr).withAvailabilityZone(zones.get(i)));
+            com.amazonaws.services.ec2.model.Subnet subnet = AWS.vpc.createSubnet(new CreateSubnetRequest(resource.vpc.remoteVPC.getVpcId(), cidr)
+                .withAvailabilityZone(zones.get(i)));
             subnetIds.add(subnet.getSubnetId());
         }
 
