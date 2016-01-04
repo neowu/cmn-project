@@ -63,7 +63,8 @@ public class Cloud {
         // ssh is blocking task
         String resourceId = context.requiredParam(Param.RESOURCE_ID);
         String instanceIndex = context.param(Param.INSTANCE_INDEX);
-        SSHRunner runner = new SSHRunner(context.env, resourceId, instanceIndex == null ? null : Integer.parseInt(instanceIndex));
+        String tunnelResourceId = context.param(Param.SSH_TUNNEL_RESOURCE_ID);
+        SSHRunner runner = new SSHRunner(context.env, resourceId, instanceIndex == null ? null : Integer.parseInt(instanceIndex), tunnelResourceId);
         runner.run();
     }
 

@@ -12,9 +12,15 @@ public final class Lists {
         return new ArrayList<>();
     }
 
+    public static <T> List<T> newArrayList(T element) {
+        List<T> list = new ArrayList<>(1);
+        list.add(element);
+        return list;
+    }
+
     @SuppressWarnings("unchecked")
     public static <T> List<T> newArrayList(T... elements) {
-        List<T> list = new ArrayList<>();
+        List<T> list = new ArrayList<>(elements.length);
         Collections.addAll(list, elements);
         return list;
     }

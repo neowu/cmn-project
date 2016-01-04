@@ -1,8 +1,8 @@
 ## Change log
 
-### 1.7.0 (12/29/2015 - )
-TODO: * nat: support nat gateway
-TODO: detect ELB to internal change, AS group policy changes
+### 1.7.0 (12/29/2015 - 1/4/2015)
+* nat: support nat gateway
+* ssh: support tunnel to ssh to private subnet
 
 ### 1.6.9 (12/18/2015 - 12/29/2015)
 * iam: handle deleting instance profile but without role (not expected state, but make cmn ignore it)

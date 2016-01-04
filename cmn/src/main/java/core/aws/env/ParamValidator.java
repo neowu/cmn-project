@@ -26,7 +26,7 @@ public class ParamValidator {
         } else if (goal == Goal.PROVISION) {
             validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.RESOURCE_ID, Param.PACKAGE_DIR, Param.INSTANCE_INDEX, Param.PROVISION_PLAYBOOK), Lists.newArrayList(Param.RESOURCE_ID));
         } else if (goal == Goal.SSH) {
-            validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.RESOURCE_ID, Param.INSTANCE_INDEX), Lists.newArrayList(Param.RESOURCE_ID));
+            validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.RESOURCE_ID, Param.INSTANCE_INDEX, Param.SSH_TUNNEL_RESOURCE_ID), Lists.newArrayList(Param.RESOURCE_ID));
         } else {
             Asserts.fail("unknown goal, goal={}", goal);
         }
