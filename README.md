@@ -2,6 +2,7 @@
 cmn is a AWS resource manager. this tool is designed to support our own project, not to be a generic aws tool.
 
 ## TODO:
+* detect ELB to internal change, AS group policy changes
 * make Task not tied to resource, deleteTask should pass remoteResource only, refactory Task/Workflow
 * monitor, eval pcp.io? collectd (server/client) to rabbitmq to ES
 * elasticsearch AWS plugin
