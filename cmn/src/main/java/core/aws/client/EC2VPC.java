@@ -139,14 +139,19 @@ public class EC2VPC {
             .withAllocationId(address.getAllocationId());
         String gatewayId = ec2.createNatGateway(request).getNatGateway().getNatGatewayId();
 
+        NatGateway gateway;
         while (true) {
             Threads.sleepRoughly(Duration.ofSeconds(30));
-            NatGateway gateway = describeNATGateway(gatewayId);
+            gateway = describeNATGateway(gatewayId);
             String state = gateway.getState();
             if ("pending".equals(state)) continue;
-            if (!"available".equals(state)) throw new Error("failed to create nat gateway, gatewayId=" + gatewayId + ", state=" + state);
-            return gateway;
+            if ("available".equals(state)) {
+                break;
+            } else {
+                throw new Error("failed to create nat gateway, gatewayId=" + gatewayId + ", state=" + state);
+            }
         }
+        return gateway;
     }
 
     public void deleteNATGateway(String gatewayId) {
@@ -158,8 +163,11 @@ public class EC2VPC {
             NatGateway gateway = AWS.vpc.describeNATGateway(gatewayId);
             String state = gateway.getState();
             if ("deleting".equals(state)) continue;
-            if (!"deleted".equals(state)) throw new Error("failed to delete nat gateway, gatewayId=" + gatewayId + ", state=" + state);
-            return;
+            if ("deleted".equals(state)) {
+                break;
+            } else {
+                throw new Error("failed to delete nat gateway, gatewayId=" + gatewayId + ", state=" + state);
+            }
         }
     }
 
