@@ -1,6 +1,9 @@
 ## Change log
 
-### 1.7.0 (12/29/2015 - 1/4/2015)
+### 1.7.1 (1/25/2016 - )
+* ansbile: update command line param according to latest version (sudo->become)
+
+### 1.7.0 (12/29/2015 - 1/4/2016)
 * nat: support nat gateway
 * ssh: support tunnel to ssh to private subnet
 

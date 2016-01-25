@@ -18,8 +18,8 @@
 
     - name: clone project repo
       git: repo=git@bitbucket.org:demo/demo-project.git dest=/opt/build/depot/demo-project accept_hostkey=yes
-      sudo_user: ubuntu
+      become_user: ubuntu
 
     - name: clone env repo
       git: repo=git@bitbucket.org:demo/demo-env-project.git dest=/opt/build/depot/demo-env-project accept_hostkey=yes
-      sudo_user: ubuntu
+      become_user: ubuntu

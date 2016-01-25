@@ -70,7 +70,7 @@ public class AnsibleProvisioner {
     }
 
     String ansibleCommand() {
-        StringBuilder builder = new StringBuilder("ansible-playbook --sudo");
+        StringBuilder builder = new StringBuilder("ansible-playbook --become");
         if (!additionalVariables.isEmpty()) {
             builder.append(" -e '").append(JSON.toJSON(additionalVariables)).append('\'');
         }
