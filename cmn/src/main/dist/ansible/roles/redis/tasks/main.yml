@@ -1,8 +1,24 @@
+- name: update net.core.somaxconn
+  sysctl: name=net.core.somaxconn value=1024
+
+- name: update vm.overcommit_memory
+  sysctl: name=vm.overcommit_memory value=1
+
+- name: update /etc/init.d/disable-thp
+  copy: src=etc/init.d/disable-thp.sh dest=/etc/init.d/disable-thp owner=root group=root mode=0755
+
+- name: enable disable-thp service
+  service: name=disable-thp state=restarted enabled=yes
+
 - name: add redis repo
   apt_repository: repo=ppa:chris-lea/redis-server
 
 - name: install redis
   apt: name=redis-server
+
+- name: update /etc/default/redis-server
+  copy: src=etc/default/redis-server.conf dest=/etc/default/redis-server
+  notify: restart-redis
 
 - name: update /etc/redis/redis.conf
   copy: src=etc/redis/redis.conf dest=/etc/redis/redis.conf
