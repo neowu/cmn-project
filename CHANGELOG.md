@@ -1,9 +1,10 @@
 ## Change log
 
-### 1.7.1 (1/25/2016 - )
+### 1.7.1 (1/25/2016 - 2/3/2016)
 * ansbile: update command line param according to latest version (sudo->become)
 * mongo: update mongo role to 3.2.1
 * redis/mongo: add tuning settings, disable thp, set max nofile, maxconn, overcommit
+* supervisor: updated supervisor init script to adapt to ansible service restart (ansible "retart service" calls stop->start without delay)
 
 ### 1.7.0 (12/29/2015 - 1/4/2016)
 * nat: support nat gateway
