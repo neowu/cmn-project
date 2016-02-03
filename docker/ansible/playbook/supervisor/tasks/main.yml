@@ -5,13 +5,13 @@
   copy: src=etc/init.d/supervisor.sh dest=/etc/init.d/supervisor owner=root group=root mode=0755
 
 - name: create /opt/app
-  file: path=/opt/app owner=ubuntu group=ubuntu mode=0777 state=directory
+  file: path=/opt/app owner=root group=root mode=0777 state=directory
 
 - name: create /opt/log/supervisor
-  file: path=/opt/log/supervisor owner=ubuntu group=ubuntu mode=0755 state=directory
+  file: path=/opt/log/supervisor owner=root group=root mode=0755 state=directory
 
 - name: update /var/log/supervisor
-  file: path=/var/log/supervisor owner=ubuntu group=ubuntu mode=0755 state=directory
+  file: path=/var/log/supervisor owner=root group=root mode=0755 state=directory
 
 - name: update /etc/logrotate.d/supervisor
   copy: src=etc/logrotate.d/supervisor dest=/etc/logrotate.d/supervisor

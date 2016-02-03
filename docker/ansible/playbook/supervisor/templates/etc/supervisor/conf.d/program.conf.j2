@@ -1,0 +1,9 @@
+{% for key, value in supervisor_programs.iteritems() %}
+[program:{{key}}]
+command={{value.command}}
+user=root
+stdout_logfile=/var/log/supervisor/{{key}}-stdout.log
+stderr_logfile=/var/log/supervisor/{{key}}-stderr.log
+environment={{value.env|default('')}}
+
+{% endfor %}
