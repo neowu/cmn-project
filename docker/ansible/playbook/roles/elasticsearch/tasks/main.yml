@@ -27,3 +27,6 @@
 
 - name: enable elasticsearch service
   service: name=elasticsearch enabled=yes
+
+- name: install elasticsearch HQ
+  command: /usr/share/elasticsearch/bin/plugin install royrusso/elasticsearch-HQ creates=/usr/share/elasticsearch/plugins/hq
