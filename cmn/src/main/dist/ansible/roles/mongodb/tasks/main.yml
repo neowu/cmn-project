@@ -13,6 +13,12 @@
 - name: install mongodb
   apt: name=mongodb-org
 
+- name: create /opt/log/mongodb
+  file: path=/opt/log/mongodb owner=mongodb group=mongodb mode=0755 state=directory
+
+- name: update /etc/logrotate.d/mongod
+  copy: src=etc/logrotate.d/mongod.conf dest=/etc/logrotate.d/mongod
+
 - name: update /etc/mongod.conf
   copy: src=etc/mongod.conf dest=/etc/mongod.conf
   notify: restart-mongodb
