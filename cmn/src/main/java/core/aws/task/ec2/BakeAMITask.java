@@ -79,6 +79,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
         provisioner.additionalVariables.put("tomcat_service_state", "stopped");
         provisioner.additionalVariables.put("supervisor_service_state", "stopped");
         provisioner.additionalVariables.put("nginx_service_state", "stopped");
+        provisioner.additionalVariables.put("elasticsearch_heap_size", "1g");
         provisioner.provision();
 
         String imageId = createAMI(context, instance.getInstanceId());
