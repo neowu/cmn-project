@@ -37,12 +37,13 @@ public class CreateELBListenerTask extends Task<ELB> {
         }
 
         if (addedProtocols.contains("HTTPS")) {
+            String certARN = resource.amazonCertARN != null ? resource.amazonCertARN : resource.cert.remoteCert.getServerCertificateMetadata().getArn();
             request.getListeners().add(new Listener()
                 .withProtocol("HTTPS")
                 .withLoadBalancerPort(443)
                 .withInstanceProtocol("HTTP")
                 .withInstancePort(80)
-                .withSSLCertificateId(resource.cert.remoteCert.getServerCertificateMetadata().getArn()));
+                .withSSLCertificateId(certARN));
         }
 
         logger.info("create ELB listeners, request={}", request);

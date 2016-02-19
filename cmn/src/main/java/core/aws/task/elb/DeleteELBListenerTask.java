@@ -4,13 +4,11 @@ import com.amazonaws.services.elasticloadbalancing.model.DeleteLoadBalancerListe
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.resource.elb.ELB;
-import core.aws.util.Threads;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.Duration;
 import java.util.List;
 
 /**
@@ -42,9 +40,5 @@ public class DeleteELBListenerTask extends Task<ELB> {
 
         logger.info("delete ELB listeners, request={}", request);
         AWS.elb.elb.deleteLoadBalancerListeners(request);
-
-        if (deletedProtocols.contains("HTTPS")) {
-            Threads.sleepRoughly(Duration.ofSeconds(20)); // wait 20s to make change visible to IAM cert system
-        }
     }
 }

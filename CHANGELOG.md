@@ -1,9 +1,10 @@
 ## Change log
 
-### 1.7.2 (2/3/2016 - )
+### 1.7.2 (2/3/2016 - 2/19/2016)
 * es: install HQ plugin by default
 * redis: set timeout to 7200s
 * mongo: add logrotate conf
+* cert: support Amazon Cert for ELB
 
 ### 1.7.1 (1/25/2016 - 2/3/2016)
 * ansbile: update command line param according to latest version (sudo->become)

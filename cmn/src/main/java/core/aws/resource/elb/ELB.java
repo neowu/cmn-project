@@ -36,6 +36,7 @@ public class ELB extends Resource {
     public Subnet subnet;
     public Bucket accessLogBucket;
     public Optional<String> scheme = Optional.empty();   // currently only allowed value is "internal"
+    public String amazonCertARN;
 
     public ELB(String id) {
         super(id);
@@ -51,6 +52,10 @@ public class ELB extends Resource {
             Asserts.isTrue(name.length() <= 32, "max length of elb name is 32");
             Asserts.isTrue(name.matches("[a-zA-Z0-9\\-]+"), "elb name can only contain alphanumeric, and '-'");
         }
+
+        if (status == ResourceStatus.LOCAL_ONLY || status == ResourceStatus.LOCAL_REMOTE) {
+            Asserts.isTrue(amazonCertARN != null || cert != null, "https listener requires cert");
+        }
     }
 
     @Override
@@ -64,18 +69,22 @@ public class ELB extends Resource {
             tasks.add(new UpdateELBSGTask(this));
         }
 
+        CreateELBListenerTask createELBListenerTask = null;
         List<String> addedProtocols = Lists.newArrayList();
         if (httpListenerAdded()) addedProtocols.add("HTTP");
         if (httpsListenerAdded() || httpsCertChanged()) addedProtocols.add("HTTPS");
         if (!addedProtocols.isEmpty()) {
-            tasks.add(new CreateELBListenerTask(this, addedProtocols));
+            createELBListenerTask = new CreateELBListenerTask(this, addedProtocols);
+            tasks.add(createELBListenerTask);
         }
 
         List<String> deletedProtocols = Lists.newArrayList();
         if (httpListenerRemoved()) deletedProtocols.add("HTTP");
         if (httpsListenerRemoved() || httpsCertChanged()) deletedProtocols.add("HTTPS");
         if (!deletedProtocols.isEmpty()) {
-            tasks.add(new DeleteELBListenerTask(this, deletedProtocols));
+            DeleteELBListenerTask deleteELBListenerTask = new DeleteELBListenerTask(this, deletedProtocols);
+            if (createELBListenerTask != null) createELBListenerTask.dependsOn(deleteELBListenerTask);
+            tasks.add(deleteELBListenerTask);
         }
     }
 
@@ -117,13 +126,18 @@ public class ELB extends Resource {
     public boolean httpsCertChanged() {
         Optional<ListenerDescription> remoteHTTPSListener = findRemoteHTTPSListener();
 
-        if (listenHTTPS && remoteHTTPSListener.isPresent()) {
-            String remoteCertARN = remoteHTTPSListener.get().getListener().getSSLCertificateId();
+        if (!listenHTTPS || !remoteHTTPSListener.isPresent()) return false;
+        String remoteCertARN = remoteHTTPSListener.get().getListener().getSSLCertificateId();
+
+        if (cert != null) {    // cert files
             if (cert.status == ResourceStatus.LOCAL_ONLY
                 || !cert.remoteCert.getServerCertificateMetadata().getArn().equals(remoteCertARN))
                 return true;
             if (cert.changed()) return true;
+        } else if (!remoteCertARN.equals(amazonCertARN)) {
+            return true;
         }
+
         return false;
     }
 

@@ -44,9 +44,13 @@ public class ELBLoader implements LocalResourceLoader {
         elb.scheme = scheme;
 
         resolvers.add(node, () -> {
-            if (serverCertId.isPresent()) {
-                elb.cert = resources.get(ServerCert.class, serverCertId.get());
-            }
+            serverCertId.ifPresent(id -> {
+                if (id.startsWith("arn:aws:acm:")) {
+                    elb.amazonCertARN = id;
+                } else {
+                    elb.cert = resources.get(ServerCert.class, id);
+                }
+            });
 
             elb.subnet = resources.get(Subnet.class, subnetId);
             elb.securityGroup = resources.get(SecurityGroup.class, securityGroupId);
