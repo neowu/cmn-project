@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.7.3 (3/1/2016)
+* ec2: pass ebs-optimized = true for m4/c4 instance, it's not necessary since it's enabled by default, but there is bug in AWS console, it needs to pass it to display correct value
+
 ### 1.7.2 (2/3/2016 - 2/19/2016)
 * es: install HQ plugin by default
 * redis: set timeout to 7200s

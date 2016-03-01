@@ -8,6 +8,7 @@ import com.amazonaws.services.ec2.model.Tag;
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.env.Environment;
+import core.aws.resource.ec2.EBS;
 import core.aws.resource.ec2.Instance;
 import core.aws.resource.vpc.SubnetType;
 import core.aws.util.Strings;
@@ -46,6 +47,10 @@ public class CreateInstanceTask extends Task<Instance> {
             .withMinCount(addedCount)
             .withMaxCount(addedCount)
             .withUserData(Base64.encodeBase64String(Strings.bytes(userData(context.env))));
+
+        if (EBS.enableEBSOptimized(resource.instanceType)) {
+            request.withEbsOptimized(true);
+        }
 
         if (resource.instanceProfile != null)
             request.withIamInstanceProfile(new IamInstanceProfileSpecification()

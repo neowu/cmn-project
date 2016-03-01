@@ -8,6 +8,7 @@ import core.aws.client.AWS;
 import core.aws.env.Environment;
 import core.aws.resource.as.ASGroup;
 import core.aws.resource.as.LaunchConfig;
+import core.aws.resource.ec2.EBS;
 import core.aws.resource.vpc.SubnetType;
 import core.aws.util.Encodings;
 import core.aws.util.Randoms;
@@ -34,6 +35,10 @@ public class ASGroupHelper {
             .withImageId(launchConfig.ami.imageId())
             .withSecurityGroups(launchConfig.securityGroup.remoteSecurityGroup.getGroupId())
             .withUserData(Encodings.base64(userData(asGroup)));
+
+        if (EBS.enableEBSOptimized(launchConfig.instanceType)) {    // this is not necessary since m4/c4 are EBS optimized enable by default, but there is bug in AWS console, we need to set this in order to display correct value
+            request.withEbsOptimized(true);
+        }
 
         if (asGroup.subnet.type == SubnetType.PUBLIC) {
             request.withAssociatePublicIpAddress(true);
