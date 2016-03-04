@@ -51,12 +51,13 @@ public class CreateELBTask extends Task<ELB> {
         }
 
         if (resource.listenHTTPS) {
+            String certARN = resource.amazonCertARN != null ? resource.amazonCertARN : resource.cert.remoteCert.getServerCertificateMetadata().getArn();
             request.getListeners().add(new Listener()
                 .withProtocol("HTTPS")
                 .withLoadBalancerPort(443)
                 .withInstanceProtocol("HTTP")
                 .withInstancePort(80)
-                .withSSLCertificateId(resource.cert.remoteCert.getServerCertificateMetadata().getArn()));
+                .withSSLCertificateId(certARN));
         }
 
         resource.remoteELB = AWS.elb.createELB(request);
