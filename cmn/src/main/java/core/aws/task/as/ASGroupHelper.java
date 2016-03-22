@@ -50,7 +50,7 @@ public class ASGroupHelper {
         if (launchConfig.ebs.rootVolumeSize != null) {
             request.getBlockDeviceMappings().add(new BlockDeviceMapping()
                 .withDeviceName("/dev/sda1")
-                .withEbs(new Ebs().withVolumeSize(launchConfig.ebs.rootVolumeSize)));
+                .withEbs(new Ebs().withVolumeSize(launchConfig.ebs.rootVolumeSize).withVolumeType(launchConfig.ebs.type)));
         }
 
         launchConfig.remoteLaunchConfig = AWS.as.createLaunchConfig(request);

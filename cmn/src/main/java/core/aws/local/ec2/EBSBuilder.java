@@ -11,7 +11,10 @@ import java.util.Map;
 public class EBSBuilder {
     public EBS build(Map<String, Object> params) {
         Integer rootVolumeSize = parseSize((String) params.get("size"));
-        return new EBS(rootVolumeSize);
+        EBS ebs = new EBS();
+        ebs.rootVolumeSize = rootVolumeSize;
+        ebs.type = (String) params.get("type");
+        return ebs;
     }
 
     Integer parseSize(String size) {

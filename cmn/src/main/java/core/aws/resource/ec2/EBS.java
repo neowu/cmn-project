@@ -8,10 +8,6 @@ public class EBS {
         return instanceType.startsWith("c4") || instanceType.startsWith("m4");
     }
 
-    public final Integer rootVolumeSize;     // in gigabytes
-    // TODO: support IOPS
-
-    public EBS(Integer rootVolumeSize) {
-        this.rootVolumeSize = rootVolumeSize;
-    }
+    public Integer rootVolumeSize;     // in gigabytes
+    public String type;
 }

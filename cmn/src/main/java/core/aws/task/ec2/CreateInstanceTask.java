@@ -59,7 +59,7 @@ public class CreateInstanceTask extends Task<Instance> {
         if (resource.ebs.rootVolumeSize != null) {
             request.getBlockDeviceMappings().add(new BlockDeviceMapping()
                 .withDeviceName("/dev/sda1")
-                .withEbs(new EbsBlockDevice().withVolumeSize(resource.ebs.rootVolumeSize)));
+                .withEbs(new EbsBlockDevice().withVolumeSize(resource.ebs.rootVolumeSize).withVolumeType(resource.ebs.type)));
         }
 
         List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.ec2.runInstances(request, tags(context.env));

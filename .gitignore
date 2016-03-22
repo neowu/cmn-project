@@ -3,5 +3,6 @@
 *.iml
 /build/
 */src/dev/java/
+*/src/main/dev/
 aws.properties
 /test-env/

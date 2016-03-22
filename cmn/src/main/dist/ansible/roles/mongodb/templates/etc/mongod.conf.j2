@@ -7,7 +7,7 @@ systemLog:
   path: /var/log/mongodb/mongod.log
   logAppend: true
 storage:
-  dbPath: /var/lib/mongodb
+  dbPath: {{mongodb_db_path}}
   journal:
     enabled: true
 net:
