@@ -1,5 +1,9 @@
 ## Change log
 
+### 1.7.4 (3/22/2016)
+* ec2: support ebs type
+* mongodb: support db path as variable
+
 ### 1.7.3 (3/1/2016)
 * ec2: pass ebs-optimized = true for m4/c4 instance, it's not necessary since it's enabled by default, but there is bug in AWS console, it needs to pass it to display correct value
 
