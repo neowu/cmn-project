@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.7.5 (3/28/2016 - )
+* mongodb: clustering support
+
 ### 1.7.4 (3/22/2016)
 * ec2: support ebs type
 * mongodb: support db path as variable

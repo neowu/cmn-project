@@ -7,9 +7,13 @@ systemLog:
   path: /var/log/mongodb/mongod.log
   logAppend: true
 storage:
-  dbPath: {{mongodb_db_path}}
+  dbPath: /var/lib/mongodb
   journal:
     enabled: true
+{% if mongodb_replica_set_name != "" %}
+replication:
+   replSetName: {{mongodb_replica_set_name}}
+{% endif %}
 net:
   bindIp: 0.0.0.0
   port: 27017

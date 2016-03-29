@@ -1,5 +1,5 @@
 - hosts: localhost
-  roles: [elasticsearch]
+  roles: []
   vars:
 #    rabbitmq_erlang_cookie: DDDTIOFCNHHJPAUZYHAS
 #    elasticsearch_heap_size: 1g
