@@ -1,7 +1,8 @@
 ## Change log
 
-### 1.7.5 (3/28/2016 - )
+### 1.7.5 (3/28/2016 - 4/25)
 * mongodb: clustering support
+* node: added repo
 
 ### 1.7.4 (3/22/2016)
 * ec2: support ebs type
