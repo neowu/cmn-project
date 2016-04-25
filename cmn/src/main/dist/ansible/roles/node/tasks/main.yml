@@ -1,0 +1,8 @@
+- name: add node repo key
+  apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+
+- name: add node repo
+  apt_repository: repo='deb https://deb.nodesource.com/node_5.x trusty main'
+
+- name: install node
+  apt: name=nodejs
