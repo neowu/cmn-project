@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 
 /**
@@ -98,9 +99,22 @@ public class Image extends Resource implements AMI {
 
         tasks.add(new BakeAMITask(this, resumeBakeInstance));
 
+        deleteAllFailedImages(tasks);
+
         while (remoteImages.size() >= 5) {
             Map.Entry<Integer, com.amazonaws.services.ec2.model.Image> entry = remoteImages.pollFirstEntry();
             tasks.add(new DeleteImageTask(this, entry.getValue()));
+        }
+    }
+
+    private void deleteAllFailedImages(Tasks tasks) {
+        List<Integer> failedImageVersions = remoteImages.entrySet().stream()
+            .filter(entry -> !"available".equals(entry.getValue().getState()))
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+        for (Integer failedImageVersion : failedImageVersions) {
+            com.amazonaws.services.ec2.model.Image image = remoteImages.remove(failedImageVersion);
+            tasks.add(new DeleteImageTask(this, image));
         }
     }
 
