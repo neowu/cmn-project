@@ -12,3 +12,8 @@
 
 - name: enable jenkins service
   service: name=jenkins enabled=yes
+
+- name: install jenkins plugins
+  get_url: url=http://updates.jenkins-ci.org/latest/{{item}}.hpi dest=/var/lib/jenkins/plugins/{{item}}.jpi timeout=60 owner=jenkins group=jenkins
+  with_items: "{{jenkins_plugins}}"
+  notify: restart-jenkins
