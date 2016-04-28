@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.7.6 (4/28 - )
+* ansible: jenkins supports plugins
+
 ### 1.7.5 (3/28/2016 - 4/28)
 * mongodb: clustering support
 * node: added repo
