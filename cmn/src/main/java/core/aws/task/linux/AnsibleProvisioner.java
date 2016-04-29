@@ -9,6 +9,7 @@ import core.aws.util.Files;
 import core.aws.util.JSON;
 import core.aws.util.Maps;
 import core.aws.util.SSH;
+import core.aws.util.Strings;
 import core.aws.util.Tarball;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class AnsibleProvisioner {
         logger.info("playbook => {}", playbookPath);
         logger.info("packageDir => {}", packageDir);
 
-        try (SSH ssh = new SSH(instance.getPublicDnsName(), "ubuntu", KeyPair.keyFile(instance.getKeyName(), env))) {
+        try (SSH ssh = new SSH(hostName(instance), "ubuntu", KeyPair.keyFile(instance.getKeyName(), env))) {
             ssh.executeCommands("dpkg -s ansible || (sudo apt-add-repository -y ppa:ansible/ansible && sudo apt-get -y -q update && sudo apt-get -y install ansible)",
                 "sudo rm -rf /opt/ansible /opt/packages",    // clear previous ansible roles and packages if installed
                 "sudo mkdir -p /opt/packages /opt/ansible",
@@ -94,5 +95,10 @@ public class AnsibleProvisioner {
 
     private void uploadPackage(SSH ssh) throws IOException, SftpException, JSchException {
         packageDir.ifPresent(path -> ssh.uploadDir(path, "/opt/packages"));
+    }
+
+    private String hostName(Instance instance) {
+        String publicDNS = instance.getPublicDnsName();
+        return (null != publicDNS && Strings.notEmpty(publicDNS)) ? publicDNS : instance.getPrivateIpAddress();
     }
 }
