@@ -99,6 +99,6 @@ public class AnsibleProvisioner {
 
     private String hostName(Instance instance) {
         String publicDNS = instance.getPublicDnsName();
-        return (null != publicDNS && Strings.notEmpty(publicDNS)) ? publicDNS : instance.getPrivateIpAddress();
+        return Strings.notEmpty(publicDNS) ? publicDNS : instance.getPrivateIpAddress();
     }
 }

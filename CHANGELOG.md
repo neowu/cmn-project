@@ -2,6 +2,7 @@
 
 ### 1.7.6 (4/28 - )
 * ansible: jenkins supports plugins
+* provision: use private ip if public dns not available, for build server provision private subnet server (by Gabo)
 
 ### 1.7.5 (3/28/2016 - 4/28)
 * mongodb: clustering support
