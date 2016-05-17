@@ -1,6 +1,7 @@
 package core.aws.client;
 
 import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.regions.Region;
 import com.amazonaws.services.autoscaling.AmazonAutoScaling;
@@ -24,9 +25,11 @@ import com.amazonaws.services.autoscaling.model.TerminateInstanceInAutoScalingGr
 import com.amazonaws.services.autoscaling.model.UpdateAutoScalingGroupRequest;
 import core.aws.util.Exceptions;
 import core.aws.util.Maps;
+import core.aws.util.Runner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +38,8 @@ import java.util.Map;
  * @author neo
  */
 public class AutoScaling {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     public final AmazonAutoScaling autoScaling;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public AutoScaling(AWSCredentialsProvider credentials, Region region) {
         autoScaling = new AmazonAutoScalingClient(credentials);
@@ -109,9 +112,16 @@ public class AutoScaling {
         return autoScaling.describePolicies(new DescribePoliciesRequest().withAutoScalingGroupName(asGroupName)).getScalingPolicies();
     }
 
-    public void updateASGroup(UpdateAutoScalingGroupRequest request) {
-        logger.info("update auto scaling group, request={}", request);
-        autoScaling.updateAutoScalingGroup(request);
+    public void updateASGroup(UpdateAutoScalingGroupRequest request) throws Exception {
+        new Runner<>()
+            .retryInterval(Duration.ofSeconds(5))
+            .maxAttempts(3)
+            .retryOn(e -> e instanceof AmazonServiceException && ((AmazonServiceException) e).getErrorCode().equalsIgnoreCase("Throttling"))
+            .run(() -> {
+                logger.info("update auto scaling group, request={}", request);
+                autoScaling.updateAutoScalingGroup(request);
+                return null;
+            });
     }
 
     public String createPolicy(PutScalingPolicyRequest request) {

@@ -48,7 +48,8 @@ public class AnsibleProvisioner {
         logger.info("packageDir => {}", packageDir);
 
         try (SSH ssh = new SSH(hostName(instance), "ubuntu", KeyPair.keyFile(instance.getKeyName(), env))) {
-            ssh.executeCommands("dpkg -s ansible || (sudo apt-add-repository -y ppa:ansible/ansible && sudo apt-get -y -q update && sudo apt-get -y install ansible)",
+            ssh.executeCommands("dpkg -s ansible || ([[ $(lsb_release -r) =~ '14.04' ]] && sudo apt-add-repository -y ppa:ansible/ansible && sudo apt-get -y -q update && sudo apt-get -y install ansible)",
+                "dpkg -s ansible || (sudo apt-get -y -q update && sudo apt-get -y install ansible)",
                 "sudo rm -rf /opt/ansible /opt/packages",    // clear previous ansible roles and packages if installed
                 "sudo mkdir -p /opt/packages /opt/ansible",
                 "sudo chown ubuntu.ubuntu /opt/packages /opt/ansible");
