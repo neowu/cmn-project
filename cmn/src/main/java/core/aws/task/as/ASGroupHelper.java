@@ -23,7 +23,7 @@ public class ASGroupHelper {
         this.env = env;
     }
 
-    public void createLaunchConfig(ASGroup asGroup) {
+    public void createLaunchConfig(ASGroup asGroup) throws Exception {
         String launchConfigName = env.name + "-" + asGroup.id + "-" + Randoms.alphaNumeric(6);
 
         LaunchConfig launchConfig = asGroup.launchConfig;

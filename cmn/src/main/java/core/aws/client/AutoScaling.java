@@ -54,11 +54,16 @@ public class AutoScaling {
         return result.getAutoScalingGroups().get(0);
     }
 
-    public LaunchConfiguration createLaunchConfig(CreateLaunchConfigurationRequest request) {
-        logger.info("create launch config, request={}", request);
-        autoScaling.createLaunchConfiguration(request);
-
-        return describeLaunchConfig(request.getLaunchConfigurationName());
+    public LaunchConfiguration createLaunchConfig(CreateLaunchConfigurationRequest request) throws Exception {
+        return new Runner<LaunchConfiguration>()
+            .retryInterval(Duration.ofSeconds(5))
+            .maxAttempts(3)
+            .retryOn(e -> e instanceof AmazonServiceException && ((AmazonServiceException) e).getErrorCode().equalsIgnoreCase("Throttling"))
+            .run(() -> {
+                logger.info("create launch config, request={}", request);
+                autoScaling.createLaunchConfiguration(request);
+                return describeLaunchConfig(request.getLaunchConfigurationName());
+            });
     }
 
     public List<AutoScalingGroup> listASGroups() {
