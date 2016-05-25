@@ -121,7 +121,7 @@ public class AutoScaling {
         new Runner<>()
             .retryInterval(Duration.ofSeconds(5))
             .maxAttempts(3)
-            .retryOn(e -> e instanceof AmazonServiceException && ((AmazonServiceException) e).getErrorCode().equalsIgnoreCase("Throttling"))
+            .retryOn(e -> e instanceof AmazonServiceException)
             .run(() -> {
                 logger.info("update auto scaling group, request={}", request);
                 autoScaling.updateAutoScalingGroup(request);
