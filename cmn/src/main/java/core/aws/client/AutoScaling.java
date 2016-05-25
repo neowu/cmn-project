@@ -58,7 +58,7 @@ public class AutoScaling {
         return new Runner<LaunchConfiguration>()
             .retryInterval(Duration.ofSeconds(5))
             .maxAttempts(3)
-            .retryOn(e -> e instanceof AmazonServiceException && ((AmazonServiceException) e).getErrorCode().equalsIgnoreCase("Throttling"))
+            .retryOn(e -> e instanceof AmazonServiceException)
             .run(() -> {
                 logger.info("create launch config, request={}", request);
                 autoScaling.createLaunchConfiguration(request);
