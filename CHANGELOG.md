@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.7.8 (5/30)
+* provision: update version for fixing uninterrupted dist-upgrade
+
 ### 1.7.7 (5/25)
 * provision: run apt-get update dist-upgrade before ansible playbook
 * sys: remove apt-get update/upgrade from role  (which may cause ansible problem if update ansible during playbook execution)
