@@ -48,8 +48,9 @@ public class AnsibleProvisioner {
         logger.info("packageDir => {}", packageDir);
 
         try (SSH ssh = new SSH(hostName(instance), "ubuntu", KeyPair.keyFile(instance.getKeyName(), env))) {
-            ssh.executeCommands("dpkg -s ansible || ([[ $(lsb_release -r) =~ '14.04' ]] && sudo apt-add-repository -y ppa:ansible/ansible && sudo apt-get -y -q update && sudo apt-get -y install ansible) || echo not ubuntu 14.04",
-                "dpkg -s ansible || (sudo apt-get -y -q update && sudo apt-get -y install ansible)",
+            ssh.executeCommands("dpkg -s ansible || ([[ $(lsb_release -r) =~ '14.04' ]] && sudo apt-add-repository -y ppa:ansible/ansible) || echo not ubuntu 14.04",
+                "sudo apt-get -y -q update",
+                "dpkg -s ansible || sudo apt-get -y install ansible",
                 "sudo DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes -q -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' dist-upgrade", // update package before run playbook to make sure ansible is updated in advance
                 "sudo rm -rf /opt/ansible /opt/packages",    // clear previous ansible roles and packages if installed
                 "sudo mkdir -p /opt/packages /opt/ansible",
