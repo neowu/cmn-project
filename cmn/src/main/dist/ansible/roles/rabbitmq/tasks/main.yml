@@ -1,5 +1,5 @@
 - name: add rabbitmq repo key
-  apt_key: url=http://www.rabbitmq.com/rabbitmq-release-signing-key.asc state=present
+  apt_key: url=http://www.rabbitmq.com/rabbitmq-release-signing-key.asc
 
 - name: add rabbitmq repo
   apt_repository: repo='deb http://www.rabbitmq.com/debian/ testing main'

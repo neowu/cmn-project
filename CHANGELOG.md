@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.7.9 (6/8/2016 - ongoing)
+* rabbitmq: updated key path
+
 ### 1.7.8 (5/30)
 * provision: update version for fixing uninterrupted dist-upgrade
 
