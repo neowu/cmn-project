@@ -209,7 +209,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
         }
     }
 
-    private void updateLaunchConfigIfChanged(Environment env) {
+    private void updateLaunchConfigIfChanged(Environment env) throws Exception {
         if (resource.launchConfig.changed()) {
             oldLaunchConfigName = resource.remoteASGroup.getLaunchConfigurationName();
             ASGroupHelper helper = new ASGroupHelper(env);
