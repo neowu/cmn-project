@@ -1,0 +1,14 @@
+- name: add kibana repo key
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch
+
+- name: add kibana repo
+  apt_repository: repo='deb http://packages.elastic.co/kibana/4.5/debian stable main'
+
+- name: install kibana
+  apt: name=kibana
+
+- name: install timelion
+  command: /opt/kibana/bin/kibana plugin -i kibana/timelion creates=/opt/kibana/installedPlugins/timelion
+
+- name: enable kibana service
+  service: name=kibana enabled=yes
