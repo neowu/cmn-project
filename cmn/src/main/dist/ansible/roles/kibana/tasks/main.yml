@@ -9,7 +9,9 @@
 
 - name: install timelion
   command: /opt/kibana/bin/kibana plugin -i kibana/timelion creates=/opt/kibana/installedPlugins/timelion
-  become_user: kibana
+
+- name: update /opt/kibana/optimize
+  file: path=/opt/kibana/optimize owner=kibana group=kibana recurse=yes
 
 - name: enable kibana service
   service: name=kibana enabled=yes
