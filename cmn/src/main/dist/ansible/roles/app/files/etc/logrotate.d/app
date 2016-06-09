@@ -1,0 +1,9 @@
+/var/log/app/*.log {
+    size 1k
+    olddir /opt/log/app
+    dateext
+    dateformat -%Y-%m-%d-%s
+    missingok
+    notifempty
+    copytruncate
+}
