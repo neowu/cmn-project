@@ -1,6 +1,6 @@
 ## Change log
 
-### 1.7.9 (6/8/2016 - ongoing)
+### 1.7.9 (6/8/2016 - 6/14/2016)
 * rabbitmq: updated key path
 * app: added app role into cmn
 * kibana: added kibana role, now it has officially deb repo
