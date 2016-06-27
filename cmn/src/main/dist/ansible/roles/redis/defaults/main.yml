@@ -1,0 +1,2 @@
+redis_persistence_rdb: true
+redis_persistence_aof: false
