@@ -1,0 +1,6 @@
+[package]
+name = "cmn-ng"
+version = "0.1.0"
+authors = ["neo"]
+
+[dependencies]

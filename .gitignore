@@ -1,4 +1,5 @@
 /.idea/
+/classes/
 /.gradle/
 *.iml
 /build/
@@ -6,3 +7,5 @@
 */src/main/dev/
 aws.properties
 /test-env/
+/cmn-ng/target/
+/cmn-ng/Cargo.lock
