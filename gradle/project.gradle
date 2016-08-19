@@ -8,8 +8,6 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
 
-    project.ext['project.build.time'] = buildTime.format('yyyyMMdd-HHmmss')
-
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 
@@ -46,5 +44,5 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+    gradleVersion = '3.0'
 }
