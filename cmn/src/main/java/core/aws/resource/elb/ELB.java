@@ -53,7 +53,7 @@ public class ELB extends Resource {
             Asserts.isTrue(name.matches("[a-zA-Z0-9\\-]+"), "elb name can only contain alphanumeric, and '-'");
         }
 
-        if (status == ResourceStatus.LOCAL_ONLY || status == ResourceStatus.LOCAL_REMOTE) {
+        if (listenHTTPS && (status == ResourceStatus.LOCAL_ONLY || status == ResourceStatus.LOCAL_REMOTE)) {
             Asserts.isTrue(amazonCertARN != null || cert != null, "https listener requires cert");
         }
     }
