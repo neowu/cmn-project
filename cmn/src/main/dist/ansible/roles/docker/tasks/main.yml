@@ -9,3 +9,5 @@
 
 - name: enable docker service
   service: name=docker enabled=yes state=started
+
+- user: name=ubuntu groups=docker append=yes
