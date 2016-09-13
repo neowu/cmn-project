@@ -133,12 +133,18 @@ public final class SSH implements Closeable {
         }
     }
 
+    public static class SSHException extends RuntimeException {
+        public SSHException(Throwable cause) {
+            super(cause);
+        }
+    }
+
     private class PutFileVisitor extends SimpleFileVisitor<Path> {
         private final String remoteDir;
         private final Path localDir;
         private final ChannelSftp channel;
 
-        public PutFileVisitor(Path localDir, String remoteDir, ChannelSftp channel) {
+        PutFileVisitor(Path localDir, String remoteDir, ChannelSftp channel) {
             this.remoteDir = remoteDir;
             this.localDir = localDir;
             this.channel = channel;
@@ -182,12 +188,6 @@ public final class SSH implements Closeable {
             } catch (SftpException e) {
                 throw new IOException(e);
             }
-        }
-    }
-
-    public static class SSHException extends RuntimeException {
-        public SSHException(Throwable cause) {
-            super(cause);
         }
     }
 }

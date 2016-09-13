@@ -15,14 +15,12 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author neo
  */
 public class Context {
-    private final Logger messageLogger = LoggerFactory.getLogger("message");
     final Map<Param, String> params = new ConcurrentHashMap<>();
-
-    public Goal goal;
-    public Environment env;
-
+    private final Logger messageLogger = LoggerFactory.getLogger("message");
     private final Map<String, List<String>> newOutputs = new TreeMap<>();
     private final ReentrantLock lock = new ReentrantLock();
+    public Goal goal;
+    public Environment env;
 
     public void output(String key, Object value) {
         lock.lock();
@@ -38,12 +36,12 @@ public class Context {
         return params.get(key);
     }
 
-    public String requiredParam(Param key) {
-        return Asserts.notNull(params.get(key), "param is required, param={}", key.key);
-    }
-
     public void param(Param key, String value) {
         params.put(key, value);
+    }
+
+    public String requiredParam(Param key) {
+        return Asserts.notNull(params.get(key), "param is required, param={}", key.key);
     }
 
     public void printOutputs() {
