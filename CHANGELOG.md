@@ -4,6 +4,8 @@
 * redis: update ansible playbook to support persistence rdb/aof
 * docker: add docker engine role
 * kibana: add kibana role
+* logroate: simplify logroate config, not upload to s3
+* ubuntu: update all roles for ubuntu 16.04, removed supervisor/ec2 roles
 
 ### 1.7.9 (6/8/2016 - 6/14/2016)
 * rabbitmq: updated key path

@@ -1,9 +1,9 @@
 /var/log/rabbitmq/*.log {
-    size 1k
-    olddir /opt/log/rabbitmq
-    dateext
-    dateformat -%Y-%m-%d-%s
+    daily
     missingok
+    rotate 14
+    compress
+    delaycompress
     notifempty
     sharedscripts
     postrotate

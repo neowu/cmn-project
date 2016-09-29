@@ -17,9 +17,6 @@
   template: src=etc/default/tomcat7.j2 dest=/etc/default/tomcat7
   notify: restart-tomcat
 
-- name: create /opt/log/tomcat7
-  file: path=/opt/log/tomcat7 owner=tomcat7 group=tomcat7 mode=0755 state=directory
-
 - name: update /etc/logrotate.d/tomcat7
   copy: src=etc/logrotate.d/tomcat7 dest=/etc/logrotate.d/tomcat7
 

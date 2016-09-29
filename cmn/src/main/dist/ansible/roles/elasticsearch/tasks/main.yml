@@ -11,9 +11,6 @@
   template: src=etc/elasticsearch/elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
   notify: restart-elasticsearch
 
-- name: create /opt/log/elasticsearch
-  file: path=/opt/log/elasticsearch owner=elasticsearch group=elasticsearch mode=0755 state=directory
-
 - name: update /etc/elasticsearch/logging.yml
   copy: src=etc/elasticsearch/logging.yml dest=/etc/elasticsearch/logging.yml
   notify: restart-elasticsearch

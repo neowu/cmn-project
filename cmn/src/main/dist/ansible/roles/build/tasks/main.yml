@@ -1,6 +1,12 @@
 - name: install git
   apt: name=git
 
+- name: install pip
+  apt: name=python-pip
+
+- name: install awscli
+  pip: name=awscli
+
 - name: create build folder
   file: path=/opt/build owner=ubuntu group=ubuntu state=directory
 

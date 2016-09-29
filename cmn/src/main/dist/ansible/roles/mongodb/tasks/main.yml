@@ -8,16 +8,13 @@
   apt_key: id=EA312927 keyserver=hkp://keyserver.ubuntu.com:80
 
 - name: add mongodb repo
-  apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu trusty/mongodb-org/3.2 multiverse'
+  apt_repository: repo='deb http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.2 multiverse'
 
 - name: install mongodb
   apt: name=mongodb-org
 
-- name: create /opt/log/mongodb
-  file: path=/opt/log/mongodb owner=mongodb group=mongodb mode=0755 state=directory
-
 - name: update /etc/logrotate.d/mongod
-  copy: src=etc/logrotate.d/mongod.conf dest=/etc/logrotate.d/mongod
+  copy: src=etc/logrotate.d/mongod dest=/etc/logrotate.d/mongod
 
 - name: update /etc/mongod.conf
   template: src=etc/mongod.conf.j2 dest=/etc/mongod.conf

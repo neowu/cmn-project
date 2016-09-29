@@ -19,9 +19,6 @@
 - name: install rabbitmqadmin
   get_url: url=http://localhost:15672/cli/rabbitmqadmin dest=/usr/local/bin timeout=60 mode=0755
 
-- name: create /opt/log/rabbitmq
-  file: path=/opt/log/rabbitmq owner=rabbitmq group=rabbitmq mode=0755 state=directory
-
 - name: update /etc/logrotate.d/rabbitmq-server
   copy: src=etc/logrotate.d/rabbitmq-server dest=/etc/logrotate.d/rabbitmq-server
 

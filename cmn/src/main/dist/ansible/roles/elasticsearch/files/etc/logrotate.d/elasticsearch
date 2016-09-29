@@ -1,9 +1,9 @@
 /var/log/elasticsearch/*.log {
-    size 1k
-    olddir /opt/log/elasticsearch
-    dateext
-    dateformat -%Y-%m-%d-%s
-    missingok
+	daily
+	missingok
+	rotate 14
+	compress
+	delaycompress
     notifempty
     copytruncate
 }
