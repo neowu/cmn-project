@@ -3,6 +3,7 @@
 ### 1.8.0 (6/27/2016 - ongoing)
 * redis: update ansible playbook to support persistence rdb/aof
 * docker: add docker engine role
+* kibana: add kibana role
 
 ### 1.7.9 (6/8/2016 - 6/14/2016)
 * rabbitmq: updated key path
