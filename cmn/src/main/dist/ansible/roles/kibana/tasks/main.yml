@@ -1,8 +1,14 @@
+- name: create kibana group
+  group: name=kibana
+
+- name: create kibana user
+  user: name=kibana group=kibana
+
 - name: download kibana
   get_url: url=https://download.elastic.co/kibana/kibana/kibana-4.6.1-linux-x86_64.tar.gz dest=/tmp timeout=60
 
 - name: extract kibana
-  unarchive: src=/tmp/kibana-4.6.1-linux-x86_64.tar.gz dest=/opt/ copy=no owner=ubuntu group=ubuntu
+  unarchive: src=/tmp/kibana-4.6.1-linux-x86_64.tar.gz dest=/opt/ copy=no owner=kibana group=kibana
 
 - name: update /etc/systemd/system/kibana.service
   copy: src=etc/systemd/system/kibana.service dest=/etc/systemd/system/kibana.service

@@ -3,7 +3,7 @@ Description=kibana
 After=network.target
 
 [Service]
-User=ubuntu
+User=kibana
 ExecStart=/opt/kibana-4.6.1-linux-x86_64/bin/kibana
 
 [Install]
