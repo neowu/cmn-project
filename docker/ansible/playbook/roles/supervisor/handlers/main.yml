@@ -1,2 +1,0 @@
-- name: restart-supervisor
-  service: name=supervisor state={{supervisor_service_state}}

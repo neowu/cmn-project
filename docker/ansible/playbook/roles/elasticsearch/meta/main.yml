@@ -1,3 +1,0 @@
-dependencies:
-  - role: jdk
-  - role: logrotate

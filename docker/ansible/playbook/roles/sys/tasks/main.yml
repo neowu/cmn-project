@@ -1,8 +1,0 @@
-- name: update all packages
-  apt: upgrade=dist update_cache=yes cache_valid_time=3600
-
-- include: timezone.yml
-  when: sys_timezone != ""
-
-- include: ssh-key.yml
-  when: sys_ssh_private_key != ""
