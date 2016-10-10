@@ -1,3 +1,6 @@
+- name: install openjdk-8-jre-headless
+  apt: name=openjdk-8-jre-headless
+
 - name: add elasticsearch repo key
   apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch
 
