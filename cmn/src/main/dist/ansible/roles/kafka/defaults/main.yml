@@ -1,0 +1,2 @@
+kafka_broker_id: "0"
+kafka_log_retention_hours: 720

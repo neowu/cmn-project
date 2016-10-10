@@ -1,0 +1,10 @@
+[Unit]
+Description=kafka
+After=network.target zookeeper.service
+
+[Service]
+User=kafka
+ExecStart=/opt/kafka_2.11-0.10.0.1/bin/kafka-server-start.sh /opt/kafka_2.11-0.10.0.1/config/server.properties
+
+[Install]
+WantedBy=multi-user.target
