@@ -3,10 +3,11 @@
 ### 1.8.0 (6/27/2016 - ongoing)
 * redis: update ansible playbook to support persistence rdb/aof
 * docker: add docker engine role
-* kibana: add kibana role
+* kibana: update kibana role to use download tar
 * logroate: simplify logroate config, not upload to s3
 * ubuntu: update all roles for ubuntu 16.04, removed supervisor/ec2 roles
 * kafka: add kafka role
+* jdk: move to openjdk-8-jre-headless with ubuntu 16.04
 
 ### 1.7.9 (6/8/2016 - 6/14/2016)
 * rabbitmq: updated key path
