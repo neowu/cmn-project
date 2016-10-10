@@ -16,9 +16,6 @@
 - name: create /opt/app
   file: path=/opt/app owner=app group=app mode=0755 state=directory
 
-- name: create /opt/log/app
-  file: path=/opt/log/app owner=app group=app mode=0755 state=directory
-
 - name: update /etc/logrotate.d/app
   copy: src=etc/logrotate.d/app dest=/etc/logrotate.d/app
 
