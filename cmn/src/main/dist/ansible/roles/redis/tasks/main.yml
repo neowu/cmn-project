@@ -4,14 +4,11 @@
 - name: update vm.overcommit_memory
   sysctl: name=vm.overcommit_memory value=1
 
-- name: update /etc/init.d/disable-thp
-  copy: src=etc/init.d/disable-thp.sh dest=/etc/init.d/disable-thp owner=root group=root mode=0755
+- name: update /etc/systemd/system/redis-server-disable-thp.service
+  copy: src=etc/systemd/system/redis-server-disable-thp.service dest=/etc/systemd/system/redis-server-disable-thp.service
 
-- name: enable disable-thp service
-  service: name=disable-thp state=restarted enabled=yes
-
-- name: add redis repo
-  apt_repository: repo=ppa:chris-lea/redis-server
+- name: enable redis-server-disable-thp service
+  service: name=redis-server-disable-thp state=restarted enabled=yes
 
 - name: install redis
   apt: name=redis-server

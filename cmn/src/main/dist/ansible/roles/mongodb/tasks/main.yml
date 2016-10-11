@@ -1,8 +1,8 @@
-- name: update /etc/init.d/disable-thp
-  copy: src=etc/init.d/disable-thp.sh dest=/etc/init.d/disable-thp owner=root group=root mode=0755
+- name: update /etc/systemd/system/mongod-disable-thp.service
+  copy: src=etc/systemd/system/mongod-disable-thp.service dest=/etc/systemd/system/mongod-disable-thp.service
 
-- name: enable disable-thp service
-  service: name=disable-thp state=restarted enabled=yes
+- name: enable mongod-disable-thp service
+  service: name=mongod-disable-thp state=restarted enabled=yes
 
 - name: add mongodb repo key
   apt_key: id=EA312927 keyserver=hkp://keyserver.ubuntu.com:80
