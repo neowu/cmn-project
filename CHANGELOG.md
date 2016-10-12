@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.8.1 (10/12/2016)
+* mongo: disable NUMA, for ec2 m4.xlarge or larger instance
+
 ### 1.8.0 (6/27/2016 - 10/11/2016)
 * redis: update ansible playbook to support persistence rdb/aof
 * docker: add docker engine role

@@ -1,3 +1,9 @@
+- name: update vm.zone_reclaim_mode
+  sysctl: name=vm.zone_reclaim_mode value=0
+
+- name: install numactl
+  apt: name=numactl
+
 - name: update /etc/systemd/system/mongod-disable-thp.service
   copy: src=etc/systemd/system/mongod-disable-thp.service dest=/etc/systemd/system/mongod-disable-thp.service
 
@@ -12,6 +18,9 @@
 
 - name: install mongodb
   apt: name=mongodb-org
+
+- name: update /lib/systemd/system/mongod.service
+  copy: src=lib/systemd/system/mongod.service dest=/lib/systemd/system/mongod.service
 
 - name: update /etc/logrotate.d/mongod
   copy: src=etc/logrotate.d/mongod dest=/etc/logrotate.d/mongod

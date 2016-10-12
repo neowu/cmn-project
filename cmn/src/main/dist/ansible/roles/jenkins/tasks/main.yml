@@ -1,5 +1,5 @@
-- name: install openjdk-8-jre-headless
-  apt: name=openjdk-8-jre-headless
+- name: install openjdk-8-jdk
+  apt: name=openjdk-8-jdk
 
 - name: add jenkins repo key
   apt_key: url=http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key
