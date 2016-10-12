@@ -14,11 +14,9 @@
 
 - name: update /etc/tomcat8/*
   copy: src=etc/tomcat8/ dest=/etc/tomcat8 owner=root group=tomcat8 mode=644
-  notify: restart-tomcat
 
 - name: update /etc/default/tomcat8
   template: src=etc/default/tomcat8.j2 dest=/etc/default/tomcat8
-  notify: restart-tomcat
 
 - name: update /etc/logrotate.d/tomcat8
   copy: src=etc/logrotate.d/tomcat8 dest=/etc/logrotate.d/tomcat8

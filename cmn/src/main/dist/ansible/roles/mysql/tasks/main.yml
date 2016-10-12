@@ -8,7 +8,6 @@
 
 - name: update /etc/mysql/conf.d/bind.cnf
   copy: src=etc/mysql/conf.d/bind.cnf dest=/etc/mysql/conf.d/bind.cnf
-  notify: restart-mysql
 
 - name: enable mysql service
   service: name=mysql enabled=yes

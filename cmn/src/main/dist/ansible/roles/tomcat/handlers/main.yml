@@ -1,6 +1,0 @@
-- name: restart-tomcat
-  command: "rm -rf /var/cache/tomcat8/Catalina/localhost"
-  notify: restart-tomcat-service
-
-- name: restart-tomcat-service
-  service: name=tomcat8 state={{tomcat_service_state}}

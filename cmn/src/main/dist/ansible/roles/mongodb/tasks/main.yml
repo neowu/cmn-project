@@ -27,7 +27,6 @@
 
 - name: update /etc/mongod.conf
   template: src=etc/mongod.conf.j2 dest=/etc/mongod.conf
-  notify: restart-mongodb
 
 - name: enable mongodb service
   service: name=mongod enabled=yes

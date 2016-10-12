@@ -1,2 +1,1 @@
 tomcat_java_opts: -XX:+UseG1GC -Xss256k -Djava.awt.headless=true
-tomcat_service_state: restarted

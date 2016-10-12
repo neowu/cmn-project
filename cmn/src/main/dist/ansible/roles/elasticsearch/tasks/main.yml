@@ -12,18 +12,15 @@
 
 - name: update /etc/elasticsearch/elasticsearch.yml
   template: src=etc/elasticsearch/elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
-  notify: restart-elasticsearch
 
 - name: update /etc/elasticsearch/logging.yml
   copy: src=etc/elasticsearch/logging.yml dest=/etc/elasticsearch/logging.yml
-  notify: restart-elasticsearch
 
 - name: update /etc/logrotate.d/elasticsearch
   copy: src=etc/logrotate.d/elasticsearch dest=/etc/logrotate.d/elasticsearch
 
 - name: update /etc/default/elasticsearch
   template: src=etc/default/elasticsearch.j2 dest=/etc/default/elasticsearch
-  notify: restart-elasticsearch
 
 - name: enable elasticsearch service
   service: name=elasticsearch enabled=yes

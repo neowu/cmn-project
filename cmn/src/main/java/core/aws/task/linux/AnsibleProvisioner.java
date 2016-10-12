@@ -6,7 +6,6 @@ import com.jcraft.jsch.SftpException;
 import core.aws.env.Environment;
 import core.aws.resource.ec2.KeyPair;
 import core.aws.util.Files;
-import core.aws.util.JSON;
 import core.aws.util.Maps;
 import core.aws.util.SSH;
 import core.aws.util.Strings;
@@ -68,18 +67,9 @@ public class AnsibleProvisioner {
         ssh.put(playbookPath, "/opt/ansible/localhost.yml");
 
         ssh.executeCommands("tar xzf /tmp/ansible.tar.gz -C /opt/ansible",
-            ansibleCommand());
+            "ansible-playbook --become /opt/ansible/localhost.yml");
 
         delete(ansibleArchive);
-    }
-
-    String ansibleCommand() {
-        StringBuilder builder = new StringBuilder("ansible-playbook --become");
-        if (!additionalVariables.isEmpty()) {
-            builder.append(" -e '").append(JSON.toJSON(additionalVariables)).append('\'');
-        }
-        builder.append(" /opt/ansible/localhost.yml");
-        return builder.toString();
     }
 
     private Path packAnsibleRoles() throws IOException {

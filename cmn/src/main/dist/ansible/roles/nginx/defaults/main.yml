@@ -1,2 +1,1 @@
 nginx_default_conf: ""
-nginx_service_state: restarted

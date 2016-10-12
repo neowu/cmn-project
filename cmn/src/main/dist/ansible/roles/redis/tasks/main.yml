@@ -15,11 +15,9 @@
 
 - name: update /etc/default/redis-server
   copy: src=etc/default/redis-server.conf dest=/etc/default/redis-server
-  notify: restart-redis
 
 - name: update /etc/redis/redis.conf
   template: src=etc/redis/redis.conf.j2 dest=/etc/redis/redis.conf
-  notify: restart-redis
 
 - name: enable redis service
   service: name=redis-server enabled=yes
