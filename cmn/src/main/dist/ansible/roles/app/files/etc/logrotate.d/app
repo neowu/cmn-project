@@ -1,9 +1,9 @@
 /var/log/app/*.log {
     daily
-	missingok
-	rotate 14
-	compress
-	delaycompress
+    missingok
+    rotate 14
+    compress
+    delaycompress
     notifempty
     copytruncate
     postrotate
