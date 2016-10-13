@@ -7,6 +7,6 @@
     notifempty
     copytruncate
     postrotate
-        /usr/bin/find /var/log/app/trace/ -name "*.log" -type f -mtime 14 -exec rm {} \;
+        /usr/bin/find /var/log/app/trace/ -name "*.log" -type f -mtime +14 -exec rm {} \;
     endscript
 }
