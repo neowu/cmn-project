@@ -1,0 +1,23 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "node asset pipeline",
+  "scripts": {
+    "build": "gulp build",
+    "clean": "gulp clean"
+  },
+  "private": true,
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-eslint": "^3.0.1",
+    "gulp-md5-plus": "^0.2.5",
+    "gulp-sourcemaps": "^2.1.1",
+    "gulp-stylelint": "^3.2.0",
+    "gulp-uglify": "^2.0.0",
+    "merge2": "^1.0.2",
+    "yargs": "^6.2.0"
+  }
+}
