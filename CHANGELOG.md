@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.8.2 (10/20/2016 - onging)
+* kafka: update to 0.10.1.0
+
 ### 1.8.1 (10/12/2016)
 * mongo: disable NUMA, for ec2 m4.xlarge or larger instance
 * ansible: role behavior changed with ubuntu1604, all roles are only for bake image, service will not start by default
