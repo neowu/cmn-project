@@ -11,10 +11,9 @@ import java.util.regex.Pattern;
  * @author neo
  */
 public class Protocol {
+    static final String TCP = "tcp";
     private static final Pattern SINGLE_PORT_PATTERN = Pattern.compile("\\d+");
     private static final Pattern PORT_RANGE_PATTERN = Pattern.compile("(\\d+)-(\\d+)");
-
-    static final String TCP = "tcp";
     private static final String UDP = "udp";
 
     private static final Map<String, Protocol> PREDEFINED_PROTOCOLS = new HashMap<>();
@@ -29,6 +28,7 @@ public class Protocol {
         PREDEFINED_PROTOCOLS.put("rdp", new Protocol(TCP, 3389));
         PREDEFINED_PROTOCOLS.put("mongodb", new Protocol(TCP, 27017));
         PREDEFINED_PROTOCOLS.put("rabbitmq", new Protocol(TCP, 5672));
+        PREDEFINED_PROTOCOLS.put("kafka", new Protocol(TCP, 9092));
         PREDEFINED_PROTOCOLS.put("elasticsearch", new Protocol(TCP, 9300));
         PREDEFINED_PROTOCOLS.put("redis", new Protocol(TCP, 6379));
         PREDEFINED_PROTOCOLS.put("openvpn", new Protocol(UDP, 1194));
