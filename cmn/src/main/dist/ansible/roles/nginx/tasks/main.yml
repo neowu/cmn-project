@@ -1,6 +1,3 @@
-- name: add nginx repo
-  apt_repository: repo=ppa:nginx/stable
-
 - name: install nginx
   apt: name=nginx
 
@@ -12,12 +9,6 @@
 
 - name: update /etc/nginx/sites-enabled/default
   file: src=/etc/nginx/sites-available/default dest=/etc/nginx/sites-enabled/default state=link
-
-- name: create /var/www
-  file: path=/var/www owner=www-data group=adm mode=0775 state=directory
-
-- name: add ubuntu to adm group for deployment
-  user: name=ubuntu groups=adm append=yes
 
 - name: enable nginx service
   service: name=nginx enabled=yes
