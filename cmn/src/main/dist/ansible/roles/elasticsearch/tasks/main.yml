@@ -1,11 +1,14 @@
+- name: update vm.max_map_count
+  sysctl: name=vm.max_map_count value=262144
+
 - name: install openjdk-8-jre-headless
   apt: name=openjdk-8-jre-headless
 
 - name: add elasticsearch repo key
-  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch
+  apt_key: url=https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
 - name: add elasticsearch repo
-  apt_repository: repo='deb http://packages.elastic.co/elasticsearch/2.x/debian stable main'
+  apt_repository: repo='deb https://artifacts.elastic.co/packages/5.x/apt stable main'
 
 - name: install elasticsearch
   apt: name=elasticsearch
@@ -13,17 +16,14 @@
 - name: update /etc/elasticsearch/elasticsearch.yml
   template: src=etc/elasticsearch/elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
 
-- name: update /etc/elasticsearch/logging.yml
-  copy: src=etc/elasticsearch/logging.yml dest=/etc/elasticsearch/logging.yml
+- name: update /etc/elasticsearch/jvm.options
+  template: src=etc/elasticsearch/jvm.options.j2 dest=/etc/elasticsearch/jvm.options
+
+- name: update /etc/elasticsearch/log4j2.properties
+  copy: src=etc/elasticsearch/log4j2.properties dest=/etc/elasticsearch/log4j2.properties
 
 - name: update /etc/logrotate.d/elasticsearch
   copy: src=etc/logrotate.d/elasticsearch dest=/etc/logrotate.d/elasticsearch
 
-- name: update /etc/default/elasticsearch
-  template: src=etc/default/elasticsearch.j2 dest=/etc/default/elasticsearch
-
 - name: enable elasticsearch service
   service: name=elasticsearch enabled=yes
-
-- name: install elasticsearch HQ
-  command: /usr/share/elasticsearch/bin/plugin install royrusso/elasticsearch-HQ creates=/usr/share/elasticsearch/plugins/hq
