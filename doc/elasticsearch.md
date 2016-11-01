@@ -1,6 +1,6 @@
 # backup and restore
 ```
-sudo /usr/share/elasticsearch/bin/plugin install cloud-aws
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install repository-s3
 
 curl -XPUT localhost:9200/_snapshot/s3 -d '
 {
