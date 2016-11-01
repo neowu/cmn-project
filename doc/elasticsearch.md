@@ -19,3 +19,9 @@ curl localhost:9200/_snapshot/s3/_all
 
 curl -XPOST localhost:9200/_snapshot/s3/snapshot_1/_restore
 ```
+
+# inspection
+curl 'localhost:9200/_cat/master?v'
+curl 'localhost:9200/_cat/count?v'
+curl 'localhost:9200/_cat/indices/*?v'
+curl 'localhost:9200/_cat/nodes?v'
