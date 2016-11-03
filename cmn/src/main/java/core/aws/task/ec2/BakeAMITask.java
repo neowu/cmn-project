@@ -129,7 +129,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
     private com.amazonaws.services.ec2.model.Instance createInstance(KeyPair keyPair, String sgId) throws Exception {
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(keyPair.remoteKeyPair.getKeyName())
-            .withInstanceType(InstanceType.C4Large)
+            .withInstanceType(InstanceType.M4Large)
             .withImageId(resource.baseAMI.imageId())
             .withMinCount(1)
             .withMaxCount(1)
