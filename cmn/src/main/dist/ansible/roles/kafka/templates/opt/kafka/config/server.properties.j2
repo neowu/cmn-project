@@ -97,7 +97,9 @@ log.retention.hours={{kafka_log_retention_hours}}
 
 # A size-based retention policy for logs. Segments are pruned from the log as long as the remaining
 # segments don't drop below log.retention.bytes.
-#log.retention.bytes=1073741824
+{% if kafka_log_retention_bytes != "" %}
+log.retention.bytes={{kafka_log_retention_bytes}}
+{% endif %}
 
 # The maximum size of a log segment file. When this size is reached a new log segment will be created.
 log.segment.bytes=1073741824
