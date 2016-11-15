@@ -1,9 +1,9 @@
 package core.aws.client;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.PropertiesCredentials;
-import com.amazonaws.internal.StaticCredentialsProvider;
 import com.amazonaws.regions.Region;
 import core.aws.env.Environment;
 import core.aws.util.Asserts;
@@ -50,7 +50,7 @@ public class AWS {
         if (Files.exists(awsCredential)) {
             LOGGER.info("found aws.properties, use it as aws credentials, file={}", awsCredential);
             PropertiesCredentials credentials = new PropertiesCredentials(awsCredential.toFile());
-            provider = new StaticCredentialsProvider(credentials);
+            provider = new AWSStaticCredentialsProvider(credentials);
         } else {
             LOGGER.info("not found aws.properties, use default credentials (env or instanceProfile)");
             provider = new DefaultAWSCredentialsProviderChain();
