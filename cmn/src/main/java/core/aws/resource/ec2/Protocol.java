@@ -32,6 +32,8 @@ public class Protocol {
         PREDEFINED_PROTOCOLS.put("elasticsearch", new Protocol(TCP, 9300));
         PREDEFINED_PROTOCOLS.put("redis", new Protocol(TCP, 6379));
         PREDEFINED_PROTOCOLS.put("openvpn", new Protocol(UDP, 1194));
+        PREDEFINED_PROTOCOLS.put("all-tcp", new Protocol(TCP, 0, 65535));
+        PREDEFINED_PROTOCOLS.put("all-udp", new Protocol(UDP, 0, 65535));
     }
 
     public static Protocol parse(String value) {

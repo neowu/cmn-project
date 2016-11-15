@@ -1,6 +1,7 @@
 ## Change log
-### 1.8.3 (10/28/2016 - )
+### 1.8.3 (10/28/2016 - 10/15/2016)
 * es: update es/kibana to 5.0.0
+* protocol: add all-tcp/all-udp for kubernetes cluster support
 
 ### 1.8.2 (10/20/2016 - 10/27/2016)
 * kafka: update to 0.10.1.0
