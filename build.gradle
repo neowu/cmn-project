@@ -13,12 +13,12 @@ project(':cmn') {
     apply plugin: 'application'
     mainClassName = 'Main'
 
-    afterEvaluate {
-        startScripts {
-            doLast {
-                windowsScript.text = windowsScript.text.replaceFirst('set DEFAULT_JVM_OPTS=', 'set DEFAULT_JVM_OPTS="-Dcmn.ansible=%~dp0../ansible"')
-                unixScript.text = unixScript.text.replaceFirst('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS=\'-Dcmn.ansible=\\$APP_HOME/ansible\'')
-            }
+    startScripts {
+        defaultJvmOpts = ['-Dcmn.ansible=APP_HOME_VAR/ansible']
+
+        doLast {
+            windowsScript.text = windowsScript.text.replaceFirst('APP_HOME_VAR', '%APP_HOME%')
+            unixScript.text = unixScript.text.replaceFirst('APP_HOME_VAR', '\\$APP_HOME')
         }
     }
 
@@ -39,7 +39,7 @@ project(':cmn') {
         )
         testCompile(
                 'junit:junit:4.12',
-                'org.mockito:mockito-core:1.10.19'
+                'org.mockito:mockito-core:2.1.0'
         )
     }
 }
