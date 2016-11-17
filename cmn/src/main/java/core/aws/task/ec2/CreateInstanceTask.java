@@ -4,6 +4,7 @@ import com.amazonaws.services.ec2.model.BlockDeviceMapping;
 import com.amazonaws.services.ec2.model.EbsBlockDevice;
 import com.amazonaws.services.ec2.model.IamInstanceProfileSpecification;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
+import com.amazonaws.services.ec2.model.Subnet;
 import com.amazonaws.services.ec2.model.Tag;
 import core.aws.client.AWS;
 import core.aws.env.Context;
@@ -11,6 +12,7 @@ import core.aws.env.Environment;
 import core.aws.resource.ec2.EBS;
 import core.aws.resource.ec2.Instance;
 import core.aws.resource.vpc.SubnetType;
+import core.aws.util.Maps;
 import core.aws.util.Strings;
 import core.aws.util.ToStringHelper;
 import core.aws.workflow.Action;
@@ -18,6 +20,7 @@ import core.aws.workflow.Task;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -25,27 +28,74 @@ import java.util.stream.Collectors;
  */
 @Action("create-instance")
 public class CreateInstanceTask extends Task<Instance> {
-    private final int addedCount;
+    private final int count;
     private final boolean waitUntilInService;
 
-    public CreateInstanceTask(Instance instance, int addedCount, boolean waitUntilInService) {
+    public CreateInstanceTask(Instance instance, int count, boolean waitUntilInService) {
         super(instance);
-        this.addedCount = addedCount;
+        this.count = count;
         this.waitUntilInService = waitUntilInService;
     }
 
     @Override
     public void execute(Context context) throws Exception {
+        Map<String, Integer> addedInstanceCount = planAddedCountBySubnet();
+
+        for (Map.Entry<String, Integer> entry : addedInstanceCount.entrySet()) {
+            String subnetId = entry.getKey();
+            int count = entry.getValue();
+            if (count > 0) {
+                createInstance(context, count, subnetId);
+            }
+        }
+    }
+
+    private Map<String, Integer> planAddedCountBySubnet() {
+        Map<String, Integer> instanceCount = Maps.newHashMap();
+        for (Subnet remoteSubnet : resource.subnet.remoteSubnets) {
+            instanceCount.put(remoteSubnet.getSubnetId(), 0);
+        }
+        for (com.amazonaws.services.ec2.model.Instance remoteInstance : resource.remoteInstances) {
+            instanceCount.compute(remoteInstance.getSubnetId(), (key, oldValue) -> oldValue + 1);
+        }
+
+        Map<String, Integer> addedInstanceCount = Maps.newHashMap();
+        for (String subnetId : instanceCount.keySet()) {
+            addedInstanceCount.put(subnetId, 0);
+        }
+
+        for (int i = 0; i < count; i++) {
+            String targetSubnet = findSubnetHasMinimalInstances(instanceCount);
+            instanceCount.compute(targetSubnet, (key, oldValue) -> oldValue + 1);
+            addedInstanceCount.compute(targetSubnet, (key, oldValue) -> oldValue + 1);
+        }
+        return addedInstanceCount;
+    }
+
+    private String findSubnetHasMinimalInstances(Map<String, Integer> instanceCount) {
+        String subnetId = null;
+        int minCount = Integer.MAX_VALUE;
+        for (Map.Entry<String, Integer> entry : instanceCount.entrySet()) {
+            int count = entry.getValue();
+            if (count < minCount) {
+                minCount = count;
+                subnetId = entry.getKey();
+            }
+        }
+        return subnetId;
+    }
+
+    private void createInstance(Context context, int count, String subnetId) throws Exception {
         String sgId = resource.securityGroup.remoteSecurityGroup.getGroupId();
 
         RunInstancesRequest request = new RunInstancesRequest()
             .withKeyName(resource.keyPair.remoteKeyPair.getKeyName())
             .withInstanceType(resource.instanceType)
             .withImageId(resource.ami.imageId())
-            .withSubnetId(resource.subnet.firstRemoteSubnet().getSubnetId())
+            .withSubnetId(subnetId)
             .withSecurityGroupIds(sgId)
-            .withMinCount(addedCount)
-            .withMaxCount(addedCount)
+            .withMinCount(count)
+            .withMaxCount(count)
             .withUserData(Base64.encodeBase64String(Strings.bytes(userData(context.env))));
 
         if (EBS.enableEBSOptimized(resource.instanceType)) {
@@ -96,7 +146,7 @@ public class CreateInstanceTask extends Task<Instance> {
         }
 
         resource.ami.version()
-            .ifPresent(version -> name.append(":v").append(version));
+                    .ifPresent(version -> name.append(":v").append(version));
 
         return name.toString();
     }
@@ -111,7 +161,7 @@ public class CreateInstanceTask extends Task<Instance> {
     public String toString() {
         return new ToStringHelper(this)
             .add(resource)
-            .add("addedCount", addedCount)
+            .add("count", count)
             .toString();
     }
 }
