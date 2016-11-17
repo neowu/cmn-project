@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * due to nature of cloud manager, to use plain design to achieve maximum simplicity and flexibility
+ * due to nature of cloud manager, to use plain design to achieve better simplicity and flexibility
  *
  * @author neo
  */

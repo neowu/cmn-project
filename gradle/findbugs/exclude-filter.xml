@@ -16,4 +16,9 @@
         <!--PZLA: PZLA_PREFER_ZERO_LENGTH_ARRAYS: Consider returning a zero length array rather than null-->
         <Bug code="RV,EI,EI2,Dm,CN,SIC,UrF,UwF,NP,BC,SQL,UuF,PZLA"/>
     </Match>
+
+    <Match>
+        <!-- MS_CANNOT_BE_FINAL: Field isn't final and can't be protected from malicious code-->
+        <Bug code="MS"/>    <!--ignore AWS.java-->
+    </Match>
 </FindBugsFilter>
