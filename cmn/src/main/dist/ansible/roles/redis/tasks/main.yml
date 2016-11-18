@@ -8,7 +8,7 @@
   copy: src=etc/systemd/system/redis-server-disable-thp.service dest=/etc/systemd/system/redis-server-disable-thp.service
 
 - name: enable redis-server-disable-thp service
-  service: name=redis-server-disable-thp state=restarted enabled=yes
+  service: name=redis-server-disable-thp enabled=yes
 
 - name: install redis
   apt: name=redis-server

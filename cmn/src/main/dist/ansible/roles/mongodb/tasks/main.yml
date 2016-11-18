@@ -8,7 +8,7 @@
   copy: src=etc/systemd/system/mongod-disable-thp.service dest=/etc/systemd/system/mongod-disable-thp.service
 
 - name: enable mongod-disable-thp service
-  service: name=mongod-disable-thp state=restarted enabled=yes
+  service: name=mongod-disable-thp enabled=yes
 
 - name: add mongodb repo key
   apt_key: id=EA312927 keyserver=hkp://keyserver.ubuntu.com:80
