@@ -12,3 +12,9 @@
     - kubeadm
     - kubectl
     - kubernetes-cni
+
+- name: install pip
+  apt: name=python-pip
+
+- name: install awscli
+  pip: name=awscli
