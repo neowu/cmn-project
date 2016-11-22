@@ -20,7 +20,7 @@ public class ParamValidator {
         } else if (goal == Goal.DEPLOY || goal == Goal.STOP || goal == Goal.START) {
             validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.RESOURCE_ID), null);
         } else if (goal == Goal.EXEC) {
-            validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.RESOURCE_ID, Param.INSTANCE_INDEX, Param.EXECUTE_COMMAND, Param.EXECUTE_SCRIPT), Lists.newArrayList(Param.RESOURCE_ID));
+            validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.RESOURCE_ID, Param.INSTANCE_INDEX, Param.EXECUTE_COMMAND, Param.EXECUTE_SCRIPT), Lists.newArrayList(Param.RESOURCE_ID, Param.EXECUTE_COMMAND));
         } else if (goal == Goal.UPLOAD) {
             validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.RESOURCE_ID, Param.PACKAGE_DIR, Param.INSTANCE_INDEX), Lists.newArrayList(Param.PACKAGE_DIR, Param.RESOURCE_ID));
         } else if (goal == Goal.PROVISION) {

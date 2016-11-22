@@ -13,6 +13,9 @@
     - kubectl
     - kubernetes-cni
 
+- name: update /etc/systmed/system/kubelet.service.d/10-kubeadm.conf
+  copy: src=etc/systmed/system/kubelet.service.d/10-kubeadm.conf dest=/etc/systmed/system/kubelet.service.d/10-kubeadm.conf
+
 - name: install pip
   apt: name=python-pip
 
