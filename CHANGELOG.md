@@ -1,7 +1,8 @@
 ## Change log
-### 1.8.4 (10/15/2016 - )
+### 1.8.4 (10/15/2016 - 12/01/2016)
 * provision: removed ubuntu 14.04 support from ansible provisioner, now build-in roles and provision/bake only works with ubuntu 1604
 * ec2: create instance into multiple AZ/Subnet if applicable
+* exec: support multiple cmd
 
 ### 1.8.3 (10/28/2016 - 10/15/2016)
 * es: update es/kibana to 5.0.0

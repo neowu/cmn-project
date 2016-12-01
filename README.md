@@ -39,7 +39,7 @@ GOALS:
 
 CONTEXTS:
   env:              # specify env folder or use current folder if absent
-  id:               # only execute goal on specific resource, useful for bake ami and execute command, multiple id uses comma delimited string
+  id:               # only execute goal on specific resource, useful for bake ami and execute command
   dry-run:          # print the tasks will be executed
   cmd:              # shell command to run
   script:           # exec can use command or script
@@ -51,7 +51,7 @@ EXAMPLES:
   cmn desc
   cmn sync --dry-run=true
   cmn bake --id={imageId}
-  cmn exec --id={instanceId} --cmd={command}
+  cmn exec --id={instanceId} --id={instanceId} --cmd={command}
   cmn exec --id={instanceId} --script={scriptPath}
   cmn upload --id={instanceId} --package-dir={packageDir}
   cmn ssh --id={instanceId} --i={optionalIndex}

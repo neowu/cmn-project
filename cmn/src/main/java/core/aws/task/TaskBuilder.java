@@ -13,7 +13,6 @@ import core.aws.workflow.Tasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +34,7 @@ public class TaskBuilder {
     }
 
     public Tasks build() {
-        List<String> resourceIds = resourceIds(context.param(Param.RESOURCE_ID));
+        List<String> resourceIds = context.params(Param.RESOURCE_ID);
 
         Tasks tasks = new Tasks();
         if (goal == Goal.BAKE) {
@@ -48,15 +47,9 @@ public class TaskBuilder {
         return tasks;
     }
 
-    List<String> resourceIds(String resourceIdParam) {
-        List<String> resourceIds = null;
-        if (resourceIdParam != null) resourceIds = Arrays.asList(resourceIdParam.split(","));
-        return resourceIds;
-    }
-
     private void serverTasks(List<String> resourceIds, Tasks tasks) {
         if (resourceIds != null) {
-            Optional<String> invalidResourceId = resourceIds.stream().filter(resourceId -> !resources.stream().anyMatch(resource -> resource.id.equals(resourceId))).findFirst();
+            Optional<String> invalidResourceId = resourceIds.stream().filter(resourceId -> resources.stream().noneMatch(resource -> resource.id.equals(resourceId))).findFirst();
             if (invalidResourceId.isPresent())
                 throw Exceptions.error("resourceId is invalid, resourceId={}", invalidResourceId.get());
         }

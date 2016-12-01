@@ -10,7 +10,7 @@ import java.util.Map;
  * @author neo
  */
 public class ParamValidator {
-    public void validate(Goal goal, Map<Param, String> params) {
+    public void validate(Goal goal, Map<Param, List<String>> params) {
         if (goal == Goal.SYNC || goal == Goal.DEL) {
             validateParams(params, Lists.newArrayList(Param.ENV_PATH, Param.DRY_RUN), null);
         } else if (goal == Goal.DESC) {
@@ -32,7 +32,7 @@ public class ParamValidator {
         }
     }
 
-    private void validateParams(Map<Param, String> params, List<Param> allowedParams, List<Param> requiredParams) {
+    private void validateParams(Map<Param, List<String>> params, List<Param> allowedParams, List<Param> requiredParams) {
         boolean allParamAllowed = params.keySet().stream().allMatch(allowedParams::contains);
         Asserts.isTrue(allParamAllowed, "not allowed param found, allowed={}, input={}", allowedParams, params);
 

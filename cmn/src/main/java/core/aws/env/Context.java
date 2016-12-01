@@ -1,6 +1,7 @@
 package core.aws.env;
 
 import core.aws.util.Asserts;
+import core.aws.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author neo
  */
 public class Context {
-    final Map<Param, String> params = new ConcurrentHashMap<>();
+    final Map<Param, List<String>> params = new ConcurrentHashMap<>();
     private final Logger messageLogger = LoggerFactory.getLogger("message");
     private final Map<String, List<String>> newOutputs = new TreeMap<>();
     private final ReentrantLock lock = new ReentrantLock();
@@ -26,25 +27,32 @@ public class Context {
         lock.lock();
         try {
             newOutputs.computeIfAbsent(key, k -> new ArrayList<>())
-                .add(String.valueOf(value));
+                      .add(String.valueOf(value));
         } finally {
             lock.unlock();
         }
     }
 
-    public String param(Param key) {
+    public List<String> params(Param key) {
         return params.get(key);
     }
 
+    public String param(Param key) {
+        List<String> params = this.params.get(key);
+        if (params == null) return null;
+        if (params.size() == 1) return params.get(0);
+        throw new IllegalStateException("found multiple values, key=" + key);
+    }
+
     public void param(Param key, String value) {
-        params.put(key, value);
+        params.computeIfAbsent(key, k -> Lists.newArrayList()).add(value);
     }
 
     public String requiredParam(Param key) {
-        return Asserts.notNull(params.get(key), "param is required, param={}", key.key);
+        return Asserts.notNull(param(key), "param is required, param={}", key.key);
     }
 
-    public void printOutputs() {
+    void printOutputs() {
         lock.lock();
         try {
             if (newOutputs.isEmpty()) {

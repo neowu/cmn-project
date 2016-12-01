@@ -30,10 +30,10 @@ public class LinuxCommandRunner {
     }
 
     public void run() throws IOException, JSchException, SftpException, InterruptedException {
-        String command = context.param(Param.EXECUTE_COMMAND);
+        List<String> commands = context.params(Param.EXECUTE_COMMAND);
         String script = context.param(Param.EXECUTE_SCRIPT);
 
-        Asserts.isTrue(command != null || script != null, "{} or {} is required", Param.EXECUTE_COMMAND.key, Param.EXECUTE_SCRIPT.key);
+        Asserts.isTrue(commands != null || script != null, "{} or {} is required", Param.EXECUTE_COMMAND.key, Param.EXECUTE_SCRIPT.key);
 
         String index = context.param(Param.INSTANCE_INDEX);
 
@@ -41,8 +41,8 @@ public class LinuxCommandRunner {
             Instance remoteInstance = remoteInstances.get(i);
             if (InstanceState.RUNNING.equalsTo(remoteInstance.getState()) && indexMatches(index, i)) {
                 try (SSH ssh = new SSH(remoteInstance.getPublicDnsName(), "ubuntu", KeyPair.keyFile(remoteInstance.getKeyName(), env))) {
-                    if (command != null) {
-                        ssh.executeCommands(command);
+                    if (commands != null) {
+                        ssh.executeCommands(commands.toArray(new String[commands.size()]));
                     } else {
                         executeScript(ssh, env.envDir.resolve(script));
                     }
