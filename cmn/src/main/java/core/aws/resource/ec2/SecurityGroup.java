@@ -1,6 +1,7 @@
 package core.aws.resource.ec2;
 
 import com.amazonaws.services.ec2.model.IpPermission;
+import com.amazonaws.services.ec2.model.IpRange;
 import core.aws.resource.Resource;
 import core.aws.resource.ResourceStatus;
 import core.aws.resource.Resources;
@@ -24,10 +25,9 @@ import java.util.Map;
  * @author neo
  */
 public class SecurityGroup extends Resource {
-    public com.amazonaws.services.ec2.model.SecurityGroup remoteSecurityGroup;
-
-    public String name;
     private final Map<Protocol, List<Source>> ingressRules = new HashMap<>();
+    public com.amazonaws.services.ec2.model.SecurityGroup remoteSecurityGroup;
+    public String name;
     public VPC vpc;
 
     public SecurityGroup(String id) {
@@ -97,7 +97,7 @@ public class SecurityGroup extends Resource {
 
     public static class Source {
         public SecurityGroup securityGroup;
-        public String ipRange;
+        public IpRange ipRange;
 
         @Override
         public String toString() {

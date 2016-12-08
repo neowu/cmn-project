@@ -41,7 +41,7 @@ public class CreateSGRuleTask extends Task<SecurityGroup> {
                     permission.getUserIdGroupPairs()
                         .add(new UserIdGroupPair().withGroupId(source.securityGroup.remoteSecurityGroup.getGroupId()));
                 } else if (source.ipRange != null) {
-                    permission.getIpRanges().add(source.ipRange);
+                    permission.getIpv4Ranges().add(source.ipRange);
                 }
             }
 

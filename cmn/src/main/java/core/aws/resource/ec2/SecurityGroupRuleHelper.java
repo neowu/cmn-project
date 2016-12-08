@@ -1,6 +1,7 @@
 package core.aws.resource.ec2;
 
 import com.amazonaws.services.ec2.model.IpPermission;
+import com.amazonaws.services.ec2.model.IpRange;
 import com.amazonaws.services.ec2.model.UserIdGroupPair;
 import core.aws.util.Lists;
 
@@ -52,9 +53,9 @@ class SecurityGroupRuleHelper {
                 continue;
             }
 
-            List<String> deletedIpRanges = permission.getIpRanges().stream()
-                .filter(ipRange -> !containsIpRange(sources, ipRange))
-                .collect(Collectors.toList());
+            List<IpRange> deletedIpRanges = permission.getIpv4Ranges().stream()
+                                                      .filter(ipRange -> !containsIpRange(sources, ipRange))
+                                                      .collect(Collectors.toList());
 
             List<UserIdGroupPair> deletedSecurityGroupIds = new ArrayList<>();
             deletedSecurityGroupIds.addAll(permission.getUserIdGroupPairs().stream()
@@ -67,7 +68,7 @@ class SecurityGroupRuleHelper {
                     .withIpProtocol(permission.getIpProtocol())
                     .withFromPort(permission.getFromPort())
                     .withToPort(permission.getToPort())
-                    .withIpRanges(deletedIpRanges)
+                    .withIpv4Ranges(deletedIpRanges)
                     .withUserIdGroupPairs(deletedSecurityGroupIds);
                 deletedRules.add(rule);
             }
@@ -81,7 +82,7 @@ class SecurityGroupRuleHelper {
             && sourceUserGroup.getGroupId().equals(source.securityGroup.remoteSecurityGroup.getGroupId()));
     }
 
-    private boolean containsIpRange(Collection<SecurityGroup.Source> sources, final String ipRange) {
+    private boolean containsIpRange(Collection<SecurityGroup.Source> sources, final IpRange ipRange) {
         return sources.stream().anyMatch(source -> source.ipRange != null && source.ipRange.equals(ipRange));
     }
 
@@ -90,7 +91,7 @@ class SecurityGroupRuleHelper {
             if (rule.getIpProtocol().equals(protocol.ipProtocol)
                 && rule.getFromPort() == protocol.fromPort
                 && rule.getToPort() == protocol.toPort) {
-                if (source.ipRange != null && rule.getIpRanges().contains(source.ipRange)) return true;
+                if (source.ipRange != null && rule.getIpv4Ranges().contains(source.ipRange)) return true;
                 if (remoteIngressRuleContainsSource(rule, source)) return true;
             }
         }

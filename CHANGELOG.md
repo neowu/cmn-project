@@ -1,4 +1,7 @@
 ## Change log
+### 1.8.5 (12/8/2016)
+* aws: fix AWS latest SDK deprecated old IpRange and switch to Ipv4Ranges
+
 ### 1.8.4 (10/15/2016 - 12/01/2016)
 * provision: removed ubuntu 14.04 support from ansible provisioner, now build-in roles and provision/bake only works with ubuntu 1604
 * ec2: create instance into multiple AZ/Subnet if applicable

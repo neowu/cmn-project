@@ -1,5 +1,6 @@
 package core.aws.local.ec2;
 
+import com.amazonaws.services.ec2.model.IpRange;
 import core.aws.env.Environment;
 import core.aws.local.DependencyResolvers;
 import core.aws.local.LocalResourceLoader;
@@ -68,7 +69,7 @@ public class SGLoader implements LocalResourceLoader {
         if (inputSource.sgId != null) {
             source.securityGroup = resources.get(SecurityGroup.class, inputSource.sgId);
         } else if (inputSource.cidr != null) {
-            source.ipRange = inputSource.cidr;
+            source.ipRange = new IpRange().withCidrIp(inputSource.cidr);
         }
         securityGroup.addIngressRule(protocol, source);
     }

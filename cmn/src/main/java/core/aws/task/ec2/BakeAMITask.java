@@ -8,6 +8,7 @@ import com.amazonaws.services.ec2.model.DescribeImagesRequest;
 import com.amazonaws.services.ec2.model.DescribeImagesResult;
 import com.amazonaws.services.ec2.model.InstanceType;
 import com.amazonaws.services.ec2.model.IpPermission;
+import com.amazonaws.services.ec2.model.IpRange;
 import com.amazonaws.services.ec2.model.RunInstancesRequest;
 import com.amazonaws.services.ec2.model.Subnet;
 import core.aws.client.AWS;
@@ -160,7 +161,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
 
         String sgId = AWS.ec2.createSecurityGroup(request).getGroupId();
         AWS.ec2.createSGIngressRules(sgId, Lists.newArrayList(new IpPermission()
-            .withIpRanges("0.0.0.0/0")
+            .withIpv4Ranges(new IpRange().withCidrIp("0.0.0.0/0"))
             .withFromPort(22)
             .withToPort(22)
             .withIpProtocol("tcp")));
