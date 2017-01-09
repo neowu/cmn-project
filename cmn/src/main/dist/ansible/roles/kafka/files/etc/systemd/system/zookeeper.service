@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 User=kafka
-ExecStart=/opt/kafka_2.11-0.10.1.0/bin/zookeeper-server-start.sh /opt/kafka_2.11-0.10.1.0/config/zookeeper.properties
+ExecStart=/opt/kafka_2.11-0.10.1.1/bin/zookeeper-server-start.sh /opt/kafka_2.11-0.10.1.1/config/zookeeper.properties
 
 [Install]
 WantedBy=multi-user.target

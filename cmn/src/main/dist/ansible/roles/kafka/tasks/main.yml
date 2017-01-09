@@ -14,10 +14,10 @@
   pam_limits: domain=kafka limit_type=hard limit_item=nofile value=32768
 
 - name: download kafka
-  get_url: url=http://www.us.apache.org/dist/kafka/0.10.1.0/kafka_2.11-0.10.1.0.tgz dest=/tmp timeout=60 checksum=md5:45c7d032324e16c2e19a7d904a4d65c6
+  get_url: url=http://www.us.apache.org/dist/kafka/0.10.1.1/kafka_2.11-0.10.1.1.tgz dest=/tmp timeout=60 checksum=md5:c32c75ff9b23cd6b64717f9eb5b4eb87
 
 - name: extract kafka
-  unarchive: src=/tmp/kafka_2.11-0.10.1.0.tgz dest=/opt/ copy=no owner=kafka group=kafka
+  unarchive: src=/tmp/kafka_2.11-0.10.1.1.tgz dest=/opt/ copy=no owner=kafka group=kafka
 
 - name: create /var/lib/zookeeper
   file: path=/var/lib/zookeeper owner=kafka group=kafka mode=0755 state=directory
@@ -32,10 +32,10 @@
   template: src=etc/systemd/system/kafka.service.j2 dest=/etc/systemd/system/kafka.service
 
 - name: update /opt/kafka/config/zookeeper.properties
-  copy: src=opt/kafka/config/zookeeper.properties dest=/opt/kafka_2.11-0.10.1.0/config/zookeeper.properties
+  copy: src=opt/kafka/config/zookeeper.properties dest=/opt/kafka_2.11-0.10.1.1/config/zookeeper.properties
 
 - name: update /opt/kafka/config/server.properties
-  template: src=opt/kafka/config/server.properties.j2 dest=/opt/kafka_2.11-0.10.1.0/config/server.properties
+  template: src=opt/kafka/config/server.properties.j2 dest=/opt/kafka_2.11-0.10.1.1/config/server.properties
 
 - name: enable zookeeper service
   service: name=zookeeper enabled=yes
