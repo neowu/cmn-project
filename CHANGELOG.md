@@ -1,6 +1,7 @@
 ## Change log
 ### 1.8.5 (12/8/2016)
 * aws: fix AWS latest SDK deprecated old IpRange and switch to Ipv4Ranges
+* kafka: update kafka to 0.10.1.1
 
 ### 1.8.4 (10/15/2016 - 12/01/2016)
 * provision: removed ubuntu 14.04 support from ansible provisioner, now build-in roles and provision/bake only works with ubuntu 1604
