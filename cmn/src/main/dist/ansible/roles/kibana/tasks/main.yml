@@ -5,13 +5,13 @@
   user: name=kibana group=kibana
 
 - name: download kibana
-  get_url: url=https://artifacts.elastic.co/downloads/kibana/kibana-5.0.0-linux-x86_64.tar.gz dest=/tmp timeout=60 checksum=sha1:370b78f1600c4dde8ac29ff9bb71a0a429d58ba9
+  get_url: url=https://artifacts.elastic.co/downloads/kibana/kibana-5.2.0-linux-x86_64.tar.gz dest=/tmp timeout=60 checksum=sha1:2606853a5d51c95f88d1b7ceff5f2a41e696ce00
 
 - name: extract kibana
-  unarchive: src=/tmp/kibana-5.0.0-linux-x86_64.tar.gz dest=/opt/ copy=no owner=kibana group=kibana
+  unarchive: src=/tmp/kibana-5.2.0-linux-x86_64.tar.gz dest=/opt/ copy=no owner=kibana group=kibana
 
 - name: update /opt/kibana/config/kibana.yml
-  copy: src=opt/kibana/config/kibana.yml dest=/opt/kibana-5.0.0-linux-x86_64/config/kibana.yml
+  copy: src=opt/kibana/config/kibana.yml dest=/opt/kibana-5.2.0-linux-x86_64/config/kibana.yml
 
 - name: update /etc/systemd/system/kibana.service
   copy: src=etc/systemd/system/kibana.service dest=/etc/systemd/system/kibana.service
