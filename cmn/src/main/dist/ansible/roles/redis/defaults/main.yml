@@ -1,2 +1,4 @@
 redis_persistence_rdb: true
 redis_persistence_aof: false
+redis_max_memory: ""
+redis_max_memory_policy: ""
