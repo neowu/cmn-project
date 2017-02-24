@@ -3,9 +3,9 @@ package core.aws.client;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.autoscaling.AmazonAutoScaling;
-import com.amazonaws.services.autoscaling.AmazonAutoScalingClient;
+import com.amazonaws.services.autoscaling.AmazonAutoScalingClientBuilder;
 import com.amazonaws.services.autoscaling.model.AutoScalingGroup;
 import com.amazonaws.services.autoscaling.model.CreateAutoScalingGroupRequest;
 import com.amazonaws.services.autoscaling.model.CreateLaunchConfigurationRequest;
@@ -41,9 +41,8 @@ public class AutoScaling {
     public final AmazonAutoScaling autoScaling;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public AutoScaling(AWSCredentialsProvider credentials, Region region) {
-        autoScaling = new AmazonAutoScalingClient(credentials);
-        autoScaling.setRegion(region);
+    public AutoScaling(AWSCredentialsProvider credentials, Regions region) {
+        autoScaling = AmazonAutoScalingClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
     public AutoScalingGroup createASGroup(CreateAutoScalingGroupRequest request) {
@@ -83,7 +82,7 @@ public class AutoScaling {
         logger.info("describe auto scaling group, name={}", asGroupName);
         List<AutoScalingGroup> groups = autoScaling.describeAutoScalingGroups(new DescribeAutoScalingGroupsRequest()
             .withAutoScalingGroupNames(asGroupName))
-            .getAutoScalingGroups();
+                                                   .getAutoScalingGroups();
         if (groups.isEmpty()) return null;
         return groups.get(0);
     }
@@ -96,8 +95,8 @@ public class AutoScaling {
 
         autoScaling.describeLaunchConfigurations(new DescribeLaunchConfigurationsRequest()
             .withLaunchConfigurationNames(launchConfigNames))
-            .getLaunchConfigurations()
-            .forEach(config -> results.put(config.getLaunchConfigurationName(), config));
+                   .getLaunchConfigurations()
+                   .forEach(config -> results.put(config.getLaunchConfigurationName(), config));
 
         if (results.size() != launchConfigNames.size())
             throw Exceptions.error("some launch config does not exist, foundNames={}", results.keySet());
@@ -109,7 +108,7 @@ public class AutoScaling {
         logger.info("describe launch config, name={}", launchConfigName);
         return autoScaling.describeLaunchConfigurations(new DescribeLaunchConfigurationsRequest()
             .withLaunchConfigurationNames(launchConfigName))
-            .getLaunchConfigurations().get(0);
+                          .getLaunchConfigurations().get(0);
     }
 
     public List<ScalingPolicy> describeScalingPolicies(String asGroupName) {
@@ -144,7 +143,7 @@ public class AutoScaling {
     public void updateTag(String asGroupName, Tag tag) {
         logger.info("update auto scaling group tag, asGroup={}, key={}, value={}", asGroupName, tag.getKey(), tag.getValue());
         tag.withResourceId(asGroupName)
-            .withResourceType("auto-scaling-group");
+           .withResourceType("auto-scaling-group");
         autoScaling.createOrUpdateTags(new CreateOrUpdateTagsRequest().withTags(tag));
     }
 

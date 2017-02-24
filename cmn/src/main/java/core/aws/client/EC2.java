@@ -2,9 +2,9 @@ package core.aws.client;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.AuthorizeSecurityGroupIngressRequest;
 import com.amazonaws.services.ec2.model.AvailabilityZone;
 import com.amazonaws.services.ec2.model.BlockDeviceMapping;
@@ -61,18 +61,17 @@ public class EC2 {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private volatile List<String> availabilityZones;
 
-    public EC2(AWSCredentialsProvider credentials, Region region) {
-        ec2 = new AmazonEC2Client(credentials);
-        ec2.setRegion(region);
+    public EC2(AWSCredentialsProvider credentials, Regions region) {
+        ec2 = AmazonEC2ClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
     public synchronized List<String> availabilityZones() {
         if (availabilityZones == null) {
             DescribeAvailabilityZonesResult result = ec2.describeAvailabilityZones();
             availabilityZones = result.getAvailabilityZones().stream()
-                .filter(zone -> "available".equals(zone.getState()))
-                .map(AvailabilityZone::getZoneName)
-                .collect(Collectors.toList());
+                                      .filter(zone -> "available".equals(zone.getState()))
+                                      .map(AvailabilityZone::getZoneName)
+                                      .collect(Collectors.toList());
             logger.info("availability zones => {}", availabilityZones);
         }
         return availabilityZones;
@@ -210,8 +209,8 @@ public class EC2 {
         logger.info("describe instances, instanceIds={}", instanceIds);
         DescribeInstancesResult result = ec2.describeInstances(new DescribeInstancesRequest().withInstanceIds(instanceIds));
         return result.getReservations().stream()
-            .flatMap(reservation -> reservation.getInstances().stream())
-            .collect(Collectors.toList());
+                     .flatMap(reservation -> reservation.getInstances().stream())
+                     .collect(Collectors.toList());
     }
 
     public List<Image> describeImages(Collection<String> imageIds) {

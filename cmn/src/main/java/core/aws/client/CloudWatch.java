@@ -1,9 +1,9 @@
 package core.aws.client;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
 import com.amazonaws.services.cloudwatch.model.DeleteAlarmsRequest;
 import com.amazonaws.services.cloudwatch.model.PutMetricAlarmRequest;
 import org.slf4j.Logger;
@@ -18,9 +18,8 @@ public class CloudWatch {
     public final AmazonCloudWatch cloudWatch;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public CloudWatch(AWSCredentialsProvider credentials, Region region) {
-        cloudWatch = new AmazonCloudWatchClient(credentials);
-        cloudWatch.setRegion(region);
+    public CloudWatch(AWSCredentialsProvider credentials, Regions region) {
+        cloudWatch = AmazonCloudWatchClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
     public void createAlarm(PutMetricAlarmRequest request) {

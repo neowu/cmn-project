@@ -4,7 +4,6 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.PropertiesCredentials;
-import com.amazonaws.regions.Region;
 import core.aws.env.Environment;
 import core.aws.util.Asserts;
 import org.slf4j.Logger;
@@ -34,14 +33,13 @@ public class AWS {
 
         LOGGER.info("initialize aws clients");
         AWSCredentialsProvider provider = loadAWSCredentials(env.envDir);
-        Region region = Region.getRegion(env.region);
-        ec2 = new EC2(provider, region);
-        vpc = new EC2VPC(provider, region);
-        elb = new ElasticLoadBalancing(provider, region);
-        s3 = new S3(provider, region);
-        iam = new IAM(provider, region);
-        as = new AutoScaling(provider, region);
-        cloudWatch = new CloudWatch(provider, region);
+        ec2 = new EC2(provider, env.region);
+        vpc = new EC2VPC(provider, env.region);
+        elb = new ElasticLoadBalancing(provider, env.region);
+        s3 = new S3(provider, env.region);
+        iam = new IAM(provider, env.region);
+        as = new AutoScaling(provider, env.region);
+        cloudWatch = new CloudWatch(provider, env.region);
     }
 
     private static AWSCredentialsProvider loadAWSCredentials(Path envDir) throws IOException {

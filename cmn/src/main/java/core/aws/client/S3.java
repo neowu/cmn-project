@@ -1,9 +1,9 @@
 package core.aws.client;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.BucketTaggingConfiguration;
@@ -36,12 +36,11 @@ import java.util.List;
  * @author neo
  */
 public class S3 {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     public final AmazonS3 s3;
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public S3(AWSCredentialsProvider credentials, Region region) {
-        s3 = new AmazonS3Client(credentials);
-        s3.setRegion(region);
+    public S3(AWSCredentialsProvider credentials, Regions region) {
+        s3 = AmazonS3ClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
     public void createFolder(String bucket, String folder) {

@@ -2,9 +2,9 @@ package core.aws.client;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.ec2.AmazonEC2;
-import com.amazonaws.services.ec2.AmazonEC2Client;
+import com.amazonaws.services.ec2.AmazonEC2ClientBuilder;
 import com.amazonaws.services.ec2.model.Address;
 import com.amazonaws.services.ec2.model.AllocateAddressRequest;
 import com.amazonaws.services.ec2.model.AllocateAddressResult;
@@ -46,9 +46,8 @@ public class EC2VPC {
     public final AmazonEC2 ec2;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public EC2VPC(AWSCredentialsProvider credentials, Region region) {
-        ec2 = new AmazonEC2Client(credentials);
-        ec2.setRegion(region);
+    public EC2VPC(AWSCredentialsProvider credentials, Regions region) {
+        ec2 = AmazonEC2ClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
     public Vpc createVPC() throws InterruptedException {
@@ -91,7 +90,7 @@ public class EC2VPC {
     private void enableVPCDNS(String vpcId) {
         logger.info("enable VPC DNS support, vpcId={}", vpcId);
         ec2.modifyVpcAttribute(new ModifyVpcAttributeRequest().withVpcId(vpcId)
-            .withEnableDnsHostnames(true));
+                                                              .withEnableDnsHostnames(true));
     }
 
     public String assignEIP(final String instanceId) throws Exception {

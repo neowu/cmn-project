@@ -2,9 +2,9 @@ package core.aws.client;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancing;
-import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancingClient;
+import com.amazonaws.services.elasticloadbalancing.AmazonElasticLoadBalancingClientBuilder;
 import com.amazonaws.services.elasticloadbalancing.model.ApplySecurityGroupsToLoadBalancerRequest;
 import com.amazonaws.services.elasticloadbalancing.model.CreateLoadBalancerRequest;
 import com.amazonaws.services.elasticloadbalancing.model.DeleteLoadBalancerRequest;
@@ -31,13 +31,11 @@ import java.util.stream.Collectors;
  * @author neo
  */
 public class ElasticLoadBalancing {
+    public final AmazonElasticLoadBalancing elb;
     private final Logger logger = LoggerFactory.getLogger(ElasticLoadBalancing.class);
 
-    public final AmazonElasticLoadBalancing elb;
-
-    public ElasticLoadBalancing(AWSCredentialsProvider credentials, Region region) {
-        elb = new AmazonElasticLoadBalancingClient(credentials);
-        elb.setRegion(region);
+    public ElasticLoadBalancing(AWSCredentialsProvider credentials, Regions region) {
+        elb = AmazonElasticLoadBalancingClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
     public LoadBalancerDescription createELB(final CreateLoadBalancerRequest request) throws Exception {
@@ -88,8 +86,8 @@ public class ElasticLoadBalancing {
         logger.info("describe elb instance health, instanceIds={}", instanceIds);
 
         List<com.amazonaws.services.elasticloadbalancing.model.Instance> instances = instanceIds.stream()
-            .map(com.amazonaws.services.elasticloadbalancing.model.Instance::new)
-            .collect(Collectors.toList());
+                                                                                                .map(com.amazonaws.services.elasticloadbalancing.model.Instance::new)
+                                                                                                .collect(Collectors.toList());
 
         DescribeInstanceHealthResult result = elb.describeInstanceHealth(new DescribeInstanceHealthRequest(elbName)
             .withInstances(instances));

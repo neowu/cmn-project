@@ -7,7 +7,7 @@ subprojects {
     version = '1.8.5'
 }
 
-def awsVersion = '1.11.60'
+def awsVersion = '1.11.95'
 
 project(':cmn') {
     apply plugin: 'application'

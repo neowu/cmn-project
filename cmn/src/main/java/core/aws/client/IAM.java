@@ -4,8 +4,9 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
-import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClient;
+import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
 import com.amazonaws.services.identitymanagement.model.AddRoleToInstanceProfileRequest;
 import com.amazonaws.services.identitymanagement.model.CreateInstanceProfileRequest;
 import com.amazonaws.services.identitymanagement.model.CreateRoleRequest;
@@ -42,10 +43,9 @@ public class IAM {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Region region;
 
-    public IAM(AWSCredentialsProvider credentials, Region region) {
-        iam = new AmazonIdentityManagementClient(credentials);
-        iam.setRegion(region);
-        this.region = region;
+    public IAM(AWSCredentialsProvider credentials, Regions region) {
+        iam = AmazonIdentityManagementClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
+        this.region = Region.getRegion(region);
     }
 
     public ServerCertificate createServerCert(UploadServerCertificateRequest request) throws InterruptedException {
