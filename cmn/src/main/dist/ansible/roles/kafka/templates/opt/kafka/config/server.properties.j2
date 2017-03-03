@@ -28,7 +28,7 @@ broker.id={{kafka_broker_id}}
 # The address the socket server listens on. It will get the value returned from
 # java.net.InetAddress.getCanonicalHostName() if not configured.
 #   FORMAT:
-#     listeners = security_protocol://host_name:port
+#     listeners = listener_name://host_name:port
 #   EXAMPLE:
 #     listeners = PLAINTEXT://your.host.name:9092
 #listeners=PLAINTEXT://:9092
@@ -37,6 +37,9 @@ broker.id={{kafka_broker_id}}
 # it uses the value for "listeners" if configured.  Otherwise, it will use the value
 # returned from java.net.InetAddress.getCanonicalHostName().
 #advertised.listeners=PLAINTEXT://your.host.name:9092
+
+# Maps listener names to security protocols, the default is for them to be the same. See the config documentation for more details
+#listener.security.protocol.map=PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL
 
 # The number of threads handling network requests
 num.network.threads=3
@@ -92,11 +95,11 @@ num.recovery.threads.per.data.dir=1
 # A segment will be deleted whenever *either* of these criteria are met. Deletion always happens
 # from the end of the log.
 
-# The minimum age of a log file to be eligible for deletion
+# The minimum age of a log file to be eligible for deletion due to age
 log.retention.hours={{kafka_log_retention_hours}}
 
 # A size-based retention policy for logs. Segments are pruned from the log as long as the remaining
-# segments don't drop below log.retention.bytes.
+# segments don't drop below log.retention.bytes. Functions independently of log.retention.hours.
 {% if kafka_log_retention_bytes != "" %}
 log.retention.bytes={{kafka_log_retention_bytes}}
 {% endif %}
@@ -119,5 +122,3 @@ zookeeper.connect={{kafka_zookeeper_connect}}
 
 # Timeout in ms for connecting to zookeeper
 zookeeper.connection.timeout.ms=6000
-
-message.max.bytes=3000012
