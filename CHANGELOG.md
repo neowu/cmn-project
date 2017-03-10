@@ -1,6 +1,7 @@
 ## Change log
 ### 1.8.6 (3/3/2017 - )
 * kafka: update to 0.10.2.0
+* docker: update to use docker-ce
 
 ### 1.8.5 (12/8/2016 - 2/27/2017)
 * aws: fix AWS latest SDK deprecated old IpRange and switch to Ipv4Ranges

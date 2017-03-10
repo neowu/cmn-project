@@ -1,11 +1,11 @@
 - name: add docker repo key
-  apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
+  apt_key: url=https://download.docker.com/linux/ubuntu/gpg
 
 - name: add docker repo
-  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-xenial main'
+  apt_repository: repo='deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'
 
 - name: install docker
-  apt: name=docker-engine
+  apt: name=docker-ce
 
 - name: enable docker service
   service: name=docker enabled=yes state=started
