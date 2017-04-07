@@ -13,6 +13,9 @@
     - kubectl
     - kubernetes-cni
 
+- name: update /etc/kubernetes/*
+  copy: src=etc/kubernetes/ dest=/etc/kubernetes owner=root group=root mode=0644
+
 - name: update /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
   copy: src=etc/systemd/system/kubelet.service.d/10-kubeadm.conf dest=/etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
