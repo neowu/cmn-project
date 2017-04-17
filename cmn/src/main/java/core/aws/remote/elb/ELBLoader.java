@@ -7,7 +7,6 @@ import core.aws.resource.Resources;
 import core.aws.resource.elb.ELB;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author neo
@@ -28,8 +27,7 @@ public class ELBLoader {
             String prefix = env.name + "-";
             if (elbName.startsWith(prefix)) {
                 String resourceId = elbName.substring(prefix.length());
-                Optional<ELB> result = resources.find(ELB.class, resourceId);
-                ELB elb = result.isPresent() ? result.get() : resources.add(new ELB(resourceId));
+                ELB elb = resources.find(ELB.class, resourceId).orElseGet(() -> resources.add(new ELB(resourceId)));
                 elb.name = elbName;
                 elb.remoteELB = remoteELB;
                 elb.foundInRemote();

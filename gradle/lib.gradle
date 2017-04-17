@@ -1,15 +1,9 @@
-configurations {
-    provided
-}
+apply plugin: 'java-library'
 
-sourceSets {
-    main.compileClasspath += configurations.provided
-    test.compileClasspath += configurations.provided
-    test.runtimeClasspath += configurations.provided
+sourceSets {    // add compileOnly to test scope to make simplify test dependency config
+    test.compileClasspath += configurations.compileOnly
+    test.runtimeClasspath += configurations.compileOnly
 }
-
-apply plugin: 'idea'
-idea.module.scopes.PROVIDED.plus += [configurations.provided]
 
 task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource

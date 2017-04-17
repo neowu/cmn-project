@@ -134,6 +134,8 @@ public final class SSH implements Closeable {
     }
 
     public static class SSHException extends RuntimeException {
+        private static final long serialVersionUID = 3248580184982451829L;
+
         public SSHException(Throwable cause) {
             super(cause);
         }

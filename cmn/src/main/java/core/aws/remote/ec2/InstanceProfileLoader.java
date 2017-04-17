@@ -6,7 +6,6 @@ import core.aws.resource.Resources;
 import core.aws.resource.ec2.InstanceProfile;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author neo
@@ -29,8 +28,8 @@ public class InstanceProfileLoader {
             if (!name.startsWith(prefix)) continue; // ignore instance profiles not matching naming convention
             String resourceId = name.substring(env.name.length() + 1);
 
-            Optional<InstanceProfile> result = resources.find(InstanceProfile.class, resourceId);
-            InstanceProfile instanceProfile = result.isPresent() ? result.get() : resources.add(new InstanceProfile(resourceId));
+            InstanceProfile instanceProfile = resources.find(InstanceProfile.class, resourceId)
+                                                       .orElseGet(() -> resources.add(new InstanceProfile(resourceId)));
             instanceProfile.name = remoteInstanceProfile.getInstanceProfileName();
             instanceProfile.remoteInstanceProfile = remoteInstanceProfile;
             instanceProfile.foundInRemote();

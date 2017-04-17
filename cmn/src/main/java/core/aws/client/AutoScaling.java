@@ -142,8 +142,7 @@ public class AutoScaling {
 
     public void updateTag(String asGroupName, Tag tag) {
         logger.info("update auto scaling group tag, asGroup={}, key={}, value={}", asGroupName, tag.getKey(), tag.getValue());
-        tag.withResourceId(asGroupName)
-           .withResourceType("auto-scaling-group");
+        tag.withResourceId(asGroupName).withResourceType("auto-scaling-group");
         autoScaling.createOrUpdateTags(new CreateOrUpdateTagsRequest().withTags(tag));
     }
 

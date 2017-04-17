@@ -2,7 +2,7 @@ apply plugin: 'build-dashboard'
 
 defaultTasks 'clean', 'build'
 
-def buildTime = new Date();
+def buildTime = new Date()
 
 subprojects {
     apply plugin: 'java'
@@ -13,6 +13,7 @@ subprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
+        options.compilerArgs << '-Xlint:all'
     }
 
     repositories {
@@ -35,14 +36,8 @@ subprojects {
             }
         }
     }
-
-    task mkdirs {
-        description = 'create project folder skeleton.'
-        sourceSets*.java.srcDirs*.each { it.mkdirs() }
-        sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-    }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
+    gradleVersion = '3.5'
 }

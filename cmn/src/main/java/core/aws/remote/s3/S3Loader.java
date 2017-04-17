@@ -27,7 +27,7 @@ public class S3Loader {
             String bucketId = bucketId(env.name, bucket.getName());
             if (bucketId != null) {
                 Optional<Bucket> result = resources.find(Bucket.class, bucketId);
-                Bucket localBucket = result.isPresent() ? result.get() : resources.add(new Bucket(bucketId));
+                Bucket localBucket = result.orElseGet(() -> resources.add(new Bucket(bucketId)));
                 Asserts.isNull(localBucket.remoteBucket, "the remote bucket was already loaded, please check duplicated name, bucketId={}", bucketId);
                 localBucket.remoteBucket = bucket;
                 localBucket.foundInRemote();

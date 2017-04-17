@@ -9,7 +9,6 @@ import core.aws.resource.Resources;
 import core.aws.resource.ec2.KeyPair;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author neo
@@ -30,8 +29,8 @@ public class KeyPairLoader {
         for (KeyPairInfo remoteKeyPair : remoteKeyPairs) {
             String keyPairId = keyPairId(env.name, remoteKeyPair.getKeyName());
             if (keyPairId != null) {
-                Optional<KeyPair> result = resources.find(KeyPair.class, keyPairId);
-                KeyPair keyPair = result.isPresent() ? result.get() : resources.add(new KeyPair(keyPairId, remoteKeyPair.getKeyName()));
+                KeyPair keyPair = resources.find(KeyPair.class, keyPairId)
+                                           .orElseGet(() -> resources.add(new KeyPair(keyPairId, remoteKeyPair.getKeyName())));
                 keyPair.remoteKeyPair = remoteKeyPair;
                 keyPair.foundInRemote();
             }

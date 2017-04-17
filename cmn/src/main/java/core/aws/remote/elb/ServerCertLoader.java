@@ -7,7 +7,6 @@ import core.aws.resource.Resources;
 import core.aws.resource.elb.ServerCert;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author neo
@@ -30,8 +29,8 @@ public class ServerCertLoader {
             if (!certName.startsWith(prefix)) continue; // ignore cert not matching naming convention
 
             String resourceId = certName.substring(prefix.length());
-            Optional<ServerCert> result = resources.find(ServerCert.class, resourceId);
-            ServerCert serverCert = result.isPresent() ? result.get() : resources.add(new ServerCert(resourceId));
+            ServerCert serverCert = resources.find(ServerCert.class, resourceId)
+                                             .orElseGet(() -> resources.add(new ServerCert(resourceId)));
             serverCert.name = certName;
             serverCert.remoteCert = AWS.iam.getServerCert(cert.getServerCertificateName());
             serverCert.foundInRemote();

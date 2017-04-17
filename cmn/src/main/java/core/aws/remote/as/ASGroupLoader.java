@@ -11,7 +11,6 @@ import core.aws.resource.as.AutoScalingPolicy;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,8 +30,8 @@ public class ASGroupLoader {
 
         // find all AS group with prefix
         List<AutoScalingGroup> asGroups = AWS.as.listASGroups().stream()
-            .filter(group -> group.getAutoScalingGroupName().startsWith(prefix))
-            .collect(Collectors.toList());
+                                                .filter(group -> group.getAutoScalingGroupName().startsWith(prefix))
+                                                .collect(Collectors.toList());
 
         if (asGroups.isEmpty()) return;
 
@@ -43,8 +42,8 @@ public class ASGroupLoader {
         for (AutoScalingGroup remoteASGroup : asGroups) {
             String asGroupName = remoteASGroup.getAutoScalingGroupName();
             String asGroupId = asGroupName.substring(prefix.length());
-            Optional<ASGroup> result = resources.find(ASGroup.class, asGroupId);
-            ASGroup asGroup = result.isPresent() ? result.get() : resources.add(new ASGroup(asGroupId));
+            ASGroup asGroup = resources.find(ASGroup.class, asGroupId)
+                                       .orElseGet(() -> resources.add(new ASGroup(asGroupId)));
             asGroup.remoteASGroup = remoteASGroup;
             asGroup.launchConfig.remoteLaunchConfig = configs.get(remoteASGroup.getLaunchConfigurationName());
             asGroup.foundInRemote();
@@ -52,8 +51,8 @@ public class ASGroupLoader {
             List<ScalingPolicy> remotePolicies = AWS.as.describeScalingPolicies(asGroupName);
             for (ScalingPolicy remotePolicy : remotePolicies) {
                 String policyId = remotePolicy.getPolicyName();
-                Optional<AutoScalingPolicy> policyResult = resources.find(AutoScalingPolicy.class, policyId);
-                AutoScalingPolicy policy = policyResult.isPresent() ? policyResult.get() : resources.add(new AutoScalingPolicy(policyId));
+                AutoScalingPolicy policy = resources.find(AutoScalingPolicy.class, policyId)
+                                                    .orElseGet(() -> resources.add(new AutoScalingPolicy(policyId)));
                 policy.remotePolicy = remotePolicy;
                 policy.foundInRemote();
             }
