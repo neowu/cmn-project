@@ -38,6 +38,11 @@ subprojects {
     }
 }
 
+allprojects {
+    apply plugin: 'idea'
+    idea.module.inheritOutputDirs = true
+}
+
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.1'
 }
