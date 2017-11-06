@@ -1,33 +1,34 @@
 package core.aws.resource.ec2;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author neo
  */
-public class ProtocolTest {
+class ProtocolTest {
     @Test
-    public void parsePortRange() {
+    void parsePortRange() {
         Protocol protocol = Protocol.parse("10000-12345");
-        Assert.assertEquals(Protocol.TCP, protocol.ipProtocol);
-        Assert.assertEquals(10000, protocol.fromPort);
-        Assert.assertEquals(12345, protocol.toPort);
+        assertEquals(Protocol.TCP, protocol.ipProtocol);
+        assertEquals(10000, protocol.fromPort);
+        assertEquals(12345, protocol.toPort);
     }
 
     @Test
-    public void parseSinglePort() {
+    void parseSinglePort() {
         Protocol protocol = Protocol.parse("9300");
-        Assert.assertEquals(Protocol.TCP, protocol.ipProtocol);
-        Assert.assertEquals(9300, protocol.fromPort);
-        Assert.assertEquals(9300, protocol.toPort);
+        assertEquals(Protocol.TCP, protocol.ipProtocol);
+        assertEquals(9300, protocol.fromPort);
+        assertEquals(9300, protocol.toPort);
     }
 
     @Test
-    public void parsePredefinedProtocol() {
+    void parsePredefinedProtocol() {
         Protocol protocol = Protocol.parse("http");
-        Assert.assertEquals(Protocol.TCP, protocol.ipProtocol);
-        Assert.assertEquals(80, protocol.fromPort);
-        Assert.assertEquals(80, protocol.toPort);
+        assertEquals(Protocol.TCP, protocol.ipProtocol);
+        assertEquals(80, protocol.fromPort);
+        assertEquals(80, protocol.toPort);
     }
 }

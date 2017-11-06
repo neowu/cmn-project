@@ -1,15 +1,15 @@
 package core.aws.resource.ec2;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author neo
  */
-public class KeyPairTest {
+class KeyPairTest {
     @Test
-    public void normalizeName() {
+    void normalizeName() {
         assertEquals("env-test", KeyPair.normalizeName("env:test"));
     }
 }

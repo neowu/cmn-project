@@ -3,26 +3,27 @@ package core.aws.resource.elb;
 import com.amazonaws.services.elasticloadbalancing.model.Listener;
 import com.amazonaws.services.elasticloadbalancing.model.ListenerDescription;
 import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerDescription;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class ELBTest {
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class ELBTest {
     ELB elb;
 
-    @Before
-    public void createELB() {
+    @BeforeEach
+    void createELB() {
         elb = new ELB("elb");
     }
 
     @Test
-    public void httpsCertChangedWithNewLocalCert() {
+    void httpsCertChangedWithNewLocalCert() {
         elb.listenHTTPS = true;
         elb.remoteELB = new LoadBalancerDescription()
-            .withListenerDescriptions(new ListenerDescription().withListener(new Listener("HTTPS", 443, 80)));
+                .withListenerDescriptions(new ListenerDescription().withListener(new Listener("HTTPS", 443, 80)));
         elb.cert = new ServerCert("cert");
         elb.cert.foundInLocal();
 
-        Assert.assertTrue(elb.httpsCertChanged());
+        assertTrue(elb.httpsCertChanged());
     }
 }

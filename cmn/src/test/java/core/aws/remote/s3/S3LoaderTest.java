@@ -1,31 +1,31 @@
 package core.aws.remote.s3;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author neo
  */
-public class S3LoaderTest {
+class S3LoaderTest {
     private static final String ENV = "env";
 
     S3Loader loader;
 
-    @Before
-    public void createS3Loader() {
+    @BeforeEach
+    void createS3Loader() {
         loader = new S3Loader(null, null);
     }
 
     @Test
-    public void validEnvBuckets() {
+    void validEnvBuckets() {
         assertEquals("test", loader.bucketId(ENV, "env-test"));
     }
 
     @Test
-    public void invalidEnvBuckets() {
+    void invalidEnvBuckets() {
         assertNull(loader.bucketId(ENV, "test"));
         assertNull(loader.bucketId(ENV, "en"));
         assertNull(loader.bucketId(ENV, "env-"));

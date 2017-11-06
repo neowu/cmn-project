@@ -3,24 +3,25 @@ package core.aws.client;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author neo
  */
-public class IAMTest {
+class IAMTest {
     @Test
-    public void assumeRolePolicy() {
+    void assumeRolePolicy() {
         IAM iam = new IAM(new DefaultAWSCredentialsProviderChain(), Regions.US_EAST_1);
         String document = iam.assumeRolePolicyDocument();
-        Assert.assertThat(document, CoreMatchers.containsString("\"Service\":\"ec2.amazonaws.com\""));
+        assertThat(document, CoreMatchers.containsString("\"Service\":\"ec2.amazonaws.com\""));
     }
 
     @Test
-    public void assumeRolePolicyWithChinaRegion() {
+    void assumeRolePolicyWithChinaRegion() {
         IAM iam = new IAM(new DefaultAWSCredentialsProviderChain(), Regions.CN_NORTH_1);
         String document = iam.assumeRolePolicyDocument();
-        Assert.assertThat(document, CoreMatchers.containsString("\"Service\":\"ec2.amazonaws.com.cn\""));
+        assertThat(document, CoreMatchers.containsString("\"Service\":\"ec2.amazonaws.com.cn\""));
     }
 }

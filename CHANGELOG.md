@@ -1,6 +1,6 @@
 ## Change log
 ### 1.8.6 (3/3/2017 - )
-* kafka: update to 0.10.2.0
+* kafka: update to 1.0.0
 * docker: update to use docker-ce
 * kibana: update to 5.3.0
 

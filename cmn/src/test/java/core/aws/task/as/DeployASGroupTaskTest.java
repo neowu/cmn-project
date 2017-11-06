@@ -1,35 +1,36 @@
 package core.aws.task.as;
 
 import core.aws.resource.as.ASGroup;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author neo
  */
-public class DeployASGroupTaskTest {
-    DeployASGroupTask task;
+class DeployASGroupTaskTest {
+    private DeployASGroupTask task;
 
-    @Before
-    public void createDeployASGroupTask() {
+    @BeforeEach
+    void createDeployASGroupTask() {
         task = new DeployASGroupTask(new ASGroup("test"));
     }
 
     @Test
-    public void capacityDuringDeployment() {
-        Assert.assertEquals("add 3 more for current cap", 8, task.capacityDuringDeployment(5, 3));
-        Assert.assertEquals("just double the current cap", 4, task.capacityDuringDeployment(2, 1));
+    void capacityDuringDeployment() {
+        assertEquals(8, task.capacityDuringDeployment(5, 3), "add 3 more for current cap");
+        assertEquals(4, task.capacityDuringDeployment(2, 1), "just double the current cap");
 
-        Assert.assertEquals("just double the current cap", 6, task.capacityDuringDeployment(3, 3));
+        assertEquals(6, task.capacityDuringDeployment(3, 3), "just double the current cap");
 
-        Assert.assertEquals("lift cap to target", 4, task.capacityDuringDeployment(0, 4));
-        Assert.assertEquals("lift cap to target", 3, task.capacityDuringDeployment(0, 3));
-        Assert.assertEquals("lift cap to target", 2, task.capacityDuringDeployment(0, 2));
+        assertEquals(4, task.capacityDuringDeployment(0, 4), "lift cap to target");
+        assertEquals(3, task.capacityDuringDeployment(0, 3), "lift cap to target");
+        assertEquals(2, task.capacityDuringDeployment(0, 2), "lift cap to target");
 
-        Assert.assertEquals("lift with target", 3, task.capacityDuringDeployment(1, 2));
-        Assert.assertEquals("lift with target", 8, task.capacityDuringDeployment(3, 5));
-        Assert.assertEquals("lift with target", 8, task.capacityDuringDeployment(4, 5));
-        Assert.assertEquals("lift with target", 9, task.capacityDuringDeployment(4, 6));
+        assertEquals(3, task.capacityDuringDeployment(1, 2), "lift with target");
+        assertEquals(8, task.capacityDuringDeployment(3, 5), "lift with target");
+        assertEquals(8, task.capacityDuringDeployment(4, 5), "lift with target");
+        assertEquals(9, task.capacityDuringDeployment(4, 6), "lift with target");
     }
 }

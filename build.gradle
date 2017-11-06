@@ -8,6 +8,7 @@ subprojects {
 }
 
 def awsVersion = '1.11.95'
+def junitJupiterVersion = '5.0.1'
 
 project(':cmn') {
     apply plugin: 'application'
@@ -23,24 +24,22 @@ project(':cmn') {
     }
 
     dependencies {
-        compile(
-                "com.amazonaws:aws-java-sdk-autoscaling:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-ec2:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-elasticloadbalancing:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-cloudwatch:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-iam:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-s3:${awsVersion}",
-                "com.amazonaws:aws-java-sdk-ecr:${awsVersion}",
-                'org.slf4j:slf4j-api:1.7.12',
-                'org.slf4j:jcl-over-slf4j:1.7.12',
-                'ch.qos.logback:logback-classic:1.1.3',
-                'com.jcraft:jsch:0.1.50',
-                'org.apache.commons:commons-compress:1.5',
-                'org.yaml:snakeyaml:1.13'
-        )
-        testCompile(
-                'junit:junit:4.12',
-                'org.mockito:mockito-core:2.1.0'
-        )
+        compile "com.amazonaws:aws-java-sdk-autoscaling:${awsVersion}"
+        compile "com.amazonaws:aws-java-sdk-ec2:${awsVersion}"
+        compile "com.amazonaws:aws-java-sdk-elasticloadbalancing:${awsVersion}"
+        compile "com.amazonaws:aws-java-sdk-cloudwatch:${awsVersion}"
+        compile "com.amazonaws:aws-java-sdk-iam:${awsVersion}"
+        compile "com.amazonaws:aws-java-sdk-s3:${awsVersion}"
+        compile "com.amazonaws:aws-java-sdk-ecr:${awsVersion}"
+        compile 'org.slf4j:slf4j-api:1.7.12'
+        compile 'org.slf4j:jcl-over-slf4j:1.7.12'
+        compile 'ch.qos.logback:logback-classic:1.1.3'
+        compile 'com.jcraft:jsch:0.1.50'
+        compile 'org.apache.commons:commons-compress:1.5'
+        compile 'org.yaml:snakeyaml:1.13'
+
+        testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+        testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+        testCompile 'org.mockito:mockito-core:2.11.0'
     }
 }

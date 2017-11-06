@@ -1,42 +1,14 @@
-import org.gradle.internal.os.OperatingSystem
-
 // use gradlew -Penv=${env} to pass
-def environment = hasProperty('env') ? env : null
+def env = hasProperty('env') ? env : null
 
 apply plugin: 'application'
 mainClassName = 'Main'
 
-def npm(String... params) {
-    def isWindows = OperatingSystem.current().isWindows()
-    return {
-        workingDir "${rootDir}/gradle/node"
-        def command = isWindows ? ['cmd', '/c', 'npm'] : ['npm']
-        command.addAll(params)
-        commandLine command
-    }
-}
-
-clean {
-    if (project.file("src/main/web").exists()) {
-        doLast {
-            exec npm('install')
-            exec npm('run', 'clean', '--', '--root', project.file('.') as String)
-        }
-    }
-}
-
 processResources {
-    if (environment != null) {
-        def envProperties = "conf/${environment}/resources"
-        assert project.file(envProperties).exists()
-        from envProperties
-    }
-    if (project.file("src/main/web").exists()) {
-        inputs.file project.file("src/main/web")
-        doLast {
-            exec npm('install')
-            exec npm('run', 'build', '--', '--root', project.file('.') as String)
-        }
+    if (env != null) {
+        assert project.file("conf/${env}/resources").exists()
+        inputs.file project.file("conf/${env}/resources")
+        from "conf/${env}/resources"
     }
 }
 
@@ -45,7 +17,7 @@ distTar {
 }
 
 startScripts {
-    defaultJvmOpts = ["-Dcore.webPath=APP_HOME_VAR/web", "-Dcore.appName=${project.name}"]
+    defaultJvmOpts = ['-Dcore.webPath=APP_HOME_VAR/web', "-Dcore.appName=${project.name}"]
 
     doLast {
         windowsScript.text = windowsScript.text.replaceFirst('APP_HOME_VAR', '%APP_HOME%')
@@ -54,15 +26,5 @@ startScripts {
 }
 
 distributions {
-    main {
-        if (environment != null) {
-            def envProperties = "conf/${environment}/resources"
-            assert project.file(envProperties).exists()
-            contents {
-                from("conf/${environment}/web") {
-                    into "web"
-                }
-            }
-        }
-    }
+    distZip.enabled = false
 }

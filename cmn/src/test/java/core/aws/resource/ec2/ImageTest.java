@@ -5,30 +5,30 @@ import core.aws.resource.image.Image;
 import core.aws.task.ec2.DeleteImageTask;
 import core.aws.util.StreamHelper;
 import core.aws.workflow.Tasks;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author neo
  */
-public class ImageTest {
-    Image image;
+class ImageTest {
+    private Image image;
 
-    @Before
-    public void createAMI() {
+    @BeforeEach
+    void createAMI() {
         image = new Image("test");
     }
 
     @Test
-    public void nextVersionWithoutRemoteImages() {
+    void nextVersionWithoutRemoteImages() {
         assertThat(image.nextVersion(), equalTo(1));
     }
 
     @Test
-    public void nextVersion() {
+    void nextVersion() {
         image.remoteImages.put(1, new com.amazonaws.services.ec2.model.Image().withName("image1"));
         image.remoteImages.put(3, new com.amazonaws.services.ec2.model.Image().withName("image3"));
         image.remoteImages.put(2, new com.amazonaws.services.ec2.model.Image().withName("image2"));
@@ -37,7 +37,7 @@ public class ImageTest {
     }
 
     @Test
-    public void deleteOldAMI() {
+    void deleteOldAMI() {
         image.remoteImages.put(1, new com.amazonaws.services.ec2.model.Image().withName("image1").withState(ImageState.Available));
         image.remoteImages.put(2, new com.amazonaws.services.ec2.model.Image().withName("image2").withState(ImageState.Available));
         image.remoteImages.put(5, new com.amazonaws.services.ec2.model.Image().withName("image5").withState(ImageState.Available));

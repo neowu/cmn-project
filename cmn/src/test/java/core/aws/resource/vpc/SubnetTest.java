@@ -1,18 +1,19 @@
 package core.aws.resource.vpc;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author neo
  */
-public class SubnetTest {
+class SubnetTest {
     @Test
-    public void firstRemoteSubnet() {
+    void firstRemoteSubnet() {
         Subnet subnet = new Subnet("public");
         subnet.remoteSubnets.add(new com.amazonaws.services.ec2.model.Subnet().withSubnetId("1").withAvailabilityZone("us-east-1b"));
         subnet.remoteSubnets.add(new com.amazonaws.services.ec2.model.Subnet().withSubnetId("2").withAvailabilityZone("us-east-1a"));
 
-        Assert.assertEquals("us-east-1a", subnet.firstRemoteSubnet().getAvailabilityZone());
+        assertEquals("us-east-1a", subnet.firstRemoteSubnet().getAvailabilityZone());
     }
 }

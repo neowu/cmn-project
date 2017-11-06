@@ -6,22 +6,23 @@ import core.aws.resource.ec2.SecurityGroup;
 import core.aws.task.ec2.DeleteSGRuleTask;
 import core.aws.task.ec2.DeleteSGTask;
 import core.aws.workflow.Tasks;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author neo
  */
-public class SGTaskPlannerTest {
+class SGTaskPlannerTest {
     @Test
-    public void linkDeleteSGRuleTask() {
+    void linkDeleteSGRuleTask() {
         Tasks tasks = new Tasks();
 
         SecurityGroup adminSG = new SecurityGroup("admin");
         adminSG.remoteSecurityGroup = new com.amazonaws.services.ec2.model.SecurityGroup().withGroupId("admin");
         SecurityGroup webSG = new SecurityGroup("web");
         webSG.remoteSecurityGroup = new com.amazonaws.services.ec2.model.SecurityGroup().withGroupId("web")
-            .withIpPermissions(new IpPermission().withUserIdGroupPairs(new UserIdGroupPair().withGroupId("admin")));
+                                                                                        .withIpPermissions(new IpPermission().withUserIdGroupPairs(new UserIdGroupPair().withGroupId("admin")));
 
         DeleteSGTask deleteAdminTask = tasks.add(new DeleteSGTask(adminSG));
 
@@ -31,6 +32,6 @@ public class SGTaskPlannerTest {
 
         new SGTaskPlanner(tasks).plan();
 
-        Assert.assertTrue(deleteAdminTask.dependencies.contains(deleteWebRuleTask));
+        assertTrue(deleteAdminTask.dependencies.contains(deleteWebRuleTask));
     }
 }
