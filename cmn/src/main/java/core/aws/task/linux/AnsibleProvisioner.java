@@ -48,7 +48,10 @@ public class AnsibleProvisioner {
 
         try (SSH ssh = new SSH(hostName(instance), "ubuntu", KeyPair.keyFile(instance.getKeyName(), env))) {
             ssh.executeCommands("sudo apt-get -y -q update",
-                "dpkg -s ansible || sudo apt-get -y install ansible",
+                "sudo apt-get install software-properties-common",
+                "sudo apt-add-repository ppa:ansible/ansible -y",
+                "sudo apt-get update",
+                "sudo apt-get -y install ansible",
                 "sudo DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes -q -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' dist-upgrade", // update package before run playbook to make sure ansible is updated in advance
                 "sudo rm -rf /opt/ansible /opt/packages",    // clear previous ansible roles and packages if installed
                 "sudo mkdir -p /opt/packages /opt/ansible",
