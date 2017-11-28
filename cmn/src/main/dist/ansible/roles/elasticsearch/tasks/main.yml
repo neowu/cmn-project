@@ -13,6 +13,13 @@
 - name: install elasticsearch
   apt: name=elasticsearch
 
+- name: set /usr/share/elasticsearch folder permissions
+  file:
+    path: /usr/share/elasticsearch
+    owner: elasticsearch
+    group: elasticsearch
+    mode: 0644
+
 - name: update /etc/elasticsearch/elasticsearch.yml
   template: src=etc/elasticsearch/elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
 
