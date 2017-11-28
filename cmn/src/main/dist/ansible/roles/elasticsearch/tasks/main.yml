@@ -8,7 +8,7 @@
   apt_key: url=https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
 - name: add elasticsearch repo
-  apt_repository: repo='deb https://artifacts.elastic.co/packages/5.x/apt stable main'
+  apt_repository: repo='deb https://artifacts.elastic.co/packages/6.x/apt stable main'
 
 - name: install elasticsearch
   apt: name=elasticsearch
