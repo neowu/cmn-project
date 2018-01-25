@@ -26,11 +26,11 @@ public class CreateSGTask extends core.aws.workflow.Task<SecurityGroup> {
         String description = context.env.name + ":" + resource.id;
         CreateSecurityGroupRequest request = new CreateSecurityGroupRequest(resource.name, description);
         if (resource.vpc != null) request.withVpcId(resource.vpc.remoteVPC.getVpcId());
-        resource.remoteSecurityGroup = AWS.ec2.createSecurityGroup(request);
+        resource.remoteSecurityGroup = AWS.getEc2().createSecurityGroup(request);
 
         Threads.sleepRoughly(Duration.ofSeconds(5));    // wait small period of time, for sg to be visible for creating tag
 
-        AWS.ec2.createTags(new CreateTagsRequest()
+        AWS.getEc2().createTags(new CreateTagsRequest()
             .withResources(resource.remoteSecurityGroup.getGroupId())
             .withTags(tags.env(), tags.resourceId(resource.id), tags.name(resource.id)));
     }

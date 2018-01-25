@@ -54,7 +54,7 @@ public class SSHRunner {
 
     private Integer startTunnelSSH(Instance instance) throws InterruptedException {
         Instance tunnelInstance = runningInstances(tunnelResourceId).get(0);
-        Integer localPort = Double.valueOf(Randoms.number(3000, 10000)).intValue();
+        Integer localPort = (int) Randoms.number(3000, 10000);
         CountDownLatch latch = new CountDownLatch(1);
         Thread tunnelThread = new Thread(() -> {
             Process process = null;
@@ -86,11 +86,11 @@ public class SSHRunner {
             .withFilters(new Filter("key").withValues(tag.getKey()),
                 new Filter("value").withValues(tag.getValue()),
                 new Filter("resource-type").withValues("instance"));
-        List<TagDescription> remoteTags = AWS.ec2.describeTags(request);
+        List<TagDescription> remoteTags = AWS.getEc2().describeTags(request);
         List<String> instanceIds = remoteTags.stream().map(TagDescription::getResourceId).collect(Collectors.toList());
 
         if (instanceIds.isEmpty()) {
-            com.amazonaws.services.autoscaling.model.AutoScalingGroup asGroup = AWS.as.describeASGroup(env.name + "-" + this.resourceId);
+            com.amazonaws.services.autoscaling.model.AutoScalingGroup asGroup = AWS.getAs().describeASGroup(env.name + "-" + this.resourceId);
             if (asGroup == null) throw new Error("can not find any running instance or asGroup, id=" + this.resourceId);
 
             instanceIds = asGroup.getInstances().stream()
@@ -100,7 +100,7 @@ public class SSHRunner {
 
         logger.info("find instanceId, {} => {}", resourceId, instanceIds);
 
-        List<Instance> instances = AWS.ec2.describeInstances(instanceIds)
+        List<Instance> instances = AWS.getEc2().describeInstances(instanceIds)
             .stream().filter(instance -> "running".equals(instance.getState().getName())).collect(Collectors.toList());
         if (instances.isEmpty()) throw new Error("can not find any running instance, id=" + resourceId);
 
@@ -109,7 +109,7 @@ public class SSHRunner {
 
     private Instance locateInstanceToSSH(List<Instance> instances) {
         for (int i = 0; i < instances.size(); i++) {
-            com.amazonaws.services.ec2.model.Instance remoteInstance = instances.get(i);
+            Instance remoteInstance = instances.get(i);
             logger.info("index={}, instanceId={}, state={}, publicDNS={}, privateDNS={}",
                 i,
                 remoteInstance.getInstanceId(),

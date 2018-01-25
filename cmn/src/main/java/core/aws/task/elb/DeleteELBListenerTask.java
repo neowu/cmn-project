@@ -39,6 +39,6 @@ public class DeleteELBListenerTask extends Task<ELB> {
         }
 
         logger.info("delete ELB listeners, request={}", request);
-        AWS.elb.elb.deleteLoadBalancerListeners(request);
+        AWS.getElb().elb.deleteLoadBalancerListeners(request);
     }
 }

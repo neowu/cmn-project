@@ -23,7 +23,7 @@ public class CreatePolicyTask extends Task<AutoScalingPolicy> {
     public void execute(Context context) throws Exception {
         String asGroupName = resource.asGroup.remoteASGroup.getAutoScalingGroupName();
 
-        String policyARN = AWS.as.createPolicy(new PutScalingPolicyRequest()
+        String policyARN = AWS.getAs().createPolicy(new PutScalingPolicyRequest()
             .withPolicyName(resource.id)
             .withAutoScalingGroupName(asGroupName)
             .withScalingAdjustment(resource.adjustmentPercentage)
@@ -31,7 +31,7 @@ public class CreatePolicyTask extends Task<AutoScalingPolicy> {
             .withMinAdjustmentStep(1)
             .withCooldown(300));
 
-        AWS.cloudWatch.createAlarm(new PutMetricAlarmRequest()
+        AWS.getCloudWatch().createAlarm(new PutMetricAlarmRequest()
             .withAlarmName(context.env.name + ":" + resource.id + "-alarm")
             .withMetricName("CPUUtilization")
             .withComparisonOperator(resource.comparisonOperator)

@@ -1,8 +1,14 @@
 ## Change log
-### 1.8.6 (3/3/2017 - )
+### 1.8.8 (1/25/2018 - )
+* ec2: add support for m5 instance type
+
+### 1.8.7 (12/6/2017 - 12/6/2017)
+* node: update to 9.2.0
+
+### 1.8.6 (3/3/2017 - 11/28/2017)
 * kafka: update to 1.0.0
 * docker: update to use docker-ce
-* kibana: update to 5.3.0
+* kibana: update to 6.0.0
 
 ### 1.8.5 (12/8/2016 - 2/27/2017)
 * aws: fix AWS latest SDK deprecated old IpRange and switch to Ipv4Ranges

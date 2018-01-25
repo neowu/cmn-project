@@ -35,6 +35,7 @@ public final class Asserts {
         return list;
     }
 
+    @SuppressWarnings("PMD.SuspiciousEqualsMethodName")
     public static <T> void equals(T object1, T object2, String message, Object... params) {
         if (!Objects.equals(object1, object2)) throw new AssertionError(Strings.format(message, params));
     }

@@ -29,12 +29,12 @@ public class DeleteInstanceProfileTask extends Task<InstanceProfile> {
 
         logger.info("delete instance profile and related role and policy, name={}", name);
         if (!resource.remoteInstanceProfile.getRoles().isEmpty()) { // if the associated role doesn't exist anymore, skip to delete (this is not expected state, cmn create role for every instance profile)
-            AWS.iam.iam.removeRoleFromInstanceProfile(new RemoveRoleFromInstanceProfileRequest()
+            AWS.getIam().iam.removeRoleFromInstanceProfile(new RemoveRoleFromInstanceProfileRequest()
                 .withInstanceProfileName(name)
                 .withRoleName(name));
-            AWS.iam.iam.deleteRolePolicy(new DeleteRolePolicyRequest().withRoleName(name).withPolicyName(name));
-            AWS.iam.iam.deleteRole(new DeleteRoleRequest().withRoleName(name));
+            AWS.getIam().iam.deleteRolePolicy(new DeleteRolePolicyRequest().withRoleName(name).withPolicyName(name));
+            AWS.getIam().iam.deleteRole(new DeleteRoleRequest().withRoleName(name));
         }
-        AWS.iam.iam.deleteInstanceProfile(new DeleteInstanceProfileRequest().withInstanceProfileName(name));
+        AWS.getIam().iam.deleteInstanceProfile(new DeleteInstanceProfileRequest().withInstanceProfileName(name));
     }
 }

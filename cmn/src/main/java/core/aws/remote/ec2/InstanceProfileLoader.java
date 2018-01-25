@@ -20,7 +20,7 @@ public class InstanceProfileLoader {
     }
 
     public void load() {
-        List<com.amazonaws.services.identitymanagement.model.InstanceProfile> instanceProfiles = AWS.iam.listInstanceProfiles(InstanceProfile.instanceProfilePath(env));
+        List<com.amazonaws.services.identitymanagement.model.InstanceProfile> instanceProfiles = AWS.getIam().listInstanceProfiles(InstanceProfile.instanceProfilePath(env));
 
         String prefix = env.name + "-";
         for (com.amazonaws.services.identitymanagement.model.InstanceProfile remoteInstanceProfile : instanceProfiles) {

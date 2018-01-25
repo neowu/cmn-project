@@ -20,7 +20,7 @@ public class CreateInstanceProfileTask extends Task<InstanceProfile> {
 
     @Override
     public void execute(Context context) throws Exception {
-        resource.remoteInstanceProfile = AWS.iam.createInstanceProfile(InstanceProfile.instanceProfilePath(context.env), resource.name, resource.policy);
+        resource.remoteInstanceProfile = AWS.getIam().createInstanceProfile(InstanceProfile.instanceProfilePath(context.env), resource.name, resource.policy);
 
         // wait a bit, instance profile usually takes time to be available
         Threads.sleepRoughly(Duration.ofSeconds(10));

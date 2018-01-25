@@ -17,6 +17,6 @@ public class DeleteServerCertTask extends Task<ServerCert> {
 
     @Override
     public void execute(Context context) throws Exception {
-        AWS.iam.deleteServerCert(resource.remoteCert.getServerCertificateMetadata().getServerCertificateName());
+        AWS.getIam().deleteServerCert(resource.remoteCert.getServerCertificateMetadata().getServerCertificateName());
     }
 }

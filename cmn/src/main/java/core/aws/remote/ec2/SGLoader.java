@@ -39,7 +39,7 @@ public class SGLoader extends Loader {
         DescribeSecurityGroupsRequest request = new DescribeSecurityGroupsRequest()
             .withGroupIds(securityGroups.keySet());
 
-        for (com.amazonaws.services.ec2.model.SecurityGroup remoteSecurityGroup : AWS.ec2.ec2.describeSecurityGroups(request).getSecurityGroups()) {
+        for (com.amazonaws.services.ec2.model.SecurityGroup remoteSecurityGroup : AWS.getEc2().ec2.describeSecurityGroups(request).getSecurityGroups()) {
             SecurityGroup securityGroup = securityGroups.get(remoteSecurityGroup.getGroupId());
             securityGroup.name = remoteSecurityGroup.getGroupName();
             securityGroup.remoteSecurityGroup = remoteSecurityGroup;

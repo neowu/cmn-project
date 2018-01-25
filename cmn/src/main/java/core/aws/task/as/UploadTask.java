@@ -34,7 +34,7 @@ public class UploadTask extends Task<ASGroup> {
             .map(Instance::getInstanceId)
             .collect(Collectors.toList());
 
-        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.ec2.describeInstances(instanceIds);
+        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.getEc2().describeInstances(instanceIds);
 
         LinuxUploader uploader = new LinuxUploader(context.env, remoteInstances, context);
         uploader.upload();

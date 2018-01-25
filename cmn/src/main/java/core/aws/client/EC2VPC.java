@@ -128,7 +128,7 @@ public class EC2VPC {
     public NatGateway createNATGateway(String subnetId, String ip) {
         logger.info("create nat gateway, subnetId={}, ip={}", subnetId, ip);
 
-        List<Address> addresses = AWS.vpc.ec2.describeAddresses(new DescribeAddressesRequest().withPublicIps(ip)).getAddresses();
+        List<Address> addresses = AWS.getVpc().ec2.describeAddresses(new DescribeAddressesRequest().withPublicIps(ip)).getAddresses();
         if (addresses.isEmpty()) throw new Error("cannot find eip, ip=" + ip);
         Address address = addresses.get(0);
         if (address.getAssociationId() != null) throw new Error("eip must not associated with other resource, ip=" + ip);
@@ -155,11 +155,11 @@ public class EC2VPC {
 
     public void deleteNATGateway(String gatewayId) {
         logger.info("delete nat gateway, natGatewayId={}", gatewayId);
-        AWS.vpc.ec2.deleteNatGateway(new DeleteNatGatewayRequest().withNatGatewayId(gatewayId));
+        AWS.getVpc().ec2.deleteNatGateway(new DeleteNatGatewayRequest().withNatGatewayId(gatewayId));
 
         while (true) {
             Threads.sleepRoughly(Duration.ofSeconds(30));
-            NatGateway gateway = AWS.vpc.describeNATGateway(gatewayId);
+            NatGateway gateway = AWS.getVpc().describeNATGateway(gatewayId);
             String state = gateway.getState();
             if ("deleting".equals(state)) continue;
             if ("deleted".equals(state)) {

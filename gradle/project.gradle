@@ -5,7 +5,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.1'
+        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.3'
     }
 }
 
@@ -32,8 +32,7 @@ subprojects {
     buildDir = "${rootDir}/build/${name}"
 
     dependencies {
-        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.1'
-        testCompile 'org.apiguardian:apiguardian-api:1.0.0'  // used by junit
+        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.3'
     }
 
     afterEvaluate {
@@ -51,11 +50,13 @@ subprojects {
     }
 }
 
+apply from: file("${rootDir}/gradle/check.gradle")
+
 allprojects {
     apply plugin: 'idea'
     idea.module.inheritOutputDirs = true
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.2.1'
+    gradleVersion = '4.4.1'
 }

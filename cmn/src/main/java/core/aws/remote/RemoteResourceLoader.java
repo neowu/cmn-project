@@ -57,7 +57,7 @@ public class RemoteResourceLoader {
 
         DescribeTagsRequest request = new DescribeTagsRequest()
             .withFilters(new Filter("key").withValues(new EC2TagHelper(env).prefix() + ":*"));
-        List<TagDescription> remoteTags = AWS.ec2.describeTags(request);
+        List<TagDescription> remoteTags = AWS.getEc2().describeTags(request);
 
         for (TagDescription remoteTag : remoteTags) {
             String remoteResourceId = remoteTag.getResourceId();

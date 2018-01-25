@@ -57,7 +57,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
 
         String bakeSubnetId = context.env.bakeSubnetId;
         if (bakeSubnetId != null) {
-            bakeSubnet = AWS.vpc.describeSubnets(Lists.newArrayList(bakeSubnetId)).get(0);
+            bakeSubnet = AWS.getVpc().describeSubnets(Lists.newArrayList(bakeSubnetId)).get(0);
             if (!bakeSubnet.isMapPublicIpOnLaunch())
                 throw new Error("bake subnet does not auto assign public ip, please check the subnet setting, subnetId=" + bakeSubnetId);
         }
@@ -85,17 +85,17 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
 
         String imageId = createAMI(context, instance.getInstanceId());
 
-        AWS.ec2.terminateInstances(Lists.newArrayList(instance.getInstanceId()));
+        AWS.getEc2().terminateInstances(Lists.newArrayList(instance.getInstanceId()));
 
         keyPairHelper.deleteKeyPair(instance.getKeyName());
-        AWS.ec2.deleteSecurityGroup(instance.getSecurityGroups().get(0).getGroupId());
+        AWS.getEc2().deleteSecurityGroup(instance.getSecurityGroups().get(0).getGroupId());
         waitUntilAMIFinished(imageId);
     }
 
     private void waitUntilAMIFinished(String imageId) throws InterruptedException {
         logger.info("wait until AMI finished, imageId={}", imageId);
         while (true) {
-            DescribeImagesResult result = AWS.ec2.ec2.describeImages(new DescribeImagesRequest().withImageIds(imageId));
+            DescribeImagesResult result = AWS.getEc2().ec2.describeImages(new DescribeImagesRequest().withImageIds(imageId));
             String state = result.getImages().get(0).getState();
             logger.info("AMI state {} => {}", imageId, state);
             if ("available".equals(state)) {
@@ -108,13 +108,13 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
     }
 
     private String createAMI(Context context, String instanceId) throws Exception {
-        AWS.ec2.stopInstances(Lists.newArrayList(instanceId));
+        AWS.getEc2().stopInstances(Lists.newArrayList(instanceId));
 
         logger.info("create AMI, instanceId={}, imageName={}", instanceId, resource.name());
-        CreateImageResult result = AWS.ec2.ec2.createImage(new CreateImageRequest(instanceId, resource.name()));
+        CreateImageResult result = AWS.getEc2().ec2.createImage(new CreateImageRequest(instanceId, resource.name()));
         String imageId = result.getImageId();
 
-        AWS.ec2.createTags(new CreateTagsRequest()
+        AWS.getEc2().createTags(new CreateTagsRequest()
             .withResources(imageId)
             .withTags(tagHelper.env(),
                 tagHelper.resourceId(resource.id),
@@ -138,7 +138,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
 
         if (bakeSubnet != null) request.withSubnetId(bakeSubnet.getSubnetId());
 
-        return AWS.ec2.runInstances(request,
+        return AWS.getEc2().runInstances(request,
             tagHelper.name(resourceId),
             tagHelper.env(),
             tagHelper.resourceId(resourceId),
@@ -148,7 +148,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
 
     private KeyPair createKeyPair(Environment env) throws IOException {
         KeyPair keyPair = new KeyPair(resourceId, env.name + ":" + resourceId);
-        if (!AWS.ec2.keyPairExists(keyPair.name)) {   // for resume previous failed baking, key pair may exist
+        if (!AWS.getEc2().keyPairExists(keyPair.name)) {   // for resume previous failed baking, key pair may exist
             keyPairHelper.createKeyPair(keyPair);
         }
         return keyPair;
@@ -159,14 +159,14 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
         CreateSecurityGroupRequest request = new CreateSecurityGroupRequest(sgName, sgName);
         if (bakeSubnet != null) request.setVpcId(bakeSubnet.getVpcId());
 
-        String sgId = AWS.ec2.createSecurityGroup(request).getGroupId();
-        AWS.ec2.createSGIngressRules(sgId, Lists.newArrayList(new IpPermission()
+        String sgId = AWS.getEc2().createSecurityGroup(request).getGroupId();
+        AWS.getEc2().createSGIngressRules(sgId, Lists.newArrayList(new IpPermission()
             .withIpv4Ranges(new IpRange().withCidrIp("0.0.0.0/0"))
             .withFromPort(22)
             .withToPort(22)
             .withIpProtocol("tcp")));
 
-        AWS.ec2.createTags(new CreateTagsRequest()
+        AWS.getEc2().createTags(new CreateTagsRequest()
             .withResources(sgId)
             .withTags(tagHelper.name(resourceId), tagHelper.env(), tagHelper.resourceId(resourceId)));
 

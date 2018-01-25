@@ -20,7 +20,7 @@ public class CreateVPCTask extends Task<VPC> {
 
     @Override
     public void execute(Context context) throws Exception {
-        resource.remoteVPC = AWS.vpc.createVPC();
+        resource.remoteVPC = AWS.getVpc().createVPC();
 
         createTag(context.env);
     }
@@ -31,6 +31,6 @@ public class CreateVPCTask extends Task<VPC> {
         CreateTagsRequest createTagsRequest = new CreateTagsRequest()
             .withResources(resource.remoteVPC.getVpcId())
             .withTags(tagHelper.env(), tagHelper.resourceId(resource.id), tagHelper.name(resource.id));
-        AWS.ec2.createTags(createTagsRequest);
+        AWS.getEc2().createTags(createTagsRequest);
     }
 }

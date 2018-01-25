@@ -21,7 +21,7 @@ public class VPCLoader extends Loader {
         all(VPC.class).forEach(tag -> {
             VPC vpc = resources.get(VPC.class, tag.resourceId());
             vpc.foundInRemote();
-            vpc.remoteVPC = AWS.vpc.describeVPC(tag.remoteResourceId);
+            vpc.remoteVPC = AWS.getVpc().describeVPC(tag.remoteResourceId);
         });
     }
 }

@@ -21,7 +21,7 @@ public class CreateServerCertTask extends Task<ServerCert> {
 
     @Override
     public void execute(Context context) throws Exception {
-        resource.remoteCert = AWS.iam.createServerCert(new UploadServerCertificateRequest()
+        resource.remoteCert = AWS.getIam().createServerCert(new UploadServerCertificateRequest()
             .withPath(ServerCert.certPath(context.env))
             .withServerCertificateName(resource.name)
             .withCertificateBody(resource.certificate)

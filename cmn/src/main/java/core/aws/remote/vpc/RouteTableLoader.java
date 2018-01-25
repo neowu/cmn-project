@@ -34,7 +34,7 @@ public class RouteTableLoader extends Loader {
     }
 
     private void loadRemoteRouteTables(Map<String, RouteTable> remoteRouteTables) {
-        for (com.amazonaws.services.ec2.model.RouteTable remoteRouteTable : AWS.vpc.describeRouteTables(remoteRouteTables.keySet())) {
+        for (com.amazonaws.services.ec2.model.RouteTable remoteRouteTable : AWS.getVpc().describeRouteTables(remoteRouteTables.keySet())) {
             RouteTable routeTable = remoteRouteTables.get(remoteRouteTable.getRouteTableId());
             routeTable.remoteRouteTable = remoteRouteTable;
         }

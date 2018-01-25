@@ -26,15 +26,15 @@ public class CreateRouteTableTask extends Task<RouteTable> {
     @Override
     public void execute(Context context) throws Exception {
         logger.info("create route table, routeTable={}", resource.id);
-        resource.remoteRouteTable = AWS.vpc.ec2.createRouteTable(new CreateRouteTableRequest().withVpcId(resource.vpc.remoteVPC.getVpcId())).getRouteTable();
+        resource.remoteRouteTable = AWS.getVpc().ec2.createRouteTable(new CreateRouteTableRequest().withVpcId(resource.vpc.remoteVPC.getVpcId())).getRouteTable();
 
         if (resource.internetGateway != null) {
-            AWS.vpc.ec2.createRoute(new CreateRouteRequest()
+            AWS.getVpc().ec2.createRoute(new CreateRouteRequest()
                 .withRouteTableId(resource.remoteRouteTable.getRouteTableId())
                 .withGatewayId(resource.internetGateway.remoteInternetGatewayId)
                 .withDestinationCidrBlock("0.0.0.0/0"));
         } else {
-            AWS.vpc.ec2.createRoute(new CreateRouteRequest()
+            AWS.getVpc().ec2.createRoute(new CreateRouteRequest()
                 .withRouteTableId(resource.remoteRouteTable.getRouteTableId())
                 .withNatGatewayId(resource.nat.remoteNATGateway.getNatGatewayId())
                 .withDestinationCidrBlock("0.0.0.0/0"));
@@ -42,7 +42,7 @@ public class CreateRouteTableTask extends Task<RouteTable> {
 
         EC2TagHelper tagHelper = new EC2TagHelper(context.env);
 
-        AWS.ec2.createTags(new CreateTagsRequest()
+        AWS.getEc2().createTags(new CreateTagsRequest()
             .withResources(resource.remoteRouteTable.getRouteTableId())
             .withTags(tagHelper.env(), tagHelper.name(resource.id), tagHelper.resourceId(resource.id)));
     }

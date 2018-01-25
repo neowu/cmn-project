@@ -19,13 +19,13 @@ public class CreateBucketTask extends Task<Bucket> {
 
     @Override
     public void execute(Context context) throws Exception {
-        resource.remoteBucket = AWS.s3.createBucket(resource.name);
+        resource.remoteBucket = AWS.getS3().createBucket(resource.name);
         context.output("s3/" + resource.id, "bucketName=" + resource.remoteBucket.getName());
 
         TagSet tagSet = new TagSet();
         tagSet.setTag("cloud-manager:env", context.env.name);
         tagSet.setTag("cloud-manager:env:" + context.env.name + ":resource-id", resource.id);
-        AWS.s3.createTags(resource.name, tagSet);
+        AWS.getS3().createTags(resource.name, tagSet);
     }
 
     @Override

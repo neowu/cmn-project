@@ -13,6 +13,7 @@ import core.aws.resource.vpc.SubnetType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author neo
@@ -22,7 +23,7 @@ public class SubnetLoader implements LocalResourceLoader {
     @SuppressWarnings("unchecked")
     public void load(ResourceNode node, final Resources resources, DependencyResolvers resolvers, Environment env) {
         List<String> cidrs = new ArrayList<>();
-        final SubnetType type = SubnetType.valueOf(node.getString("type").orElse("PUBLIC").toUpperCase());
+        final SubnetType type = SubnetType.valueOf(node.getString("type").orElse("PUBLIC").toUpperCase(Locale.ENGLISH));
 
         Object cidr = node.field("cidr");
         if (cidr instanceof String) cidrs.add((String) cidr);

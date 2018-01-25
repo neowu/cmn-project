@@ -22,7 +22,7 @@ public class S3Loader {
     }
 
     public void load() {
-        List<com.amazonaws.services.s3.model.Bucket> buckets = AWS.s3.listAllBuckets();
+        List<com.amazonaws.services.s3.model.Bucket> buckets = AWS.getS3().listAllBuckets();
         for (com.amazonaws.services.s3.model.Bucket bucket : buckets) {
             String bucketId = bucketId(env.name, bucket.getName());
             if (bucketId != null) {

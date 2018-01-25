@@ -5,7 +5,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
@@ -27,7 +26,7 @@ public final class Tarball {
     }
 
     public void archive(File outputFile) throws IOException {
-        try (TarArchiveOutputStream output = new TarArchiveOutputStream(new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream(outputFile))))) {
+        try (TarArchiveOutputStream output = new TarArchiveOutputStream(new GZIPOutputStream(new BufferedOutputStream(java.nio.file.Files.newOutputStream(outputFile.toPath()))))) {
             archive(sourceDir, output);
             output.flush();
         }

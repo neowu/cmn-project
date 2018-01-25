@@ -35,7 +35,7 @@ public class DeleteSubnetTask extends Task<Subnet> {
                 .retryOn(e -> e instanceof AmazonServiceException)
                 .run(() -> {
                     logger.info("delete subnet, subnetId={}, cidr={}", remoteSubnet.getSubnetId(), remoteSubnet.getCidrBlock());
-                    AWS.vpc.ec2.deleteSubnet(new DeleteSubnetRequest().withSubnetId(remoteSubnet.getSubnetId()));
+                    AWS.getVpc().ec2.deleteSubnet(new DeleteSubnetRequest().withSubnetId(remoteSubnet.getSubnetId()));
                     context.output(key, String.format("deletedSubnetId=%s, cidr=%s", remoteSubnet.getSubnetId(), remoteSubnet.getCidrBlock()));
                     return null;
                 });

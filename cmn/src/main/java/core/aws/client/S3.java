@@ -24,11 +24,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,12 +40,12 @@ public class S3 {
     public final AmazonS3 s3;
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public S3(AWSCredentialsProvider credentials, Regions region) {
+    S3(AWSCredentialsProvider credentials, Regions region) {
         s3 = AmazonS3ClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
     public void createFolder(String bucket, String folder) {
-        Asserts.isTrue(folder.startsWith("/"), "s3 key can't start with /, folder={}", folder);
+        Asserts.isTrue('/' == folder.charAt(0), "s3 key can't start with /, folder={}", folder);
 
         logger.info("create folder, bucket={}, folder={}", bucket, folder);
         InputStream input = new ByteArrayInputStream(new byte[0]);
@@ -54,7 +55,7 @@ public class S3 {
     }
 
     public void putObject(String bucket, String key, String content) {
-        Asserts.isFalse(key.startsWith("/"), "s3 key can't start with /, key={}", key);
+        Asserts.isFalse('/' == key.charAt(0), "s3 key can't start with /, key={}", key);
 
         byte[] bytes = content.getBytes(Charset.forName("UTF-8"));
 
@@ -69,8 +70,8 @@ public class S3 {
         s3.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata).withStorageClass(StorageClass.ReducedRedundancy));
     }
 
-    public void putObject(String bucket, String key, File file) {
-        Asserts.isFalse(key.startsWith("/"), "s3 key can't start with /, key={}", key);
+    private void putObject(String bucket, String key, File file) {
+        Asserts.isFalse('/' == key.charAt(0), "s3 key can't start with /, key={}", key);
 
         String etag = etag(file);
         if (etagMatches(bucket, key, etag)) return;
@@ -123,7 +124,7 @@ public class S3 {
     // use same code of aws s3 client to calculate etag, refer to AmazonS3Client.putObject()
     private String etag(File file) {
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
+            InputStream fileInputStream = Files.newInputStream(file.toPath(), StandardOpenOption.READ);
             byte[] md5Hash = Md5Utils.computeMD5Hash(fileInputStream);
             return BinaryUtils.toHex(md5Hash);
         } catch (IOException e) {

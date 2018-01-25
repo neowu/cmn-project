@@ -26,8 +26,8 @@ public class DeleteRouteTableTask extends Task<RouteTable> {
     public void execute(Context context) throws Exception {
         logger.info("delete route table, routeTableId={}", resource.id);
         for (RouteTableAssociation association : resource.remoteRouteTable.getAssociations()) {
-            AWS.vpc.ec2.disassociateRouteTable(new DisassociateRouteTableRequest().withAssociationId(association.getRouteTableAssociationId()));
+            AWS.getVpc().ec2.disassociateRouteTable(new DisassociateRouteTableRequest().withAssociationId(association.getRouteTableAssociationId()));
         }
-        AWS.vpc.ec2.deleteRouteTable(new DeleteRouteTableRequest().withRouteTableId(resource.remoteRouteTable.getRouteTableId()));
+        AWS.getVpc().ec2.deleteRouteTable(new DeleteRouteTableRequest().withRouteTableId(resource.remoteRouteTable.getRouteTableId()));
     }
 }

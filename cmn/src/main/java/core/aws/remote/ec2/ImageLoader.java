@@ -45,7 +45,7 @@ public class ImageLoader extends Loader {
         Map<String, com.amazonaws.services.ec2.model.Image> remoteImages = Maps.newHashMap();
         List<String> remoteImageIds = all(Image.class).map(tag -> tag.remoteResourceId).collect(Collectors.toList());
         if (!remoteImageIds.isEmpty()) {    // check if the env has any remote image
-            List<com.amazonaws.services.ec2.model.Image> images = AWS.ec2.describeImages(remoteImageIds);
+            List<com.amazonaws.services.ec2.model.Image> images = AWS.getEc2().describeImages(remoteImageIds);
             for (com.amazonaws.services.ec2.model.Image image : images) {
                 remoteImages.put(image.getImageId(), image);
             }

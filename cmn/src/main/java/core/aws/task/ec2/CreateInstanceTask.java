@@ -112,7 +112,7 @@ public class CreateInstanceTask extends Task<Instance> {
                 .withEbs(new EbsBlockDevice().withVolumeSize(resource.ebs.rootVolumeSize).withVolumeType(resource.ebs.type)));
         }
 
-        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.ec2.runInstances(request, tags(context.env));
+        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.getEc2().runInstances(request, tags(context.env));
         resource.remoteInstances.addAll(remoteInstances);
 
         for (com.amazonaws.services.ec2.model.Instance remoteInstance : remoteInstances) {
@@ -127,7 +127,7 @@ public class CreateInstanceTask extends Task<Instance> {
 
         if (resource.elb != null) {
             List<String> instanceIds = remoteInstances.stream().map(com.amazonaws.services.ec2.model.Instance::getInstanceId).collect(Collectors.toList());
-            AWS.elb.attachInstances(resource.elb.remoteELB.getLoadBalancerName(), instanceIds, waitUntilInService);
+            AWS.getElb().attachInstances(resource.elb.remoteELB.getLoadBalancerName(), instanceIds, waitUntilInService);
         }
     }
 

@@ -42,7 +42,7 @@ public class CreateELBTask extends Task<ELB> {
             request.withSecurityGroups(resource.securityGroup.remoteSecurityGroup.getGroupId())
                 .withSubnets(resource.subnet.remoteSubnets.stream().map(Subnet::getSubnetId).collect(Collectors.toList()));
         } else {
-            List<String> zones = AWS.ec2.availabilityZones();
+            List<String> zones = AWS.getEc2().availabilityZones();
             request.withAvailabilityZones(zones.get(0));
         }
 
@@ -60,7 +60,7 @@ public class CreateELBTask extends Task<ELB> {
                 .withSSLCertificateId(certARN));
         }
 
-        resource.remoteELB = AWS.elb.createELB(request);
+        resource.remoteELB = AWS.getElb().createELB(request);
 
         configureELB(context.env.region);
 
@@ -82,7 +82,7 @@ public class CreateELBTask extends Task<ELB> {
             configureAccessLog(attributes, region);
         }
 
-        AWS.elb.modifyELBAttributes(new ModifyLoadBalancerAttributesRequest()
+        AWS.getElb().modifyELBAttributes(new ModifyLoadBalancerAttributesRequest()
             .withLoadBalancerName(resource.name)
             .withLoadBalancerAttributes(attributes));
     }
@@ -90,7 +90,7 @@ public class CreateELBTask extends Task<ELB> {
     private void configureAccessLog(LoadBalancerAttributes attributes, Regions region) {
         ELBAccessLogBucketPolicyBuilder builder = new ELBAccessLogBucketPolicyBuilder();
         String bucketName = resource.accessLogBucket.remoteBucket.getName();
-        AWS.s3.s3.setBucketPolicy(new SetBucketPolicyRequest(bucketName, builder.policyText(region, bucketName)));
+        AWS.getS3().s3.setBucketPolicy(new SetBucketPolicyRequest(bucketName, builder.policyText(region, bucketName)));
 
         attributes.withAccessLog(new AccessLog()
             .withEnabled(true)
@@ -107,6 +107,6 @@ public class CreateELBTask extends Task<ELB> {
             .withInterval(20)
             .withTimeout(15)
             .withTarget("HTTP:80" + resource.healthCheckURL);
-        AWS.elb.elb.configureHealthCheck(new ConfigureHealthCheckRequest(resource.name, healthCheck));
+        AWS.getElb().elb.configureHealthCheck(new ConfigureHealthCheckRequest(resource.name, healthCheck));
     }
 }

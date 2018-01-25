@@ -26,7 +26,7 @@ public class NATLoader extends Loader {
         VPC vpc = resources.onlyOne(VPC.class).get();
 
         if (vpc.remoteVPC != null) {
-            List<NatGateway> gateways = AWS.vpc.ec2.describeNatGateways(new DescribeNatGatewaysRequest()
+            List<NatGateway> gateways = AWS.getVpc().ec2.describeNatGateways(new DescribeNatGatewaysRequest()
                 .withFilter(new Filter("state").withValues("available"),
                     new Filter("vpc-id").withValues(vpc.remoteVPC.getVpcId())))
                 .getNatGateways();

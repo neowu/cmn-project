@@ -34,14 +34,14 @@ public class DeleteInstanceTask extends Task<Instance> {
 
         if (resource.elb != null && resource.elb.remoteELB != null) {
             String elbName = resource.elb.remoteELB.getLoadBalancerName();
-            AWS.elb.detachInstances(elbName, instanceIds);
+            AWS.getElb().detachInstances(elbName, instanceIds);
 
             // with ELB draining, wait a bit to finish all current request
             logger.info("sleep a bit to wait all existing requests to finish if any");
             Threads.sleepRoughly(Duration.ofSeconds(5));
         }
 
-        AWS.ec2.terminateInstances(instanceIds);
+        AWS.getEc2().terminateInstances(instanceIds);
         context.output("instance/" + resource.id, "deletedInstanceIds=" + instanceIds);
     }
 

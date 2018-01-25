@@ -21,7 +21,7 @@ public class DeleteImageTask extends core.aws.workflow.Task<Image> {
 
     @Override
     public void execute(Context context) throws Exception {
-        AWS.ec2.deleteImage(deletedImage);
+        AWS.getEc2().deleteImage(deletedImage);
         context.output("ami/" + resource.id, Strings.format("deletedImageId={}, deletedImageName={}, deletedSnapshotId={}", deletedImage.getImageId(), deletedImage.getName()));
     }
 

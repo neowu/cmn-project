@@ -32,13 +32,13 @@ public class CreateSubnetTask extends Task<Subnet> {
 
     @Override
     public void execute(Context context) throws Exception {
-        List<String> zones = AWS.ec2.availabilityZones();
+        List<String> zones = AWS.getEc2().availabilityZones();
 
         List<String> subnetIds = new ArrayList<>();
 
         for (int i = 0; i < resource.cidrs.size(); i++) {
             String cidr = resource.cidrs.get(i);
-            com.amazonaws.services.ec2.model.Subnet subnet = AWS.vpc.createSubnet(new CreateSubnetRequest(resource.vpc.remoteVPC.getVpcId(), cidr)
+            com.amazonaws.services.ec2.model.Subnet subnet = AWS.getVpc().createSubnet(new CreateSubnetRequest(resource.vpc.remoteVPC.getVpcId(), cidr)
                 .withAvailabilityZone(zones.get(i)));
             subnetIds.add(subnet.getSubnetId());
         }
@@ -46,7 +46,7 @@ public class CreateSubnetTask extends Task<Subnet> {
         while (true) {
             logger.info("wait until all subnets are available");
             Threads.sleepRoughly(Duration.ofSeconds(10));
-            List<com.amazonaws.services.ec2.model.Subnet> subnets = AWS.vpc.describeSubnets(subnetIds);
+            List<com.amazonaws.services.ec2.model.Subnet> subnets = AWS.getVpc().describeSubnets(subnetIds);
             boolean allOK = subnets.stream().allMatch(subnet -> {
                 logger.info("subnet {} => {}", subnet.getSubnetId(), subnet.getState());
                 return "available".equals(subnet.getState());
@@ -59,7 +59,7 @@ public class CreateSubnetTask extends Task<Subnet> {
 
         if (resource.type == SubnetType.PUBLIC) {
             for (String subnetId : subnetIds) {
-                AWS.vpc.ec2.modifySubnetAttribute(new ModifySubnetAttributeRequest()
+                AWS.getVpc().ec2.modifySubnetAttribute(new ModifySubnetAttributeRequest()
                     .withSubnetId(subnetId)
                     .withMapPublicIpOnLaunch(true));
             }
@@ -67,13 +67,13 @@ public class CreateSubnetTask extends Task<Subnet> {
 
         EC2TagHelper tagHelper = new EC2TagHelper(context.env);
 
-        AWS.ec2.createTags(new CreateTagsRequest()
+        AWS.getEc2().createTags(new CreateTagsRequest()
             .withResources(subnetIds)
             .withTags(tagHelper.env(), tagHelper.resourceId(resource.id), tagHelper.name(resource.id)));
 
         logger.info("associate route table, subnet={}, routeTable={}", resource.id, resource.routeTable.id);
         for (com.amazonaws.services.ec2.model.Subnet remoteSubnet : resource.remoteSubnets) {
-            AWS.vpc.ec2.associateRouteTable(new AssociateRouteTableRequest()
+            AWS.getVpc().ec2.associateRouteTable(new AssociateRouteTableRequest()
                 .withRouteTableId(resource.routeTable.remoteRouteTable.getRouteTableId())
                 .withSubnetId(remoteSubnet.getSubnetId()));
         }

@@ -28,7 +28,7 @@ import static java.nio.file.Files.walkFileTree;
  * @author neo
  */
 public final class SSH implements Closeable {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    final Logger logger = LoggerFactory.getLogger(getClass());
     private final Logger messageLogger = LoggerFactory.getLogger("message");
 
     private final String host;
@@ -43,7 +43,7 @@ public final class SSH implements Closeable {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         session.disconnect();
     }
 
@@ -136,7 +136,7 @@ public final class SSH implements Closeable {
     public static class SSHException extends RuntimeException {
         private static final long serialVersionUID = 3248580184982451829L;
 
-        public SSHException(Throwable cause) {
+        SSHException(Throwable cause) {
             super(cause);
         }
     }

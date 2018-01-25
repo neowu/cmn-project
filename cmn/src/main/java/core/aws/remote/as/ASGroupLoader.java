@@ -29,7 +29,7 @@ public class ASGroupLoader {
         String prefix = env.name + "-";
 
         // find all AS group with prefix
-        List<AutoScalingGroup> asGroups = AWS.as.listASGroups().stream()
+        List<AutoScalingGroup> asGroups = AWS.getAs().listASGroups().stream()
                                                 .filter(group -> group.getAutoScalingGroupName().startsWith(prefix))
                                                 .collect(Collectors.toList());
 
@@ -37,7 +37,7 @@ public class ASGroupLoader {
 
         // load remote launch config in one request to maximize the speed
         List<String> launchConfigNames = asGroups.stream().map(AutoScalingGroup::getLaunchConfigurationName).collect(Collectors.toList());
-        Map<String, LaunchConfiguration> configs = AWS.as.describeLaunchConfigs(launchConfigNames);
+        Map<String, LaunchConfiguration> configs = AWS.getAs().describeLaunchConfigs(launchConfigNames);
 
         for (AutoScalingGroup remoteASGroup : asGroups) {
             String asGroupName = remoteASGroup.getAutoScalingGroupName();
@@ -48,7 +48,7 @@ public class ASGroupLoader {
             asGroup.launchConfig.remoteLaunchConfig = configs.get(remoteASGroup.getLaunchConfigurationName());
             asGroup.foundInRemote();
 
-            List<ScalingPolicy> remotePolicies = AWS.as.describeScalingPolicies(asGroupName);
+            List<ScalingPolicy> remotePolicies = AWS.getAs().describeScalingPolicies(asGroupName);
             for (ScalingPolicy remotePolicy : remotePolicies) {
                 String policyId = remotePolicy.getPolicyName();
                 AutoScalingPolicy policy = resources.find(AutoScalingPolicy.class, policyId)

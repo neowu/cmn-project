@@ -18,6 +18,6 @@ public class UpdateInstanceProfileTask extends Task<InstanceProfile> {
     @Override
     public void execute(Context context) throws Exception {
         String name = resource.remoteInstanceProfile.getInstanceProfileName();
-        AWS.iam.createRolePolicy(name, name, resource.policy);
+        AWS.getIam().createRolePolicy(name, name, resource.policy);
     }
 }

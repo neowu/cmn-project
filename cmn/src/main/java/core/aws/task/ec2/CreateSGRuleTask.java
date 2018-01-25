@@ -48,7 +48,7 @@ public class CreateSGRuleTask extends Task<SecurityGroup> {
             permissions.add(permission);
         });
 
-        AWS.ec2.createSGIngressRules(resource.remoteSecurityGroup.getGroupId(), permissions);
+        AWS.getEc2().createSGIngressRules(resource.remoteSecurityGroup.getGroupId(), permissions);
     }
 
     @Override

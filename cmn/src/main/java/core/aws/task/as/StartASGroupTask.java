@@ -18,7 +18,7 @@ public class StartASGroupTask extends Task<ASGroup> {
 
     @Override
     public void execute(Context context) throws Exception {
-        AWS.as.updateASGroup(new UpdateAutoScalingGroupRequest()
+        AWS.getAs().updateASGroup(new UpdateAutoScalingGroupRequest()
             .withAutoScalingGroupName(resource.remoteASGroup.getAutoScalingGroupName())
             .withDesiredCapacity(resource.desiredSize)
             .withMinSize(resource.minSize)

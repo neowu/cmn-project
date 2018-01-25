@@ -23,7 +23,7 @@ public class KeyPairLoader {
     }
 
     public void load() {
-        List<KeyPairInfo> remoteKeyPairs = AWS.ec2.ec2.describeKeyPairs(new DescribeKeyPairsRequest()
+        List<KeyPairInfo> remoteKeyPairs = AWS.getEc2().ec2.describeKeyPairs(new DescribeKeyPairsRequest()
             .withFilters(new Filter("key-name").withValues(env.name + ":*"))).getKeyPairs();
 
         for (KeyPairInfo remoteKeyPair : remoteKeyPairs) {

@@ -53,7 +53,7 @@ public class ASGroupHelper {
                 .withEbs(new Ebs().withVolumeSize(launchConfig.ebs.rootVolumeSize).withVolumeType(launchConfig.ebs.type)));
         }
 
-        launchConfig.remoteLaunchConfig = AWS.as.createLaunchConfig(request);
+        launchConfig.remoteLaunchConfig = AWS.getAs().createLaunchConfig(request);
     }
 
     private String userData(ASGroup asGroup) {

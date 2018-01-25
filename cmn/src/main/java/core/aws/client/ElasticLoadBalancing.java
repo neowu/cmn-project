@@ -85,9 +85,9 @@ public class ElasticLoadBalancing {
     public List<InstanceState> describeInstanceHealth(String elbName, List<String> instanceIds) {
         logger.info("describe elb instance health, instanceIds={}", instanceIds);
 
-        List<com.amazonaws.services.elasticloadbalancing.model.Instance> instances = instanceIds.stream()
-                                                                                                .map(com.amazonaws.services.elasticloadbalancing.model.Instance::new)
-                                                                                                .collect(Collectors.toList());
+        List<Instance> instances = instanceIds.stream()
+            .map(Instance::new)
+            .collect(Collectors.toList());
 
         DescribeInstanceHealthResult result = elb.describeInstanceHealth(new DescribeInstanceHealthRequest(elbName)
             .withInstances(instances));

@@ -64,19 +64,19 @@ public class DeployASGroupTask extends Task<ASGroup> {
         context.output("autoScaling/" + resource.id, String.format("targetDesiredSize=%d, oldInstances=%d",
             targetDesiredSize, oldInstanceIds.size()));
 
-        AWS.as.updateASGroup(new UpdateAutoScalingGroupRequest()
+        AWS.getAs().updateASGroup(new UpdateAutoScalingGroupRequest()
             .withAutoScalingGroupName(asGroupName)
             .withLaunchConfigurationName(resource.launchConfig.remoteLaunchConfig.getLaunchConfigurationName())
             .withMinSize(capacityDuringDeployment)
             .withDesiredCapacity(capacityDuringDeployment)
             .withMaxSize(Math.max(resource.maxSize, capacityDuringDeployment)));
 
-        if (oldLaunchConfigName != null) AWS.as.deleteLaunchConfig(oldLaunchConfigName);
+        if (oldLaunchConfigName != null) AWS.getAs().deleteLaunchConfig(oldLaunchConfigName);
 
         while (true) {
             waitUntilAllNewInstancesReady();
 
-            com.amazonaws.services.autoscaling.model.AutoScalingGroup remoteASGroup = AWS.as.describeASGroup(asGroupName);
+            com.amazonaws.services.autoscaling.model.AutoScalingGroup remoteASGroup = AWS.getAs().describeASGroup(asGroupName);
 
             List<String> leftOldInstanceIds = remoteASGroup.getInstances().stream()
                 .filter(instance -> oldInstanceIds.contains(instance.getInstanceId()))
@@ -86,20 +86,20 @@ public class DeployASGroupTask extends Task<ASGroup> {
 
             if (leftOldInstanceIds.size() <= capacityDuringDeployment - targetDesiredSize) {
                 logger.info("created enough new instances, terminate left old instances, finishing deployment");
-                AWS.as.updateASGroup(new UpdateAutoScalingGroupRequest()
+                AWS.getAs().updateASGroup(new UpdateAutoScalingGroupRequest()
                     .withAutoScalingGroupName(asGroupName)
                     .withMinSize(capacityDuringDeployment - leftOldInstanceIds.size()));
-                AWS.as.terminateInstancesInASGroup(leftOldInstanceIds, true);
+                AWS.getAs().terminateInstancesInASGroup(leftOldInstanceIds, true);
                 break;
             } else {
                 int terminateCount = targetDesiredSize - (capacityDuringDeployment - leftOldInstanceIds.size());  // how many new instances requires to reach target desired size
                 terminateCount = Math.min(terminateCount, leftOldInstanceIds.size());   // check currently has enough old instances
                 terminateCount = Math.min(terminateCount, 3);   // terminate with 3 at most
-                AWS.as.terminateInstancesInASGroup(leftOldInstanceIds.subList(0, terminateCount), false);
+                AWS.getAs().terminateInstancesInASGroup(leftOldInstanceIds.subList(0, terminateCount), false);
             }
         }
 
-        AWS.as.updateASGroup(new UpdateAutoScalingGroupRequest()
+        AWS.getAs().updateASGroup(new UpdateAutoScalingGroupRequest()
             .withAutoScalingGroupName(asGroupName)
             .withMinSize(resource.minSize)
             .withDesiredCapacity(targetDesiredSize)
@@ -126,7 +126,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
         List<String> newInstanceIds;
         while (true) {
             Threads.sleepRoughly(Duration.ofSeconds(30));
-            com.amazonaws.services.autoscaling.model.AutoScalingGroup remoteASGroup = AWS.as.describeASGroup(asGroupName);
+            com.amazonaws.services.autoscaling.model.AutoScalingGroup remoteASGroup = AWS.getAs().describeASGroup(asGroupName);
 
             for (Instance instance : remoteASGroup.getInstances()) {
                 logger.info("instance status, instanceId={}, lifecycle={}, health={}, new={}",
@@ -155,7 +155,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
     private void waitUntilInstanceRunning(List<String> newInstanceIds) throws InterruptedException {
         while (true) {
             Threads.sleepRoughly(Duration.ofSeconds(30));
-            List<InstanceStatus> statuses = AWS.ec2.ec2.describeInstanceStatus(new DescribeInstanceStatusRequest()
+            List<InstanceStatus> statuses = AWS.getEc2().ec2.describeInstanceStatus(new DescribeInstanceStatusRequest()
                 .withInstanceIds(newInstanceIds)).getInstanceStatuses();
 
             for (InstanceStatus status : statuses) {
@@ -188,7 +188,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
                 attempts++;
                 Threads.sleepRoughly(Duration.ofSeconds(15));
 
-                List<InstanceState> states = AWS.elb.describeInstanceHealth(resource.elb.remoteELB.getLoadBalancerName(), newInstanceIds);
+                List<InstanceState> states = AWS.getElb().describeInstanceHealth(resource.elb.remoteELB.getLoadBalancerName(), newInstanceIds);
 
                 for (InstanceState state : states) {
                     logger.info("ELB instance state {} => {}", state.getInstanceId(), state.getState());
@@ -215,7 +215,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
             ASGroupHelper helper = new ASGroupHelper(env);
             helper.createLaunchConfig(resource);
 
-            AWS.as.updateTag(asGroupName, helper.nameTag(resource));
+            AWS.getAs().updateTag(asGroupName, helper.nameTag(resource));
         }
     }
 

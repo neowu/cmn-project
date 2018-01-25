@@ -42,7 +42,7 @@ public class LinuxCommandRunner {
             if (InstanceState.RUNNING.equalsTo(remoteInstance.getState()) && indexMatches(index, i)) {
                 try (SSH ssh = new SSH(remoteInstance.getPublicDnsName(), "ubuntu", KeyPair.keyFile(remoteInstance.getKeyName(), env))) {
                     if (commands != null) {
-                        ssh.executeCommands(commands.toArray(new String[commands.size()]));
+                        ssh.executeCommands(commands.toArray(new String[0]));
                     } else {
                         executeScript(ssh, env.envDir.resolve(script));
                     }

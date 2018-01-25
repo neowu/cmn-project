@@ -24,7 +24,7 @@ public class DeleteVPCTask extends Task<VPC> {
     public void execute(Context context) throws Exception {
         String vpcId = resource.remoteVPC.getVpcId();
         logger.info("delete vpc, vpcId={}", vpcId);
-        AWS.vpc.ec2.deleteVpc(new DeleteVpcRequest(vpcId));
+        AWS.getVpc().ec2.deleteVpc(new DeleteVpcRequest(vpcId));
         context.output("vpc/" + resource.id, "deletedVPCId=" + vpcId);
     }
 }

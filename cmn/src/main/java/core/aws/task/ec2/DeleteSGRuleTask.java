@@ -32,7 +32,7 @@ public class DeleteSGRuleTask extends Task<SecurityGroup> {
             }
         }
 
-        AWS.ec2.deleteSGIngressRules(resource.remoteSecurityGroup.getGroupId(), deletedIngressRules);
+        AWS.getEc2().deleteSGIngressRules(resource.remoteSecurityGroup.getGroupId(), deletedIngressRules);
     }
 
     @Override

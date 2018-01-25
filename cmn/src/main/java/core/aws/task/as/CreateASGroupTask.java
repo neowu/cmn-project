@@ -57,6 +57,6 @@ public class CreateASGroupTask extends Task<ASGroup> {
         request.withAvailabilityZones(availabilityZones)
             .withVPCZoneIdentifier(subnetIds.toString());
 
-        resource.remoteASGroup = AWS.as.createASGroup(request);
+        resource.remoteASGroup = AWS.getAs().createASGroup(request);
     }
 }

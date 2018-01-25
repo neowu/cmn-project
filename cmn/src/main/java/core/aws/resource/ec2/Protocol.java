@@ -3,6 +3,7 @@ package core.aws.resource.ec2;
 import core.aws.util.ToStringHelper;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +38,7 @@ public class Protocol {
     }
 
     public static Protocol parse(String value) {
-        Protocol protocol = PREDEFINED_PROTOCOLS.get(value.toLowerCase());
+        Protocol protocol = PREDEFINED_PROTOCOLS.get(value.toLowerCase(Locale.ENGLISH));
         if (protocol != null) return protocol;
 
         Matcher matcher = SINGLE_PORT_PATTERN.matcher(value);

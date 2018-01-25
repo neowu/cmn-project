@@ -7,12 +7,10 @@ import core.aws.util.ClasspathResources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 /**
  * @author neo
  */
-public class Main {
+public final class Main {
     public static void main(String[] args) throws Throwable {
         Main main = new Main(args);
         main.execute();
@@ -21,7 +19,7 @@ public class Main {
     private final Logger messageLogger = LoggerFactory.getLogger("message");
     private final String[] args;
 
-    public Main(String[] args) {
+    private Main(String... args) {
         this.args = args;
     }
 
@@ -40,7 +38,8 @@ public class Main {
     }
 
     private void parseParams(Context context) {
-        for (int i = 1, length = args.length; i < length; i++) {
+        for (int i = 1,
+             length = args.length; i < length; i++) {
             String arg = args[i];
             Asserts.isTrue(arg.startsWith("--") && arg.contains("="), "arg must be in --{name}={value} format, arg={}", arg);
             int index = arg.indexOf('=');
@@ -50,7 +49,7 @@ public class Main {
         }
     }
 
-    private void printHelp() throws IOException {
+    private void printHelp() {
         messageLogger.info(ClasspathResources.text("help.txt"));
     }
 }

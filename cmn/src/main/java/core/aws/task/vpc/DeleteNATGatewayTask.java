@@ -17,6 +17,6 @@ public class DeleteNATGatewayTask extends Task<NATGateway> {
 
     @Override
     public void execute(Context context) throws Exception {
-        AWS.vpc.deleteNATGateway(resource.remoteNATGateway.getNatGatewayId());
+        AWS.getVpc().deleteNATGateway(resource.remoteNATGateway.getNatGatewayId());
     }
 }

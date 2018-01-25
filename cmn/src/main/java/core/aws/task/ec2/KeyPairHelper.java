@@ -27,7 +27,7 @@ public class KeyPairHelper {
     }
 
     public void createKeyPair(KeyPair keyPair) throws IOException {
-        com.amazonaws.services.ec2.model.KeyPair remoteKeyPair = AWS.ec2.createKeyPair(keyPair.name);
+        com.amazonaws.services.ec2.model.KeyPair remoteKeyPair = AWS.getEc2().createKeyPair(keyPair.name);
         writeKeyFile(keyPair.name, remoteKeyPair.getKeyMaterial());
         keyPair.remoteKeyPair = new KeyPairInfo()
             .withKeyName(remoteKeyPair.getKeyName())
@@ -51,7 +51,7 @@ public class KeyPairHelper {
     }
 
     public void deleteKeyPair(String keyName) throws IOException {
-        AWS.ec2.deleteKeyPair(keyName);
+        AWS.getEc2().deleteKeyPair(keyName);
 
         Path keyFile = KeyPair.keyFile(keyName, env);
         if (Files.exists(keyFile)) {

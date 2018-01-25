@@ -36,7 +36,7 @@ public class SubnetLoader extends Loader {
     }
 
     private void loadRemoteSubnets(Map<String, Subnet> remoteSubnets) {
-        DescribeSubnetsResult result = AWS.vpc.ec2.describeSubnets(new DescribeSubnetsRequest().withSubnetIds(remoteSubnets.keySet()));
+        DescribeSubnetsResult result = AWS.getVpc().ec2.describeSubnets(new DescribeSubnetsRequest().withSubnetIds(remoteSubnets.keySet()));
         for (com.amazonaws.services.ec2.model.Subnet remoteSubnet : result.getSubnets()) {
             remoteSubnets.get(remoteSubnet.getSubnetId()).remoteSubnets.add(remoteSubnet);
         }

@@ -19,8 +19,8 @@ public class DeleteBucketTask extends Task<Bucket> {
     public void execute(Context context) throws Exception {
         String bucketName = resource.remoteBucket.getName();
 
-        AWS.s3.deleteAll(bucketName);
-        AWS.s3.deleteBucket(bucketName);
+        AWS.getS3().deleteAll(bucketName);
+        AWS.getS3().deleteBucket(bucketName);
 
         context.output("s3/" + resource.id, "deletedBucket=" + bucketName);
     }

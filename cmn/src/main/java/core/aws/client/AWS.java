@@ -19,14 +19,14 @@ import java.nio.file.Path;
  * @author neo
  */
 public class AWS {
-    public static final Logger LOGGER = LoggerFactory.getLogger(AWS.class);
-    public static EC2 ec2;
-    public static S3 s3;
-    public static EC2VPC vpc;
-    public static ElasticLoadBalancing elb;
-    public static IAM iam;
-    public static AutoScaling as;
-    public static CloudWatch cloudWatch;
+    private static final Logger LOGGER = LoggerFactory.getLogger(AWS.class);
+    private static EC2 ec2;
+    private static S3 s3;
+    private static EC2VPC vpc;
+    private static ElasticLoadBalancing elb;
+    private static IAM iam;
+    private static AutoScaling as;
+    private static CloudWatch cloudWatch;
 
     public static void initialize(Environment env) throws IOException {
         Asserts.isNull(ec2, "initialize should only be called once");
@@ -54,5 +54,33 @@ public class AWS {
             provider = new DefaultAWSCredentialsProviderChain();
         }
         return provider;
+    }
+
+    public static EC2 getEc2() {
+        return ec2;
+    }
+
+    public static S3 getS3() {
+        return s3;
+    }
+
+    public static EC2VPC getVpc() {
+        return vpc;
+    }
+
+    public static ElasticLoadBalancing getElb() {
+        return elb;
+    }
+
+    public static IAM getIam() {
+        return iam;
+    }
+
+    public static AutoScaling getAs() {
+        return as;
+    }
+
+    public static CloudWatch getCloudWatch() {
+        return cloudWatch;
     }
 }

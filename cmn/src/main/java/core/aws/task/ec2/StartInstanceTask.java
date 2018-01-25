@@ -22,13 +22,13 @@ public class StartInstanceTask extends Task<Instance> {
     public void execute(Context context) throws Exception {
         List<String> instanceIds = resource.stoppedInstanceIds();
 
-        AWS.ec2.startInstances(instanceIds);
+        AWS.getEc2().startInstances(instanceIds);
 
         if (resource.elb != null) {
             // ELB uses instance ip to register, after stop/start, ELB will not refresh if instance ip changed, here it has to reattach instance to ELB
             String elbName = resource.elb.remoteELB.getLoadBalancerName();
-            AWS.elb.detachInstances(elbName, instanceIds);
-            AWS.elb.attachInstances(elbName, instanceIds, false);
+            AWS.getElb().detachInstances(elbName, instanceIds);
+            AWS.getElb().attachInstances(elbName, instanceIds, false);
         }
 
         context.output("instance/" + resource.id, "startedInstanceIds" + instanceIds);

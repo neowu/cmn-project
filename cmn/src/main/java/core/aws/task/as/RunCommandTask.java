@@ -31,7 +31,7 @@ public class RunCommandTask extends Task<ASGroup> {
         logger.info("execute command, asGroupId={}", resource.id);
 
         List<String> instanceIds = resource.remoteASGroup.getInstances().stream().map(Instance::getInstanceId).collect(Collectors.toList());
-        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.ec2.describeInstances(instanceIds);
+        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.getEc2().describeInstances(instanceIds);
 
         LinuxCommandRunner runner = new LinuxCommandRunner(context.env, remoteInstances, context);
         runner.run();

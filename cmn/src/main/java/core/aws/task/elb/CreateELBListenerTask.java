@@ -47,6 +47,6 @@ public class CreateELBListenerTask extends Task<ELB> {
         }
 
         logger.info("create ELB listeners, request={}", request);
-        AWS.elb.elb.createLoadBalancerListeners(request);
+        AWS.getElb().elb.createLoadBalancerListeners(request);
     }
 }

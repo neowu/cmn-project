@@ -39,7 +39,7 @@ class InstanceProfileHelper {
             instanceProfileName, roles);
 
         Role role = roles.get(0);
-        Optional<Policy> remotePolicy = AWS.iam.findRolePolicy(role.getRoleName(), role.getRoleName());
+        Optional<Policy> remotePolicy = AWS.getIam().findRolePolicy(role.getRoleName(), role.getRoleName());
         if (!remotePolicy.isPresent()) {
             logger.warn("role policy doesn't exist, it could be due to failure of last sync, it will try to create this time, instanceProfileName={}", instanceProfileName);
             return true;

@@ -25,7 +25,7 @@ public class DeleteELBTask extends Task<ELB> {
     @Override
     public void execute(Context context) throws Exception {
         String elbName = resource.remoteELB.getLoadBalancerName();
-        AWS.elb.deleteELB(elbName);
+        AWS.getElb().deleteELB(elbName);
 
         logger.info("elb deletion takes time to refresh to other system, wait first");
         if (!resource.remoteELB.getSubnets().isEmpty())

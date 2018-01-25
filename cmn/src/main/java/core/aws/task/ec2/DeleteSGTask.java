@@ -27,7 +27,7 @@ public class DeleteSGTask extends Task<SecurityGroup> {
             .retryInterval(Duration.ofSeconds(60))
             .retryOn(e -> e instanceof AmazonServiceException)
             .run(() -> {
-                AWS.ec2.deleteSecurityGroup(resource.remoteSecurityGroup.getGroupId());
+                AWS.getEc2().deleteSecurityGroup(resource.remoteSecurityGroup.getGroupId());
                 return null;
             });
 

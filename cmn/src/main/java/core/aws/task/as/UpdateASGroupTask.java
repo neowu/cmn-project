@@ -26,10 +26,10 @@ public class UpdateASGroupTask extends Task<ASGroup> {
             oldLaunchConfigName = resource.remoteASGroup.getLaunchConfigurationName();
             helper.createLaunchConfig(resource);
 
-            AWS.as.updateTag(asGroupName, helper.nameTag(resource));
+            AWS.getAs().updateTag(asGroupName, helper.nameTag(resource));
         }
 
-        AWS.as.updateASGroup(new UpdateAutoScalingGroupRequest()
+        AWS.getAs().updateASGroup(new UpdateAutoScalingGroupRequest()
             .withAutoScalingGroupName(asGroupName)
             .withLaunchConfigurationName(resource.launchConfig.remoteLaunchConfig.getLaunchConfigurationName())
             .withTerminationPolicies(ASGroup.TERMINATE_POLICY_OLDEST_INSTANCE)
@@ -38,7 +38,7 @@ public class UpdateASGroupTask extends Task<ASGroup> {
             .withMaxSize(resource.maxSize));
 
         if (oldLaunchConfigName != null) {
-            AWS.as.deleteLaunchConfig(oldLaunchConfigName);
+            AWS.getAs().deleteLaunchConfig(oldLaunchConfigName);
         }
     }
 }

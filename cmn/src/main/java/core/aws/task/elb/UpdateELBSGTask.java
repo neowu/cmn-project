@@ -20,6 +20,6 @@ public class UpdateELBSGTask extends Task<ELB> {
         String elbName = resource.remoteELB.getLoadBalancerName();
         String sgId = resource.securityGroup.remoteSecurityGroup.getGroupId();
 
-        AWS.elb.updateELBSG(elbName, sgId);
+        AWS.getElb().updateELBSG(elbName, sgId);
     }
 }

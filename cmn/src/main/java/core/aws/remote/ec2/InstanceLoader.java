@@ -36,7 +36,7 @@ public class InstanceLoader extends Loader {
     }
 
     private void loadInstances(Map<String, EnvTag> instanceIdLocalResourceIdMappings) {
-        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.ec2.describeInstances(instanceIdLocalResourceIdMappings.keySet());
+        List<com.amazonaws.services.ec2.model.Instance> remoteInstances = AWS.getEc2().describeInstances(instanceIdLocalResourceIdMappings.keySet());
         // link sg and key pair for remote only instances
         remoteInstances.stream()
             .filter(remoteInstance -> !InstanceState.TERMINATED.equalsTo(remoteInstance.getState())

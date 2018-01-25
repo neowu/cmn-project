@@ -19,10 +19,10 @@ public class CreateInternetGatewayTask extends Task<InternetGateway> {
 
     @Override
     public void execute(Context context) throws Exception {
-        resource.remoteInternetGatewayId = AWS.vpc.createInternetGateway(resource.vpc.remoteVPC.getVpcId()).getInternetGatewayId();
+        resource.remoteInternetGatewayId = AWS.getVpc().createInternetGateway(resource.vpc.remoteVPC.getVpcId()).getInternetGatewayId();
 
         EC2TagHelper tagHelper = new EC2TagHelper(context.env);
-        AWS.ec2.createTags(new CreateTagsRequest()
+        AWS.getEc2().createTags(new CreateTagsRequest()
             .withResources(resource.remoteInternetGatewayId)
             .withTags(tagHelper.env(), tagHelper.resourceId(resource.id), tagHelper.name(resource.id)));
     }

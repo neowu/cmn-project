@@ -18,7 +18,7 @@ public class CreateNATGatewayTask extends Task<NATGateway> {
 
     @Override
     public void execute(Context context) throws Exception {
-        NatGateway natGateway = AWS.vpc.createNATGateway(resource.subnet.remoteSubnets.first().getSubnetId(), resource.ip);
+        NatGateway natGateway = AWS.getVpc().createNATGateway(resource.subnet.remoteSubnets.first().getSubnetId(), resource.ip);
         resource.remoteNATGateway = natGateway;
     }
 }

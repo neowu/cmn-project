@@ -22,10 +22,10 @@ public class DeleteASGroupTask extends Task<ASGroup> {
     public void execute(Context context) throws Exception {
         String asGroupName = resource.remoteASGroup.getAutoScalingGroupName();
 
-        AWS.as.deleteAutoScalingGroup(asGroupName);
+        AWS.getAs().deleteAutoScalingGroup(asGroupName);
 
         String launchConfigurationName = resource.launchConfig.remoteLaunchConfig.getLaunchConfigurationName();
-        AWS.as.deleteLaunchConfig(launchConfigurationName);
+        AWS.getAs().deleteLaunchConfig(launchConfigurationName);
         context.output("as/" + resource.id, String.format("deletedASGroup=%s, deletedLaunchConfig=%s", asGroupName, launchConfigurationName));
 
         List<String> instanceIds = resource.remoteASGroup.getInstances()
@@ -34,6 +34,6 @@ public class DeleteASGroupTask extends Task<ASGroup> {
             .collect(Collectors.toList());
 
         if (!instanceIds.isEmpty())
-            AWS.ec2.terminateInstances(instanceIds);
+            AWS.getEc2().terminateInstances(instanceIds);
     }
 }

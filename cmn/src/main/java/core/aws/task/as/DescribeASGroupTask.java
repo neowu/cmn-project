@@ -35,7 +35,7 @@ public class DescribeASGroupTask extends Task<ASGroup> {
             List<String> instanceIds = remoteASGroup.getInstances().stream().map(Instance::getInstanceId).collect(Collectors.toList());
 
             if (!instanceIds.isEmpty()) {
-                for (com.amazonaws.services.ec2.model.Instance remoteInstance : AWS.ec2.describeInstances(instanceIds)) {
+                for (com.amazonaws.services.ec2.model.Instance remoteInstance : AWS.getEc2().describeInstances(instanceIds)) {
                     context.output(key, String.format("instanceId=%s, state=%s, privateDNS=%s, privateIP=%s",
                         remoteInstance.getInstanceId(),
                         remoteInstance.getState().getName(),

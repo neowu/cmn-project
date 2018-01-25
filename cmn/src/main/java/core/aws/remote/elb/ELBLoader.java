@@ -21,7 +21,7 @@ public class ELBLoader {
     }
 
     public void load() {
-        List<LoadBalancerDescription> remoteELBs = AWS.elb.listELBs();
+        List<LoadBalancerDescription> remoteELBs = AWS.getElb().listELBs();
         for (LoadBalancerDescription remoteELB : remoteELBs) {
             String elbName = remoteELB.getLoadBalancerName();
             String prefix = env.name + "-";

@@ -61,20 +61,22 @@ public class EC2 {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private volatile List<String> availabilityZones;
 
-    public EC2(AWSCredentialsProvider credentials, Regions region) {
+    EC2(AWSCredentialsProvider credentials, Regions region) {
         ec2 = AmazonEC2ClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
-    public synchronized List<String> availabilityZones() {
-        if (availabilityZones == null) {
-            DescribeAvailabilityZonesResult result = ec2.describeAvailabilityZones();
-            availabilityZones = result.getAvailabilityZones().stream()
-                                      .filter(zone -> "available".equals(zone.getState()))
-                                      .map(AvailabilityZone::getZoneName)
-                                      .collect(Collectors.toList());
-            logger.info("availability zones => {}", availabilityZones);
+    public List<String> availabilityZones() {
+        synchronized (this) {
+            if (availabilityZones == null) {
+                DescribeAvailabilityZonesResult result = ec2.describeAvailabilityZones();
+                availabilityZones = result.getAvailabilityZones().stream()
+                    .filter(zone -> "available".equals(zone.getState()))
+                    .map(AvailabilityZone::getZoneName)
+                    .collect(Collectors.toList());
+                logger.info("availability zones => {}", availabilityZones);
+            }
+            return availabilityZones;
         }
-        return availabilityZones;
     }
 
     public KeyPair createKeyPair(String keyName) {
@@ -209,8 +211,8 @@ public class EC2 {
         logger.info("describe instances, instanceIds={}", instanceIds);
         DescribeInstancesResult result = ec2.describeInstances(new DescribeInstancesRequest().withInstanceIds(instanceIds));
         return result.getReservations().stream()
-                     .flatMap(reservation -> reservation.getInstances().stream())
-                     .collect(Collectors.toList());
+            .flatMap(reservation -> reservation.getInstances().stream())
+            .collect(Collectors.toList());
     }
 
     public List<Image> describeImages(Collection<String> imageIds) {

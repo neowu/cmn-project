@@ -34,10 +34,10 @@ public class DeleteInternetGatewayTask extends Task<InternetGateway> {
             .run(() -> {
                 logger.info("delete internet gateway, internetGatewayId={}", resource.id);
 
-                AWS.vpc.ec2.detachInternetGateway(new DetachInternetGatewayRequest()
+                AWS.getVpc().ec2.detachInternetGateway(new DetachInternetGatewayRequest()
                     .withVpcId(resource.vpc.remoteVPC.getVpcId())
                     .withInternetGatewayId(resource.remoteInternetGatewayId));
-                AWS.vpc.ec2.deleteInternetGateway(new DeleteInternetGatewayRequest()
+                AWS.getVpc().ec2.deleteInternetGateway(new DeleteInternetGatewayRequest()
                     .withInternetGatewayId(resource.remoteInternetGatewayId));
                 return null;
             });

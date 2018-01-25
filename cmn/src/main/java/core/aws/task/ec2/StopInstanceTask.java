@@ -22,7 +22,7 @@ public class StopInstanceTask extends Task<Instance> {
     public void execute(Context context) throws Exception {
         List<String> instanceIds = resource.runningInstanceIds();
 
-        AWS.ec2.stopInstances(instanceIds);
+        AWS.getEc2().stopInstances(instanceIds);
         context.output("instance/stopped", instanceIds);
     }
 

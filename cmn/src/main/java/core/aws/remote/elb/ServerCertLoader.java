@@ -21,7 +21,7 @@ public class ServerCertLoader {
     }
 
     public void load() {
-        List<ServerCertificateMetadata> certs = AWS.iam.listServerCerts(ServerCert.certPath(env));
+        List<ServerCertificateMetadata> certs = AWS.getIam().listServerCerts(ServerCert.certPath(env));
 
         String prefix = env.name + "-";
         for (ServerCertificateMetadata cert : certs) {
@@ -32,7 +32,7 @@ public class ServerCertLoader {
             ServerCert serverCert = resources.find(ServerCert.class, resourceId)
                                              .orElseGet(() -> resources.add(new ServerCert(resourceId)));
             serverCert.name = certName;
-            serverCert.remoteCert = AWS.iam.getServerCert(cert.getServerCertificateName());
+            serverCert.remoteCert = AWS.getIam().getServerCert(cert.getServerCertificateName());
             serverCert.foundInRemote();
         }
     }
