@@ -42,4 +42,8 @@
         <Class name="core.framework.module.App"/>
         <Bug pattern="DM_EXIT"/>
     </Match>
+    <Match>
+        <Class name="core.aws.local.ec2.SGLoader"/>
+        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
+    </Match>
 </FindBugsFilter>

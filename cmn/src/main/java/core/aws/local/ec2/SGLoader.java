@@ -64,7 +64,6 @@ public class SGLoader implements LocalResourceLoader {
         });
     }
 
-    @SuppressWarnings("BC_UNCONFIRMED_CAST_OF_RETURN_VALUE")
     private void addIngressRule(SecurityGroup securityGroup, Protocol protocol, Source inputSource, Resources resources) {
         SecurityGroup.Source source = new SecurityGroup.Source();
         if (inputSource.sgId != null) {

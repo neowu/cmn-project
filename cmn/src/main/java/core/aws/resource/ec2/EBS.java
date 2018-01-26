@@ -5,7 +5,8 @@ package core.aws.resource.ec2;
  */
 public class EBS {
     public static boolean enableEBSOptimized(String instanceType) {
-        return instanceType.startsWith("c4") || instanceType.startsWith("m4");
+        return instanceType.startsWith("c4") || instanceType.startsWith("m4")
+            || instanceType.startsWith("c5") || instanceType.startsWith("m5");
     }
 
     public Integer rootVolumeSize;     // in gigabytes
