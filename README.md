@@ -1,6 +1,9 @@
 ## CMN
 cmn is a AWS resource manager. this tool is designed to support our own project, not to be a generic aws tool.
 
+[![Build Status](https://travis-ci.org/neowu/cmn-project.svg?branch=master)](https://travis-ci.org/neowu/cmn-project)
+[![Code Coverage](https://codecov.io/gh/neowu/cmn-project/branch/master/graph/badge.svg)](https://codecov.io/gh/neowu/cmn-project)
+
 ## TODO:
 * detect ELB to internal change, AS group policy changes
 * make Task not tied to resource, deleteTask should pass remoteResource only, refactory Task/Workflow
