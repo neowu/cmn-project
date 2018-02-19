@@ -9,3 +9,4 @@ aws.properties
 /test-env/
 /cmn-ng/target/
 /cmn-ng/Cargo.lock
+/out/

@@ -58,10 +58,8 @@ public class SGLoader implements LocalResourceLoader {
         securityGroup.name = env.name + ":" + node.id + ":" + Randoms.alphaNumeric(6);
         securityGroup.vpc = resources.vpc;
 
-        resolvers.add(node, () -> {
-            ingressRules.forEach((protocol, sources) ->
-                sources.forEach(source -> addIngressRule(securityGroup, protocol, source, resources)));
-        });
+        resolvers.add(node, () -> ingressRules.forEach((protocol, sources) ->
+            sources.forEach(source -> addIngressRule(securityGroup, protocol, source, resources))));
     }
 
     private void addIngressRule(SecurityGroup securityGroup, Protocol protocol, Source inputSource, Resources resources) {

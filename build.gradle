@@ -4,10 +4,10 @@ subprojects {
     apply from: file("${rootDir}/gradle/check.gradle")
 
     group = 'core.aws'
-    version = '1.8.7'
+    version = '1.8.8'
 }
 
-def awsVersion = '1.11.269'
+def awsVersion = '1.11.276'
 def junitJupiterVersion = '5.0.3'
 
 project(':cmn') {
@@ -27,6 +27,7 @@ project(':cmn') {
         compile "com.amazonaws:aws-java-sdk-autoscaling:${awsVersion}"
         compile "com.amazonaws:aws-java-sdk-ec2:${awsVersion}"
         compile "com.amazonaws:aws-java-sdk-elasticloadbalancing:${awsVersion}"
+        compile "com.amazonaws:aws-java-sdk-elasticloadbalancingv2:${awsVersion}"
         compile "com.amazonaws:aws-java-sdk-cloudwatch:${awsVersion}"
         compile "com.amazonaws:aws-java-sdk-iam:${awsVersion}"
         compile "com.amazonaws:aws-java-sdk-s3:${awsVersion}"
@@ -35,11 +36,11 @@ project(':cmn') {
         compile 'org.slf4j:jcl-over-slf4j:1.7.25'
         compile 'ch.qos.logback:logback-classic:1.2.3'
         compile 'com.jcraft:jsch:0.1.54'
-        compile 'org.apache.commons:commons-compress:1.15'
+        compile 'org.apache.commons:commons-compress:1.16.1'
         compile 'org.yaml:snakeyaml:1.19'
 
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
         testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
-        testCompile 'org.mockito:mockito-core:2.13.0'
+        testCompile 'org.mockito:mockito-core:2.15.0'
     }
 }

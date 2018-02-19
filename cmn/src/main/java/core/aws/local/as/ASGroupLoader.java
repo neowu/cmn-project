@@ -13,6 +13,7 @@ import core.aws.resource.ec2.InstanceProfile;
 import core.aws.resource.ec2.KeyPair;
 import core.aws.resource.ec2.SecurityGroup;
 import core.aws.resource.elb.ELB;
+import core.aws.resource.elb.v2.TargetGroup;
 import core.aws.resource.vpc.Subnet;
 import core.aws.util.Asserts;
 
@@ -40,6 +41,7 @@ public class ASGroupLoader implements LocalResourceLoader {
         int desiredSize = (int) Asserts.notNull(capacity.get("desired"), "desired is required for capacity");
 
         Optional<String> elbId = node.getString("elb");
+        Optional<String> targetGroupId = node.getString("target-group");
         Optional<String> instanceProfileId = node.getString("instance-profile");
 
         ASGroup asGroup = resources.add(new ASGroup(node.id));
@@ -58,6 +60,7 @@ public class ASGroupLoader implements LocalResourceLoader {
             instanceProfileId.ifPresent(id -> asGroup.launchConfig.instanceProfile = resources.get(InstanceProfile.class, id));
 
             elbId.ifPresent(id -> asGroup.elb = resources.get(ELB.class, id));
+            targetGroupId.ifPresent(id -> asGroup.targetGroup = resources.get(TargetGroup.class, id));
 
             asGroup.subnet = resources.get(Subnet.class, subnetId);
         });

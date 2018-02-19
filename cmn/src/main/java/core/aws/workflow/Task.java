@@ -73,7 +73,7 @@ public abstract class Task<T extends Resource> implements Callable<Void> {
     }
 
     @Override
-    public final Void call() throws Exception {
+    public final Void call() {
         try {
             Thread thread = Thread.currentThread();
             thread.setName(action() + ":" + resource.id + ":" + thread.getId());

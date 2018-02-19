@@ -1,18 +1,15 @@
-package core.aws.remote.elb;
+package core.aws.remote.elb.v2;
 
-import com.amazonaws.services.elasticloadbalancing.model.DescribeTagsRequest;
-import com.amazonaws.services.elasticloadbalancing.model.LoadBalancerDescription;
-import com.amazonaws.services.elasticloadbalancing.model.Tag;
+import com.amazonaws.services.elasticloadbalancingv2.model.DescribeTagsRequest;
+import com.amazonaws.services.elasticloadbalancingv2.model.LoadBalancer;
+import com.amazonaws.services.elasticloadbalancingv2.model.Tag;
 import core.aws.client.AWS;
 import core.aws.env.Environment;
 import core.aws.resource.Resources;
-import core.aws.resource.elb.ELB;
+import core.aws.resource.elb.v2.ELB;
 
 import java.util.List;
 
-/**
- * @author neo
- */
 public class ELBLoader {
     private final Resources resources;
     private final Environment env;
@@ -23,11 +20,11 @@ public class ELBLoader {
     }
 
     public void load() {
-        List<LoadBalancerDescription> remoteELBs = AWS.getElb().listELBs();
-        for (LoadBalancerDescription remoteELB : remoteELBs) {
+        List<LoadBalancer> remoteELBs = AWS.getElbV2().listELBs();
+        for (LoadBalancer remoteELB : remoteELBs) {
             String elbName = remoteELB.getLoadBalancerName();
             String prefix = env.name + "-";
-            if (elbName.startsWith(prefix) && "1".equals(getVersion(elbName))) {
+            if (elbName.startsWith(prefix) && "2".equals(getVersion(remoteELB.getLoadBalancerArn()))) {
                 String resourceId = elbName.substring(prefix.length());
                 ELB elb = resources.find(ELB.class, resourceId).orElseGet(() -> resources.add(new ELB(resourceId)));
                 elb.name = elbName;
@@ -37,9 +34,9 @@ public class ELBLoader {
         }
     }
 
-    private String getVersion(String elbName) {
-        List<Tag> tags = AWS.getElb().elb.describeTags(new DescribeTagsRequest()
-            .withLoadBalancerNames(elbName)).getTagDescriptions().get(0).getTags();
+    private String getVersion(String elbARN) {
+        List<Tag> tags = AWS.getElbV2().elb.describeTags(new DescribeTagsRequest()
+            .withResourceArns(elbARN)).getTagDescriptions().get(0).getTags();
         return tags.stream().filter(tag -> "cloud-manager:elb-version".equals(tag.getKey())).map(Tag::getValue).findFirst().orElse("1");
     }
 }

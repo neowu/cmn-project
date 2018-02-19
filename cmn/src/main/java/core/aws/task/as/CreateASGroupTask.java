@@ -41,6 +41,9 @@ public class CreateASGroupTask extends Task<ASGroup> {
         if (resource.elb != null) {
             request.withHealthCheckType("ELB")
                 .withLoadBalancerNames(resource.elb.remoteELB.getLoadBalancerName());
+        } else if (resource.targetGroup != null) {
+            request.withHealthCheckType("ELB")
+                .withTargetGroupARNs(resource.targetGroup.remoteTG.getTargetGroupArn());
         } else {
             request.withHealthCheckType("EC2");
         }

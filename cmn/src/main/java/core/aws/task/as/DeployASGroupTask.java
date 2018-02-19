@@ -114,7 +114,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
         return oldInstanceIds;
     }
 
-    private void waitUntilAllNewInstancesReady() throws InterruptedException {
+    private void waitUntilAllNewInstancesReady() {
         List<String> newInstanceIds = waitUntilInstanceAttachedToASG();
 
         waitUntilInstanceRunning(newInstanceIds);
@@ -122,7 +122,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
         waitUntilInstanceAttachedToELB(newInstanceIds);
     }
 
-    private List<String> waitUntilInstanceAttachedToASG() throws InterruptedException {
+    private List<String> waitUntilInstanceAttachedToASG() {
         List<String> newInstanceIds;
         while (true) {
             Threads.sleepRoughly(Duration.ofSeconds(30));
@@ -152,7 +152,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
         return newInstanceIds;
     }
 
-    private void waitUntilInstanceRunning(List<String> newInstanceIds) throws InterruptedException {
+    private void waitUntilInstanceRunning(List<String> newInstanceIds) {
         while (true) {
             Threads.sleepRoughly(Duration.ofSeconds(30));
             List<InstanceStatus> statuses = AWS.getEc2().ec2.describeInstanceStatus(new DescribeInstanceStatusRequest()
@@ -181,7 +181,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
         }
     }
 
-    private void waitUntilInstanceAttachedToELB(List<String> newInstanceIds) throws InterruptedException {
+    private void waitUntilInstanceAttachedToELB(List<String> newInstanceIds) {
         if (resource.elb != null) {
             int attempts = 0;
             while (true) {

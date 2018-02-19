@@ -24,6 +24,7 @@ public class AWS {
     private static S3 s3;
     private static EC2VPC vpc;
     private static ElasticLoadBalancing elb;
+    private static ElasticLoadBalancingV2 elbV2;
     private static IAM iam;
     private static AutoScaling as;
     private static CloudWatch cloudWatch;
@@ -36,6 +37,7 @@ public class AWS {
         ec2 = new EC2(provider, env.region);
         vpc = new EC2VPC(provider, env.region);
         elb = new ElasticLoadBalancing(provider, env.region);
+        elbV2 = new ElasticLoadBalancingV2(provider, env.region);
         s3 = new S3(provider, env.region);
         iam = new IAM(provider, env.region);
         as = new AutoScaling(provider, env.region);
@@ -70,6 +72,10 @@ public class AWS {
 
     public static ElasticLoadBalancing getElb() {
         return elb;
+    }
+
+    public static ElasticLoadBalancingV2 getElbV2() {
+        return elbV2;
     }
 
     public static IAM getIam() {

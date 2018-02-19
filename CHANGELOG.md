@@ -1,6 +1,7 @@
 ## Change log
-### 1.8.8 (1/25/2018 - )
+### 1.8.8 (1/25/2018 - 2/19/2018)
 * ec2: add support for m5 instance type
+* elb: add support for application ELB
 
 ### 1.8.7 (12/6/2017 - 12/6/2017)
 * node: update to 9.2.0

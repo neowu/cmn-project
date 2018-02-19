@@ -12,6 +12,7 @@ import core.aws.task.ec2.CreateSGTask;
 import core.aws.task.ec2.DeleteSGTask;
 import core.aws.task.elb.CreateELBTask;
 import core.aws.task.elb.DeleteELBTask;
+import core.aws.task.elb.v2.CreateTargetGroupTask;
 import core.aws.task.vpc.CreateSubnetTask;
 import core.aws.task.vpc.DeleteSubnetTask;
 import core.aws.workflow.Tasks;
@@ -95,6 +96,11 @@ public class ASGroupTaskPlanner extends Planner {
 
             if (asGroup.elb != null) {
                 find(CreateELBTask.class, asGroup.elb)
+                    .ifPresent(asGroupTask::dependsOn);
+            }
+
+            if (asGroup.targetGroup != null) {
+                find(CreateTargetGroupTask.class, asGroup.targetGroup)
                     .ifPresent(asGroupTask::dependsOn);
             }
 

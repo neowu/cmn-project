@@ -11,7 +11,7 @@ import core.aws.workflow.Tasks;
  * @author neo
  */
 public class VPC extends Resource {
-    public static final String RESOURCE_ID = "vpc";
+    private static final String RESOURCE_ID = "vpc";
     public Vpc remoteVPC;
 
     public VPC() {

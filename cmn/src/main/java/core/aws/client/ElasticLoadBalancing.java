@@ -34,7 +34,7 @@ public class ElasticLoadBalancing {
     public final AmazonElasticLoadBalancing elb;
     private final Logger logger = LoggerFactory.getLogger(ElasticLoadBalancing.class);
 
-    public ElasticLoadBalancing(AWSCredentialsProvider credentials, Regions region) {
+    ElasticLoadBalancing(AWSCredentialsProvider credentials, Regions region) {
         elb = AmazonElasticLoadBalancingClientBuilder.standard().withRegion(region).withCredentials(credentials).build();
     }
 
@@ -105,7 +105,7 @@ public class ElasticLoadBalancing {
             .withInstances(instances));
     }
 
-    public void attachInstances(String elbName, List<String> instanceIds, boolean waitUntilInService) throws InterruptedException {
+    public void attachInstances(String elbName, List<String> instanceIds, boolean waitUntilInService) {
         logger.info("attach instances to elb, elb={}, instances={}", elbName, instanceIds);
 
         String expectedState = waitUntilInService ? "InService" : "Service";    // if not waitUntilInService, state can be InService or OutOfService

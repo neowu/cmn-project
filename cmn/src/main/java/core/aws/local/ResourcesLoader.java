@@ -8,6 +8,7 @@ import core.aws.local.ec2.InstanceProfileLoader;
 import core.aws.local.ec2.SGLoader;
 import core.aws.local.elb.ELBLoader;
 import core.aws.local.elb.ServerCertLoader;
+import core.aws.local.elb.v2.TargetGroupLoader;
 import core.aws.local.env.EnvLoader;
 import core.aws.local.image.AMILoader;
 import core.aws.local.image.AMIsLoader;
@@ -46,7 +47,9 @@ public class ResourcesLoader {
         localResourceLoaders.put("s3", new S3Loader());
         localResourceLoaders.put("subnet", new SubnetLoader());
         localResourceLoaders.put("cert", new ServerCertLoader());
+        localResourceLoaders.put("target-group", new TargetGroupLoader());
         localResourceLoaders.put("elb", new ELBLoader());
+        localResourceLoaders.put("elb-v2", new core.aws.local.elb.v2.ELBLoader());
         localResourceLoaders.put("instance-profile", new InstanceProfileLoader());
         localResourceLoaders.put("auto-scaling", new ASGroupLoader());
     }

@@ -1,8 +1,10 @@
 package core.aws.resource.as;
 
 import core.aws.resource.Resource;
+import core.aws.resource.Resources;
 import core.aws.resource.ServerResource;
 import core.aws.resource.elb.ELB;
+import core.aws.resource.elb.v2.TargetGroup;
 import core.aws.resource.vpc.Subnet;
 import core.aws.task.as.CreateASGroupTask;
 import core.aws.task.as.DeleteASGroupTask;
@@ -13,6 +15,7 @@ import core.aws.task.as.StartASGroupTask;
 import core.aws.task.as.StopASGroupTask;
 import core.aws.task.as.UpdateASGroupTask;
 import core.aws.task.as.UploadTask;
+import core.aws.util.Asserts;
 import core.aws.util.ToStringHelper;
 import core.aws.workflow.Tasks;
 
@@ -27,6 +30,7 @@ public class ASGroup extends Resource implements ServerResource {
     public com.amazonaws.services.autoscaling.model.AutoScalingGroup remoteASGroup;
     public LaunchConfig launchConfig = new LaunchConfig();
     public ELB elb;
+    public TargetGroup targetGroup;
     public int minSize;
     public int maxSize;
     public int desiredSize;
@@ -34,6 +38,13 @@ public class ASGroup extends Resource implements ServerResource {
 
     public ASGroup(String id) {
         super(id);
+    }
+
+    @Override
+    public void validate(Resources resources) {
+        if (elb != null) {
+            Asserts.isNull(targetGroup, "ASG should have only ELB or TargetGroup setup.");
+        }
     }
 
     @Override
