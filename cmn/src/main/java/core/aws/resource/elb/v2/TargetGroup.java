@@ -17,7 +17,7 @@ public class TargetGroup extends Resource {
     public String healthCheckURL;
     public VPC vpc;
     public String protocol;
-    public int port;
+    public Integer port;
 
     public TargetGroup(String id) {
         super(id);
@@ -25,7 +25,9 @@ public class TargetGroup extends Resource {
 
     @Override
     public void validate(Resources resources) {
-        Asserts.isTrue("https".equalsIgnoreCase(protocol) || "http".equalsIgnoreCase(protocol), "invalid listener protocol, protocol=" + protocol);
+        if (protocol != null) {
+            Asserts.isTrue("https".equalsIgnoreCase(protocol) || "http".equalsIgnoreCase(protocol), "invalid listener protocol, protocol=" + protocol);
+        }
     }
 
     @Override
@@ -40,7 +42,19 @@ public class TargetGroup extends Resource {
 
     @Override
     protected void updateTasks(Tasks tasks) {
-        tasks.add(new UpdateTargetGroupTask(this));
+        if (changed()) {
+            tasks.add(new UpdateTargetGroupTask(this));
+        }
+    }
+
+    private boolean changed() {
+        if (protocol != null && !protocol.equalsIgnoreCase(remoteTG.getProtocol())) {
+            return Boolean.TRUE;
+        }
+        if (port != null && Integer.compare(port, remoteTG.getPort()) != 0) {
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 
     @Override

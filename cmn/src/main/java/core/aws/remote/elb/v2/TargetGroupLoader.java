@@ -26,6 +26,8 @@ public class TargetGroupLoader {
                 TargetGroup tg = resources.find(TargetGroup.class, resouceId).orElseGet(() -> resources.add(new TargetGroup(resouceId)));
                 tg.name = tgName;
                 tg.remoteTG = remoteTG;
+                tg.protocol = remoteTG.getProtocol();
+                tg.port = remoteTG.getPort();
                 tg.foundInRemote();
             }
         }
