@@ -8,7 +8,7 @@ subprojects {
 }
 
 def awsVersion = '1.11.286'
-def junitJupiterVersion = '5.0.3'
+def junitVersion = '5.1.0'
 
 project(':cmn') {
     apply plugin: 'application'
@@ -39,8 +39,10 @@ project(':cmn') {
         compile 'org.apache.commons:commons-compress:1.16.1'
         compile 'org.yaml:snakeyaml:1.19'
 
-        testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
-        testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
-        testCompile 'org.mockito:mockito-core:2.15.0'
+        testCompile "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testCompile 'org.mockito:mockito-core:2.16.0'
+        testCompile 'org.assertj:assertj-core:3.9.0'
+
+        testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     }
 }

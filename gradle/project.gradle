@@ -1,27 +1,18 @@
+import java.time.Instant
+
 defaultTasks 'clean', 'build'
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.3'
-    }
-}
-
-def buildTime = new Date()
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
-    apply plugin: org.junit.platform.gradle.plugin.JUnitPlatformPlugin
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_1_9
+    targetCompatibility = JavaVersion.VERSION_1_9
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
-        options.compilerArgs << '-Xlint:all'
+        options.deprecation = true
+        options.compilerArgs += ['-Xlint:all', '-proc:none']
     }
 
     repositories {
@@ -31,8 +22,9 @@ subprojects {
 
     buildDir = "${rootDir}/build/${name}"
 
-    dependencies {
-        testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.0.3'
+    test {
+        useJUnitPlatform()
+        failFast = true
     }
 
     afterEvaluate {
@@ -44,7 +36,7 @@ subprojects {
                         'Built-With': "gradle-${project.gradle.gradleVersion}, groovy-${GroovySystem.version}",
                         'Built-By': System.getProperty('user.name'),
                         'Built-On': "${InetAddress.localHost.hostName}/${InetAddress.localHost.hostAddress}",
-                        'Build-Time': buildTime.format('yyyy/MM/dd HH:mm:ss')
+                        'Build-Time': Instant.now().toString()
             }
         }
     }
@@ -58,5 +50,5 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.5.1'
+    gradleVersion = '4.6'
 }

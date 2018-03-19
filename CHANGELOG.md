@@ -1,6 +1,11 @@
 ## Change log
+### 1.9.0 (3/2/2018 - )
+* jdk: update to jdk 9 compatible
+* elasticsearch: update/fix elasticsearch 6.x role
+
 ### 1.8.9 (2/28/2018 - 2/28/2018)
 * tg: fix sync issue (always tried to update target group)
+
 ### 1.8.8 (1/25/2018 - 2/19/2018)
 * ec2: add support for m5 instance type
 * elb: add support for application ELB

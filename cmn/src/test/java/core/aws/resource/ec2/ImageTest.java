@@ -8,8 +8,7 @@ import core.aws.workflow.Tasks;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author neo
@@ -24,7 +23,7 @@ class ImageTest {
 
     @Test
     void nextVersionWithoutRemoteImages() {
-        assertThat(image.nextVersion(), equalTo(1));
+        assertThat(image.nextVersion()).isEqualTo(1);
     }
 
     @Test
@@ -33,7 +32,7 @@ class ImageTest {
         image.remoteImages.put(3, new com.amazonaws.services.ec2.model.Image().withName("image3"));
         image.remoteImages.put(2, new com.amazonaws.services.ec2.model.Image().withName("image2"));
 
-        assertThat(image.nextVersion(), equalTo(4));
+        assertThat(image.nextVersion()).isEqualTo(4);
     }
 
     @Test
@@ -47,8 +46,8 @@ class ImageTest {
         Tasks tasks = new Tasks();
         image.bakeTasks(tasks, false);
 
-        assertThat(tasks.size(), equalTo(2));
-        DeleteImageTask task = (DeleteImageTask) tasks.stream().filter(t -> t instanceof DeleteImageTask).reduce(StreamHelper.onlyOne()).get();
-        assertThat(task.deletedImage.getName(), equalTo("image1"));
+        assertThat(tasks.size()).isEqualTo(2);
+        DeleteImageTask task = (DeleteImageTask) tasks.stream().filter(DeleteImageTask.class::isInstance).reduce(StreamHelper.onlyOne()).get();
+        assertThat(task.deletedImage.getName()).isEqualTo("image1");
     }
 }

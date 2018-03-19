@@ -3,8 +3,7 @@ package core.aws.local.ec2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author neo
@@ -19,6 +18,6 @@ class EBSBuilderTest {
 
     @Test
     void parseSize() {
-        assertThat(builder.parseSize("30G"), equalTo(30));
+        assertThat(builder.parseSize("30G")).isEqualTo(30);
     }
 }

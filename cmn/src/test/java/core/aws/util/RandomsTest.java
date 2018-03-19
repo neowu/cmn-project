@@ -2,8 +2,7 @@ package core.aws.util;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author neo
@@ -11,8 +10,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class RandomsTest {
     @Test
     void randomAlphaNumeric() {
-        assertThat(Randoms.alphaNumeric(3).length(), equalTo(3));
-        assertThat(Randoms.alphaNumeric(5).length(), equalTo(5));
-        assertThat(Randoms.alphaNumeric(10).length(), equalTo(10));
+        assertThat(Randoms.alphaNumeric(3)).hasSize(3);
+        assertThat(Randoms.alphaNumeric(5)).hasSize(5);
+        assertThat(Randoms.alphaNumeric(10)).hasSize(10);
     }
 }
