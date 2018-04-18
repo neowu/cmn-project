@@ -12,15 +12,17 @@
     - kubeadm
     - kubectl
     - kubernetes-cni
+    - ebtables
+    - socat
 
 - name: update /etc/kubernetes/*
   copy: src=etc/kubernetes/ dest=/etc/kubernetes owner=root group=root mode=0644
 
+- name: update /etc/kubernetes/kubeadm.conf
+  template: src=etc/kubernetes/kubeadm.conf.j2 dest=/etc/kubernetes/kubeadm.conf owner=root group=root mode=0644
+
 - name: update /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
   copy: src=etc/systemd/system/kubelet.service.d/10-kubeadm.conf dest=/etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-
-- name: update /etc/kubernetes/cloud-config
-  template: src=etc/kubernetes/cloud-config.j2 dest=/etc/kubernetes/cloud-config
 
 - name: install pip
   apt: name=python-pip

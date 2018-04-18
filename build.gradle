@@ -4,10 +4,10 @@ subprojects {
     apply from: file("${rootDir}/gradle/check.gradle")
 
     group = 'core.aws'
-    version = '1.8.9'
+    version = '1.9.0'
 }
 
-def awsVersion = '1.11.286'
+def awsVersion = '1.11.313'
 def junitVersion = '5.1.0'
 
 project(':cmn') {

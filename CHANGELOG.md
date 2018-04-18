@@ -1,7 +1,8 @@
 ## Change log
-### 1.9.0 (3/2/2018 - )
+### 1.9.0 (3/2/2018 - 4/18/2018)
 * jdk: update to jdk 9 compatible
 * elasticsearch: update/fix elasticsearch 6.x role
+* kubernetes: update/fix kubernetes 1.9.6 role
 
 ### 1.8.9 (2/28/2018 - 2/28/2018)
 * tg: fix sync issue (always tried to update target group)
