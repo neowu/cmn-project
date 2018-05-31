@@ -1,4 +1,8 @@
 ## Change log
+### 1.9.1 (5/31/2018 - 5/31/2018)
+* aws: update to latest SDK version
+* gradle: update quality lib
+
 ### 1.9.0 (3/2/2018 - 4/18/2018)
 * jdk: update to jdk 9 compatible
 * elasticsearch: update/fix elasticsearch 6.x role
