@@ -1,4 +1,10 @@
 ## Change log
+### 1.9.2 (5/18/2018 - )
+* ansible: update app role to ubuntu 18
+* jdk: upgrade to jdk10
+* gradle: update to gradle 4.8
+* aws: update to latest SDK version
+
 ### 1.9.1 (5/31/2018 - 5/31/2018)
 * aws: update to latest SDK version
 * gradle: update quality lib

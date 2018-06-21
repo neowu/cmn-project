@@ -4,14 +4,14 @@ subprojects {
     apply from: file("${rootDir}/gradle/check.gradle")
 
     group = 'core.aws'
-    version = '1.9.1'
+    version = '1.9.2'
 }
 
-def awsVersion = '1.11.338'
+def awsVersion = '1.11.349'
 def junitVersion = '5.1.0'
 
 project(':cmn') {
-    apply plugin: 'application'
+    apply plugin: 'application'ca
     mainClassName = 'Main'
 
     startScripts {
@@ -36,12 +36,12 @@ project(':cmn') {
         compile 'org.slf4j:jcl-over-slf4j:1.7.25'
         compile 'ch.qos.logback:logback-classic:1.2.3'
         compile 'com.jcraft:jsch:0.1.54'
-        compile 'org.apache.commons:commons-compress:1.16.1'
-        compile 'org.yaml:snakeyaml:1.19'
+        compile 'org.apache.commons:commons-compress:1.17'
+        compile 'org.yaml:snakeyaml:1.21'
 
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-        testCompile 'org.mockito:mockito-core:2.16.0'
-        testCompile 'org.assertj:assertj-core:3.9.0'
+        testCompile 'org.mockito:mockito-core:2.19.0'
+        testCompile 'org.assertj:assertj-core:3.10.0'
 
         testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     }
