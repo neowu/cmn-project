@@ -1,5 +1,5 @@
-- name: install openjdk-10-jre-headless
-  apt: name=openjdk-10-jre-headless
+- name: install openjdk-11-jre-headless
+  apt: name=openjdk-11-jre-headless
 
 - name: install pip
   apt: name=python-pip
@@ -18,7 +18,7 @@
 
 - name: create /opt/app
   file: path=/opt/app owner=app group=app mode=0755 state=directory
-  +
+
 - name: update /etc/logrotate.d/app
   copy: src=etc/logrotate.d/app dest=/etc/logrotate.d/app
 

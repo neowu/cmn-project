@@ -11,7 +11,7 @@ def awsVersion = '1.11.349'
 def junitVersion = '5.1.0'
 
 project(':cmn') {
-    apply plugin: 'application'ca
+    apply plugin: 'application'
     mainClassName = 'Main'
 
     startScripts {
