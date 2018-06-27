@@ -5,13 +5,13 @@
   user: name=kibana group=kibana
 
 - name: download kibana
-  get_url: url=https://artifacts.elastic.co/downloads/kibana/kibana-6.0.0-linux-x86_64.tar.gz dest=/tmp timeout=60 checksum=sha512:dd1ea5f344fe31da49ed56c844d3c0792f7ef748fc8b43450c611e7eb7f44b7cde8ae1b98c3ebfec7a87090fe82dab49b2176e947aad13d72176ec609f8a79c6
+  get_url: url=https://artifacts.elastic.co/downloads/kibana/kibana-6.3.0-linux-x86_64.tar.gz dest=/tmp timeout=60 checksum=sha512:8d83a41389a75463e810644a8e2dbbd7bba0a3c55aec25189f7f56dadfe6f4879e03d27ff65a87e2beb0c7e635e09b0a5669b6ce75323169b937cd754fabe1a7
 
 - name: extract kibana
-  unarchive: src=/tmp/kibana-6.0.0-linux-x86_64.tar.gz dest=/opt/ copy=no owner=kibana group=kibana
+  unarchive: src=/tmp/kibana-6.3.0-linux-x86_64.tar.gz dest=/opt/ copy=no owner=kibana group=kibana
 
 - name: update /opt/kibana/config/kibana.yml
-  copy: src=opt/kibana/config/kibana.yml dest=/opt/kibana-6.0.0-linux-x86_64/config/kibana.yml
+  copy: src=opt/kibana/config/kibana.yml dest=/opt/kibana-6.3.0-linux-x86_64/config/kibana.yml
 
 - name: update /etc/systemd/system/kibana.service
   copy: src=etc/systemd/system/kibana.service dest=/etc/systemd/system/kibana.service

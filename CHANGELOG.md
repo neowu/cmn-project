@@ -1,4 +1,12 @@
 ## Change log
+### 1.9.4 (6/26/2018 - )
+
+### 1.9.3 (6/25/2018 - 6/26/2018)
+* kafka: update to version 1.1.0
+* kibana: update to version 6.3.0
+* es: update to version 6.3.0
+* app: add temporary workaround to fix jdk10 / ubuntu18 trustAnchors issue
+
 ### 1.9.2 (5/18/2018 - 6/24/2018)
 * ansible: update app role to ubuntu 18
 * jdk: upgrade to jdk10

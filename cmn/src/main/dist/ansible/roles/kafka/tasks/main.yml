@@ -1,5 +1,5 @@
-- name: install openjdk-8-jre-headless
-  apt: name=openjdk-8-jre-headless
+- name: install openjdk-11-jre-headless
+  apt: name=openjdk-11-jre-headless
 
 - name: create kafka group
   group: name=kafka
@@ -14,10 +14,10 @@
   pam_limits: domain=kafka limit_type=hard limit_item=nofile value=32768
 
 - name: download kafka
-  get_url: url=http://www.us.apache.org/dist/kafka/1.0.0/kafka_2.12-1.0.0.tgz dest=/tmp timeout=60 checksum=md5:11cd0165afe827d2bd3381865a9641f3
+  get_url: url=http://www.us.apache.org/dist/kafka/1.1.0/kafka_2.12-1.1.0.tgz dest=/tmp timeout=60 checksum=sha512:48D1DDC71F5A5B1B25D111F792553BE69BE62293640A3C6AF985203C6EE88C6AA78E01327066BFAD3FEAE6B0B45D71C0CAC6EBD2D08843D92269132741A3791B
 
 - name: extract kafka
-  unarchive: src=/tmp/kafka_2.12-1.0.0.tgz dest=/opt/ copy=no owner=kafka group=kafka
+  unarchive: src=/tmp/kafka_2.12-1.1.0.tgz dest=/opt/ copy=no owner=kafka group=kafka
 
 - name: create /var/lib/zookeeper
   file: path=/var/lib/zookeeper owner=kafka group=kafka mode=0755 state=directory
@@ -32,10 +32,10 @@
   template: src=etc/systemd/system/kafka.service.j2 dest=/etc/systemd/system/kafka.service
 
 - name: update /opt/kafka/config/zookeeper.properties
-  copy: src=opt/kafka/config/zookeeper.properties dest=/opt/kafka_2.12-1.0.0/config/zookeeper.properties
+  copy: src=opt/kafka/config/zookeeper.properties dest=/opt/kafka_2.12-1.1.0/config/zookeeper.properties
 
 - name: update /opt/kafka/config/server.properties
-  template: src=opt/kafka/config/server.properties.j2 dest=/opt/kafka_2.12-1.0.0/config/server.properties
+  template: src=opt/kafka/config/server.properties.j2 dest=/opt/kafka_2.12-1.1.0/config/server.properties
 
 - name: enable zookeeper service
   service: name=zookeeper enabled=yes

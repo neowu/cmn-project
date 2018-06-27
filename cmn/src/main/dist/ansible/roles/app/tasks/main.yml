@@ -1,6 +1,12 @@
 - name: install openjdk-11-jre-headless
   apt: name=openjdk-11-jre-headless
 
+- name: update /etc/fix-trustore/fix-trustore.sh
+  copy: src=etc/fix-trustore/fix-trustore.sh dest=/etc/fix-trustore/
+
+- name: fix jdk trustore issue
+  script: /etc/fix-trustore/fix-trustore.sh
+
 - name: install pip
   apt: name=python-pip
 
