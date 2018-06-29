@@ -1,0 +1,12 @@
+[Unit]
+Description=app
+After=network.target
+
+[Service]
+User=app
+Environment="JAVA_OPTS={{app_java_opts}}"
+ExecStartPre=/bin/bash -c '[[ -d /opt/app/{{app_name}} ]] || (/usr/local/bin/aws s3 cp s3://{{app_s3_bucket}}/{{app_name}}.tar /tmp && /bin/tar xf /tmp/{{app_name}}.tar -C /opt/app)'
+ExecStart=/opt/app/{{app_name}}/bin/{{app_name}}
+
+[Install]
+WantedBy=multi-user.target

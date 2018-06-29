@@ -1,5 +1,6 @@
 ## Change log
 ### 1.9.4 (6/26/2018 - )
+* app: add app-legacy role using jdk8 - temporary role -
 
 ### 1.9.3 (6/25/2018 - 6/26/2018)
 * kafka: update to version 1.1.0
