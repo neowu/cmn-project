@@ -48,14 +48,11 @@ public class AnsibleProvisioner {
 
         try (SSH ssh = new SSH(hostName(instance), "ubuntu", KeyPair.keyFile(instance.getKeyName(), env))) {
             ssh.executeCommands("sudo apt-get -y -q update",
-                    "sudo apt-get -y install software-properties-common",
-                "sudo apt-add-repository ppa:ansible/ansible -y",
-                    "sudo apt-get -y update",
-                "sudo apt-get -y install ansible",
-                "sudo DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes -q -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' dist-upgrade", // update package before run playbook to make sure ansible is updated in advance
-                "sudo rm -rf /opt/ansible /opt/packages",    // clear previous ansible roles and packages if installed
-                "sudo mkdir -p /opt/packages /opt/ansible",
-                "sudo chown ubuntu.ubuntu /opt/packages /opt/ansible");
+                    "dpkg -s ansible || sudo apt-get -y install software-properties-common && sudo apt-add-repository ppa:ansible/ansible -y && sudo apt-get -y update && sudo apt-get -y install ansible",
+                    "sudo DEBIAN_FRONTEND=noninteractive apt-get -y --force-yes -q -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' dist-upgrade", // update package before run playbook to make sure ansible is updated in advance
+                    "sudo rm -rf /opt/ansible /opt/packages",    // clear previous ansible roles and packages if installed
+                    "sudo mkdir -p /opt/packages /opt/ansible",
+                    "sudo chown ubuntu.ubuntu /opt/packages /opt/ansible");
 
             uploadPackage(ssh);
 
@@ -69,7 +66,7 @@ public class AnsibleProvisioner {
         ssh.put(playbookPath, "/opt/ansible/localhost.yml");
 
         ssh.executeCommands("tar xzf /tmp/ansible.tar.gz -C /opt/ansible",
-            "ansible-playbook --become /opt/ansible/localhost.yml");
+                "ansible-playbook --become /opt/ansible/localhost.yml");
 
         delete(ansibleArchive);
     }
