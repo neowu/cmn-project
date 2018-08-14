@@ -1,6 +1,8 @@
 ## Change log
-### 1.9.4 (6/26/2018 - )
+### 1.9.4 (6/26/2018 - 8/14/2018)
 * app: add app-legacy role using jdk8 - temporary role -
+* aws: update to version 1.11.374
+* kafka: fix download URL
 
 ### 1.9.3 (6/25/2018 - 6/26/2018)
 * kafka: update to version 1.1.0
