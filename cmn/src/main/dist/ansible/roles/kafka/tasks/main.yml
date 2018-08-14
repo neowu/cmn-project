@@ -14,7 +14,7 @@
   pam_limits: domain=kafka limit_type=hard limit_item=nofile value=32768
 
 - name: download kafka
-  get_url: url=http://www.us.apache.org/dist/kafka/1.1.0/kafka_2.12-1.1.0.tgz dest=/tmp timeout=60 checksum=sha512:48D1DDC71F5A5B1B25D111F792553BE69BE62293640A3C6AF985203C6EE88C6AA78E01327066BFAD3FEAE6B0B45D71C0CAC6EBD2D08843D92269132741A3791B
+  get_url: url=https://archive.apache.org/dist/kafka/1.1.0/kafka_2.12-1.1.0.tgz dest=/tmp timeout=60 checksum=sha512:48D1DDC71F5A5B1B25D111F792553BE69BE62293640A3C6AF985203C6EE88C6AA78E01327066BFAD3FEAE6B0B45D71C0CAC6EBD2D08843D92269132741A3791B
 
 - name: extract kafka
   unarchive: src=/tmp/kafka_2.12-1.1.0.tgz dest=/opt/ copy=no owner=kafka group=kafka

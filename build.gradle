@@ -7,7 +7,7 @@ subprojects {
     version = '1.9.4'
 }
 
-def awsVersion = '1.11.355'
+def awsVersion = '1.11.374'
 def junitVersion = '5.1.0'
 
 project(':cmn') {
@@ -32,7 +32,7 @@ project(':cmn') {
         compile "com.amazonaws:aws-java-sdk-iam:${awsVersion}"
         compile "com.amazonaws:aws-java-sdk-s3:${awsVersion}"
         compile "com.amazonaws:aws-java-sdk-ecr:${awsVersion}"
-        compile 'org.slf4j:slf4j-api:1.7.25'
+        compile "org.slf4j:slf4j-api:1.7.25"
         compile 'org.slf4j:jcl-over-slf4j:1.7.25'
         compile 'ch.qos.logback:logback-classic:1.2.3'
         compile 'com.jcraft:jsch:0.1.54'
