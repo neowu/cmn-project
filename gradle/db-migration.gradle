@@ -15,6 +15,7 @@ apply plugin: org.flywaydb.gradle.FlywayPlugin
 tasks.withType(org.flywaydb.gradle.task.AbstractFlywayTask.class) { task ->
     task.doFirst {
         flyway {
+            configurations = ['runtimeClasspath'] // use runtimeOnly scope in actual db-migration project
             placeholderReplacement = false
             assert project.file('src/main/resources/db/migration').exists()
 

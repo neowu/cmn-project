@@ -2,7 +2,7 @@
   apt_key: url=https://deb.nodesource.com/gpgkey/nodesource.gpg.key
 
 - name: add node repo
-  apt_repository: repo='deb https://deb.nodesource.com/node_9.x xenial main'
+  apt_repository: repo='deb https://deb.nodesource.com/setup_10.x xenial main'
 
 - name: install node
   apt: name=nodejs

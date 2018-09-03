@@ -1,4 +1,9 @@
 ## Change log
+### 1.9.5 (9/3/2018 - 9/3/2018)
+* node: update to version 10.9.0
+* aws: update to version 1.11.401
+* gradle: update to version 4.10
+
 ### 1.9.4 (6/26/2018 - 8/14/2018)
 * app: add app-legacy role using jdk8 - temporary role -
 * aws: update to version 1.11.374
