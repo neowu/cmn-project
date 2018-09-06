@@ -1,4 +1,9 @@
 ## Change log
+
+### 1.9.6 (9/6/2018 - 9/6/2018)
+* node: fix node repo ansible role
+* aws: update to version 1.11.402
+
 ### 1.9.5 (9/3/2018 - 9/3/2018)
 * node: update to version 10.9.0
 * aws: update to version 1.11.401
