@@ -34,18 +34,7 @@
                 BC_UNCONFIRMED_CAST,
                 UUF_UNUSED_PUBLIC_OR_PROTECTED_FIELD,
                 PZLA_PREFER_ZERO_LENGTH_ARRAYS,
-                OBL_UNSATISFIED_OBLIGATION"/>
-    </Match>
-
-    <Match>
-        <!--DM_EXIT: Method invokes System.exit(...)-->
-        <Class name="core.framework.module.App"/>
-        <Bug pattern="DM_EXIT"/>
-    </Match>
-
-    <Match>
-        <!--BC_UNCONFIRMED_CAST_OF_RETURN_VALUE: Method modifies resources list, i think it might be a false positive-->
-        <Class name="core.aws.local.ec2.SGLoader"/>
-        <Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
+                OBL_UNSATISFIED_OBLIGATION,
+                DM_CONVERT_CASE"/>
     </Match>
 </FindBugsFilter>

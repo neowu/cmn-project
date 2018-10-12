@@ -3,14 +3,14 @@ buildscript {
         gradlePluginPortal()
     }
     dependencies {
-        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.2"
+        classpath 'gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:1.6.3'
     }
 }
 
 subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'pmd'
-//    apply plugin: com.github.spotbugs.SpotBugsPlugin
+    apply plugin: com.github.spotbugs.SpotBugsPlugin
     apply plugin: 'jacoco'
 
     checkstyle {
@@ -26,26 +26,29 @@ subprojects {
     pmd {
         ruleSets = []
         ruleSetFiles = rootProject.files('gradle/check/pmd.xml')
-        toolVersion = '6.6.0'
+        toolVersion = '6.8.0'
         consoleOutput = true
     }
 
-//    spotbugs {
-//        effort = 'max'
-//        reportLevel = 'low'
-//        excludeFilter = rootProject.file('gradle/check/spotbugs-filter.xml')
-//        toolVersion = '3.1.6'
-//    }
-//
-//    tasks.withType(com.github.spotbugs.SpotBugsTask) {
-//        reports {
-//            xml.enabled = false
-//            html.enabled = true
-//        }
-//    }
+    spotbugs {
+        reportLevel = 'low'
+        includeFilter = rootProject.file('gradle/check/spotbugs.xml')
+        toolVersion = '3.1.7'
+    }
+
+    dependencies {
+        spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
+    }
+
+    tasks.withType(com.github.spotbugs.SpotBugsTask).configureEach {
+        reports {
+            xml.enabled = false
+            html.enabled = true
+        }
+    }
 
     jacoco {
-        toolVersion = '0.8.1'
+        toolVersion = '0.8.2'
     }
 
     jacocoTestReport {

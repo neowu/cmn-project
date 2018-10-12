@@ -11,7 +11,7 @@
   apt_repository: repo='deb https://artifacts.elastic.co/packages/6.x/apt stable main'
 
 - name: install elasticsearch
-  apt: name=elasticsearch
+  apt: name=elasticsearch=6.3.2
 
 - name: update /etc/elasticsearch/elasticsearch.yml
   template: src=etc/elasticsearch/elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
