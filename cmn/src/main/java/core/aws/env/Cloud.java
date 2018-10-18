@@ -32,6 +32,7 @@ public class Cloud {
         this.context = context;
     }
 
+    @SuppressWarnings("MoveVariableInsideIf")
     public void execute() throws ExecutionException, InterruptedException, IOException {
         validator.validate(context.goal, context.params);
 

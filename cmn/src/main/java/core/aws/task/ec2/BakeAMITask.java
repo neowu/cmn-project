@@ -92,7 +92,7 @@ public class BakeAMITask extends core.aws.workflow.Task<Image> {
         waitUntilAMIFinished(imageId);
     }
 
-    private void waitUntilAMIFinished(String imageId) throws InterruptedException {
+    private void waitUntilAMIFinished(String imageId) {
         logger.info("wait until AMI finished, imageId={}", imageId);
         while (true) {
             DescribeImagesResult result = AWS.getEc2().ec2.describeImages(new DescribeImagesRequest().withImageIds(imageId));

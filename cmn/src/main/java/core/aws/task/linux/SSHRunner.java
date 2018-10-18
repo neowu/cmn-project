@@ -117,7 +117,7 @@ public class SSHRunner {
                 remoteInstance.getPublicDnsName(),
                 remoteInstance.getPrivateDnsName());
         }
-        Asserts.isTrue(instances.size() == 1 || instanceIndex != null, "more than one remoteInstance, use --{} to specify index", Param.INSTANCE_INDEX.key);
+        Asserts.isTrue(instanceIndex != null || instances.size() == 1, "more than one remoteInstance, use --{} to specify index", Param.INSTANCE_INDEX.key);
         return instances.size() == 1 ? instances.get(0) : instances.get(instanceIndex);
     }
 

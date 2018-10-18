@@ -7,11 +7,14 @@ import core.aws.util.ClasspathResources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 /**
  * @author neo
  */
 public final class Main {
-    public static void main(String[] args) throws Throwable {
+    public static void main(String[] args) throws InterruptedException, ExecutionException, IOException {
         Main main = new Main(args);
         main.execute();
     }
@@ -23,7 +26,7 @@ public final class Main {
         this.args = args;
     }
 
-    private void execute() throws Throwable {
+    private void execute() throws InterruptedException, ExecutionException, IOException {
         if (args == null || args.length < 1) {
             printHelp();
             return;

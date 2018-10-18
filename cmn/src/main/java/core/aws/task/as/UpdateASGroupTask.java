@@ -18,11 +18,11 @@ public class UpdateASGroupTask extends Task<ASGroup> {
 
     @Override
     public void execute(Context context) throws Exception {
-        ASGroupHelper helper = new ASGroupHelper(context.env);
         String asGroupName = resource.remoteASGroup.getAutoScalingGroupName();
 
         String oldLaunchConfigName = null;
         if (resource.launchConfig.changed()) {
+            ASGroupHelper helper = new ASGroupHelper(context.env);
             oldLaunchConfigName = resource.remoteASGroup.getLaunchConfigurationName();
             helper.createLaunchConfig(resource);
 

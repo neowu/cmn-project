@@ -10,6 +10,25 @@ import java.util.BitSet;
  * @author neo
  */
 public final class Encodings {
+    // refer to org.apache.commons.codec.net.URLCodec.WWW_FORM_URL, not including space, url path requires space be encoded as %20
+    private static final BitSet URL_PATH = new BitSet(256);
+
+    static {
+        for (int i = 'a'; i <= 'z'; i++) {
+            URL_PATH.set(i);
+        }
+        for (int i = 'A'; i <= 'Z'; i++) {
+            URL_PATH.set(i);
+        }
+        for (int i = '0'; i <= '9'; i++) {
+            URL_PATH.set(i);
+        }
+        URL_PATH.set('-');
+        URL_PATH.set('_');
+        URL_PATH.set('.');
+        URL_PATH.set('*');
+    }
+
     public static String hex(byte[] bytes) {
         return new String(Hex.encodeHex(bytes));
     }
@@ -40,25 +59,6 @@ public final class Encodings {
 
     public static String base64URLSafe(byte[] bytes) {
         return java.util.Base64.getUrlEncoder().encodeToString(bytes);
-    }
-
-    // refer to org.apache.commons.codec.net.URLCodec.WWW_FORM_URL, not including space, url path requires space be encoded as %20
-    private static final BitSet URL_PATH = new BitSet(256);
-
-    static {
-        for (int i = 'a'; i <= 'z'; i++) {
-            URL_PATH.set(i);
-        }
-        for (int i = 'A'; i <= 'Z'; i++) {
-            URL_PATH.set(i);
-        }
-        for (int i = '0'; i <= '9'; i++) {
-            URL_PATH.set(i);
-        }
-        URL_PATH.set('-');
-        URL_PATH.set('_');
-        URL_PATH.set('.');
-        URL_PATH.set('*');
     }
 
     // url encoding is for queryString, url path encoding is for url path, the difference is queryString uses + for space, url path uses %20 for space

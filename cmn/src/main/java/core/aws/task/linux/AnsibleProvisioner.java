@@ -85,7 +85,7 @@ public class AnsibleProvisioner {
         return tarFile.toPath();
     }
 
-    private void uploadPackage(SSH ssh) throws IOException, SftpException, JSchException {
+    private void uploadPackage(SSH ssh) {
         packageDir.ifPresent(path -> ssh.uploadDir(path, "/opt/packages"));
     }
 

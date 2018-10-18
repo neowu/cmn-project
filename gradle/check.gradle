@@ -10,7 +10,7 @@ buildscript {
 subprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'pmd'
-    apply plugin: com.github.spotbugs.SpotBugsPlugin
+//    apply plugin: com.github.spotbugs.SpotBugsPlugin
     apply plugin: 'jacoco'
 
     checkstyle {
@@ -30,22 +30,22 @@ subprojects {
         consoleOutput = true
     }
 
-    spotbugs {
-        reportLevel = 'low'
-        includeFilter = rootProject.file('gradle/check/spotbugs.xml')
-        toolVersion = '3.1.7'
-    }
+//    spotbugs {
+//        reportLevel = 'low'
+//        includeFilter = rootProject.file('gradle/check/spotbugs.xml')
+//        toolVersion = '3.1.7'
+//    }
+//
+//    dependencies {
+//        spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
+//    }
 
-    dependencies {
-        spotbugsPlugins 'com.mebigfatguy.fb-contrib:fb-contrib:7.4.3.sb'
-    }
-
-    tasks.withType(com.github.spotbugs.SpotBugsTask).configureEach {
-        reports {
-            xml.enabled = false
-            html.enabled = true
-        }
-    }
+//    tasks.withType(com.github.spotbugs.SpotBugsTask).configureEach {
+//        reports {
+//            xml.enabled = false
+//            html.enabled = true
+//        }
+//    }
 
     jacoco {
         toolVersion = '0.8.2'

@@ -134,7 +134,9 @@ public class ELB extends Resource {
                 || !cert.remoteCert.getServerCertificateMetadata().getArn().equals(remoteCertARN))
                 return true;
             return cert.changed();
-        } else return !remoteCertARN.equals(amazonCertARN);
+        } else {
+            return !remoteCertARN.equals(amazonCertARN);
+        }
     }
 
     private boolean hasRemoteHTTPListener() {
