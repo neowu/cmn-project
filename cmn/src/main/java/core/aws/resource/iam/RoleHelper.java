@@ -1,15 +1,11 @@
 package core.aws.resource.iam;
 
 import com.amazonaws.auth.policy.Action;
-import com.amazonaws.auth.policy.Condition;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Principal;
-import com.amazonaws.auth.policy.Resource;
 import com.amazonaws.auth.policy.Statement;
 import core.aws.util.Asserts;
 import core.aws.util.Encodings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,8 +15,6 @@ import java.util.Optional;
  * @author mort
  */
 public class RoleHelper {
-    private final Logger logger = LoggerFactory.getLogger(RoleHelper.class);
-
     void validatePolicyDocument(String policyJSON) {
         Policy policy = Policy.fromJson(policyJSON);
         Asserts.isFalse(policy.getVersion().isEmpty(), "version is required");
@@ -45,9 +39,7 @@ public class RoleHelper {
         return policyChanged(localPolicy, remotePolicy.get());
     }
 
-    private boolean policyChanged(Policy policy1, Policy policy2) {
-        if (!policy1.getVersion().equals(policy2.getVersion())) return true;
-
+    boolean policyChanged(Policy policy1, Policy policy2) {
         Collection<Statement> statements1 = policy1.getStatements();
         Collection<Statement> statements2 = policy2.getStatements();
         if (statements1.size() != statements2.size()) return true;
@@ -73,18 +65,6 @@ public class RoleHelper {
         boolean effectMatches = statement1.getEffect().equals(statement2.getEffect());
         if (!effectMatches) return false;
 
-        List<Resource> resources1 = statement1.getResources();
-        List<Resource> resources2 = statement2.getResources();
-        boolean resourceMatches = resources1.size() == resources2.size()
-            && resources1.stream().allMatch(resource1 -> resources2.stream().anyMatch(resource2 -> resource1.getId().equals(resource2.getId())));
-        if (!resourceMatches) return false;
-
-        List<Condition> conditions1 = statement1.getConditions();
-        List<Condition> conditions2 = statement2.getConditions();
-        boolean conditionMatches = conditions1.size() == conditions2.size()
-            && conditions1.stream().allMatch(condition1 -> conditions2.stream().anyMatch(condition2 -> conditionEquals(condition1, condition2)));
-        if (!conditionMatches) return false;
-
         List<Principal> principals1 = statement1.getPrincipals();
         List<Principal> principals2 = statement2.getPrincipals();
         boolean principleMatches = principals1.size() == principals2.size()
@@ -99,20 +79,7 @@ public class RoleHelper {
             && principle1.getProvider().equals(principal2.getProvider());
     }
 
-    private boolean conditionEquals(Condition condition1, Condition condition2) {
-        if (!condition1.getConditionKey().equals(condition2.getConditionKey())) return false;
-        if (!condition1.getType().equals(condition2.getType())) return false;
-
-        List<String> values2 = condition2.getValues();
-        if (condition1.getValues().size() != values2.size()) return false;
-        for (String value : condition1.getValues()) {
-            if (!values2.contains(value)) return false;
-        }
-
-        return true;
-    }
-
-    boolean managedPolicyChanged(List<String> managedPolicyARNs, List<String> remoteManagedPolicyARNs) {
+    boolean attachedPolicyChanged(List<String> managedPolicyARNs, List<String> remoteManagedPolicyARNs) {
         if (managedPolicyARNs.size() != remoteManagedPolicyARNs.size()) return true;
         return managedPolicyARNs.stream().anyMatch(localPolicy -> !remoteManagedPolicyARNs.contains(localPolicy));
     }

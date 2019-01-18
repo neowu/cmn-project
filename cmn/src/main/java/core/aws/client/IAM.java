@@ -202,7 +202,7 @@ public class IAM {
         return result.getRoles();
     }
 
-    public List<String> listRolePolicyARNs(String roleName) {
+    public List<String> listAttachedRolePolicyARNs(String roleName) {
         ListAttachedRolePoliciesResult result = iam.listAttachedRolePolicies(new ListAttachedRolePoliciesRequest().withRoleName(roleName).withMaxItems(1000));
         Asserts.isFalse(result.isTruncated(), "result is truncated, update to support more attached policies");
         return result.getAttachedPolicies().stream().map(AttachedPolicy::getPolicyArn).collect(Collectors.toList());

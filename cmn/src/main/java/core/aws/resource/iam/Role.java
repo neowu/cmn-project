@@ -43,7 +43,7 @@ public class Role extends Resource {
         RoleHelper helper = new RoleHelper();
         if (helper.essentialChanged(path, assumeRolePolicyDocument, remoteRole)) {
             tasks.add(new UpdateRoleTask(this));
-        } else if (helper.managedPolicyChanged(managedPolicyARNs, remoteManagedPolicyARNs)) {
+        } else if (helper.attachedPolicyChanged(managedPolicyARNs, remoteManagedPolicyARNs)) {
             tasks.add(new UpdateRolePolicyTask(this));
         }
     }
