@@ -31,7 +31,7 @@ public class RoleLoader {
 
             Role role = resources.find(Role.class, resourceId).orElseGet(() -> resources.add(new Role(resourceId)));
             role.remoteRole = remoteRole;
-            role.remoteManagedPolicyARNs = AWS.getIam().listRolePolicyARNs(name);
+            role.remoteManagedPolicyARNs = AWS.getIam().listAttachedRolePolicyARNs(name);
             role.foundInRemote();
         }
     }

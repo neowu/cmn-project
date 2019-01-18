@@ -1,0 +1,91 @@
+- iam-role[eks-master]:
+    path: /
+    managed-policy:
+      - arn:aws:iam::aws:policy/AmazonEKSClusterPolicy
+      - arn:aws:iam::aws:policy/AmazonEKSServicePolicy
+    assume-role-policy: eks/esk-master-assuem-role-policy.json
+
+- security-group[eks-master]:
+    ingress:
+      - {security-group: eks-node, protocol: 443}
+    tag:
+      kubernetes.io/cluster/yb-qa-master: owned
+
+- security-group[eks-node]:
+    ingress:
+      - {security-group: eks, protocol: [443, 1025-65535]}
+      - {security-group: eks-node, protocol: [0-65535]}
+      - {security-group: eks-ops, protocol: [0-65535]}
+      - {cidr: 52.8.93.88/32, protocol: [ssh, 30000-35000]}           # xiamen vpn
+      - {cidr: 13.57.144.204/32, protocol: [ssh, 30000-35000]}        # xiamen vpn
+    tag:
+      - kubernetes.io/cluster/yb-qa-master: owned
+
+- instance-profile[eks-node]:
+    path: /
+    managed-policy:
+      - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+
+- instance-profile[eks-master-ops]:
+    policy: eks/eks-master-ops-policy.json
+
+- instance[kube-system]:
+    ami: eks-node
+    instance-type: t3.medium
+    security-group: eks-node
+    instance-profile: eks-node
+    subnet: public
+    ebs: {size: 20G, type: gp2}
+    user-data: eks/eks-sys-node-bootstrap.sh
+    tag:
+      - kubernetes.io/cluster/yb-qa-master: owned
+
+- auto-scaling[kube-ops]:
+    ami: eks-node
+    instance-type: t3.medium
+    security-group: eks-node
+    instance-profile: eks-node
+    subnet: public
+    capacity: {min: 1, desired: 1, max: 1}
+    ebs: {size: 50G, type: gp2}
+    scale:
+      - {name: 'scale-out', cpu: '>=80%', last: '2min', adjustment: '100%'}
+      - {name: 'scale-in', cpu: '<=20%', last: '30min', adjustment: '-50%'}
+    user-data: eks/eks-ops-node-bootstrap.sh
+    tag:
+      - kubernetes.io/cluster/yb-qa-master: owned
+
+
+- auto-scaling[kube-db]:
+    eks: master
+    ami: eks-node
+    instance-type: t3.medium
+    security-group: eks-node
+    instance-profile: eks-node
+    subnet: public
+    capacity: {min: 1, desired: 1, max: 1}
+    ebs: {size: 50G, type: gp2}
+    scale:
+      - {name: 'scale-out', cpu: '>=80%', last: '2min', adjustment: '100%'}
+      - {name: 'scale-in', cpu: '<=20%', last: '30min', adjustment: '-50%'}
+    user-data: eks/eks-db-node-bootstrap.sh
+    tag:
+      - kubernetes.io/cluster/yb-qa-master: owned
+
+- auto-scaling[kube-app]:
+    eks: master
+    ami: eks-node
+    instance-type: t3.medium
+    security-group: eks-node
+    instance-profile: eks-node
+    subnet: public
+    capacity: {min: 1, desired: 1, max: 1}
+    ebs: {size: 50G, type: gp2}
+    scale:
+      - {name: 'scale-out', cpu: '>=80%', last: '2min', adjustment: '100%'}
+      - {name: 'scale-in', cpu: '<=20%', last: '30min', adjustment: '-50%'}
+    user-data: eks/eks-app-node-bootstrap.sh
+    tag:
+      - kubernetes.io/cluster/yb-qa-master: owned
