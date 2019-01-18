@@ -13,14 +13,14 @@ class IAMTest {
     @Test
     void assumeRolePolicy() {
         IAM iam = new IAM(new DefaultAWSCredentialsProviderChain(), Regions.US_EAST_1);
-        String document = iam.assumeRolePolicyDocument();
+        String document = iam.assumeEC2RolePolicyDocument();
         assertThat(document).contains("\"Service\":\"ec2.amazonaws.com\"");
     }
 
     @Test
     void assumeRolePolicyWithChinaRegion() {
         IAM iam = new IAM(new DefaultAWSCredentialsProviderChain(), Regions.CN_NORTH_1);
-        String document = iam.assumeRolePolicyDocument();
+        String document = iam.assumeEC2RolePolicyDocument();
         assertThat(document).contains("\"Service\":\"ec2.amazonaws.com.cn\"");
     }
 }
