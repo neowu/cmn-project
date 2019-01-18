@@ -14,6 +14,7 @@ import core.aws.remote.ec2.SGLoader;
 import core.aws.remote.elb.ELBLoader;
 import core.aws.remote.elb.ServerCertLoader;
 import core.aws.remote.elb.v2.TargetGroupLoader;
+import core.aws.remote.iam.RoleLoader;
 import core.aws.remote.s3.S3Loader;
 import core.aws.remote.vpc.InternetGatewayLoader;
 import core.aws.remote.vpc.NATLoader;
@@ -53,6 +54,8 @@ public class RemoteResourceLoader {
         new ASGroupLoader(resources, env).load();
 
         new S3Loader(resources, env).load();
+
+        new RoleLoader(resources, env).load();
     }
 
     private List<EnvTag> loadEnvTags(Environment env) {

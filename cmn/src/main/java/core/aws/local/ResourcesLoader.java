@@ -10,6 +10,7 @@ import core.aws.local.elb.ELBLoader;
 import core.aws.local.elb.ServerCertLoader;
 import core.aws.local.elb.v2.TargetGroupLoader;
 import core.aws.local.env.EnvLoader;
+import core.aws.local.iam.RoleLoader;
 import core.aws.local.image.AMILoader;
 import core.aws.local.image.AMIsLoader;
 import core.aws.local.s3.S3Loader;
@@ -52,6 +53,7 @@ public class ResourcesLoader {
         localResourceLoaders.put("elb-v2", new core.aws.local.elb.v2.ELBLoader());
         localResourceLoaders.put("instance-profile", new InstanceProfileLoader());
         localResourceLoaders.put("auto-scaling", new ASGroupLoader());
+        localResourceLoaders.put("iam-role", new RoleLoader());
     }
 
     public Resources load(Environment env) throws IOException {
@@ -91,7 +93,7 @@ public class ResourcesLoader {
         return resources;
     }
 
-    private List<ResourceNode> load(String config, Path path) {
+    List<ResourceNode> load(String config, Path path) {
         List<ResourceNode> results = new ArrayList<>();
 
         Yaml yaml = new Yaml();
