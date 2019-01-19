@@ -25,7 +25,7 @@ class RoleHelperTest {
 
     @Test
     void essentialChangedWithDifferentPath() {
-        com.amazonaws.services.identitymanagement.model.Role remoteRole = new Role();
+        Role remoteRole = new Role();
         remoteRole.setPath("/test");
         boolean changed = roleHelper.essentialChanged("/", null, remoteRole);
         assertTrue(changed);
