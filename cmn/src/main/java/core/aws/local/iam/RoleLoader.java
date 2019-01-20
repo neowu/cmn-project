@@ -19,8 +19,8 @@ public class RoleLoader implements LocalResourceLoader {
     public void load(ResourceNode node, Resources resources, DependencyResolvers resolvers, Environment env) {
         final Role role = resources.add(new Role(node.id));
         role.name = env.name + "-" + node.id;
-        role.path = node.requiredString("path");
+        role.path = node.getString("path").orElse(Role.defaultPath(env));
         role.assumeRolePolicyDocument = Files.text(env.envDir.resolve(node.requiredString("assume-role-policy")));
-        role.managedPolicyARNs = (List<String>) node.listField("managed-policy-arns");
+        role.policyARNs = (List<String>) node.listField("managed-policy-arns");
     }
 }

@@ -158,41 +158,36 @@ public class IAM {
             .withPolicyDocument(policyJSON));
     }
 
-    public Role createRole(String path, String roleName, String assumeRolePolicyDocument, List<String> managedPolicyARNs) {
+    public Role createRole(String path, String roleName, String assumeRolePolicyDocument) {
         logger.info("create role, name={}, path={}", roleName, path);
         CreateRoleResult result = iam.createRole(new CreateRoleRequest()
             .withRoleName(roleName)
             .withPath(path)
-            .withAssumeRolePolicyDocument(assumeRolePolicyDocument));
-
-        attachRolePolicies(roleName, managedPolicyARNs);
+            .withAssumeRolePolicyDocument(assumeRolePolicyDocument(assumeRolePolicyDocument)));
         return result.getRole();
     }
 
-    public void attachRolePolicies(String roleName, List<String> managedPolicyARNs) {
-        logger.info("attach role policy, role={}, arns={}", roleName, managedPolicyARNs);
-        AttachRolePolicyRequest attachRolePolicyRequest = new AttachRolePolicyRequest();
-        attachRolePolicyRequest.withRoleName(roleName);
-        managedPolicyARNs.forEach(attachRolePolicyRequest::withPolicyArn);
-        iam.attachRolePolicy(attachRolePolicyRequest);
+    String assumeRolePolicyDocument(String document) {
+        String statementDoc = document.substring(1, document.length() - 1);
+        return "{\"Version\":\"2012-10-17\"," + statementDoc + "}";
+    }
+
+    public void attachRolePolicies(String roleName, List<String> attachedPoliciesARNS) {
+        logger.info("attach role policy, role={}, arns={}", roleName, attachedPoliciesARNS);
+        attachedPoliciesARNS.forEach(policyARN ->
+            iam.attachRolePolicy(new AttachRolePolicyRequest().withRoleName(roleName).withPolicyArn(policyARN)));
     }
 
     public void deleteRole(String roleName, String path) {
         logger.info("delete role, name={}, path={}", roleName, path);
-        detachRolePolicies(roleName);
         iam.deleteRole(new DeleteRoleRequest().withRoleName(roleName));
     }
 
-    public void detachRolePolicies(String roleName) {
-        logger.info("detach role policy, name={}", roleName);
-        ListAttachedRolePoliciesResult result = iam.listAttachedRolePolicies(new ListAttachedRolePoliciesRequest().withRoleName(roleName).withMaxItems(1000));
-        Asserts.isFalse(result.isTruncated(), "result is truncated, update to support more attached policies");
-        if (!result.getAttachedPolicies().isEmpty()) {
-            DetachRolePolicyRequest detachRolePolicyRequest = new DetachRolePolicyRequest();
-            detachRolePolicyRequest.withRoleName(roleName);
-            result.getAttachedPolicies().forEach(attachedPolicy -> detachRolePolicyRequest.withPolicyArn(attachedPolicy.getPolicyArn()));
-            iam.detachRolePolicy(detachRolePolicyRequest);
-        }
+    public void detachRolePolicies(String roleName, List<String> detachedPolicyARNs) {
+        logger.info("detach role policy, name={}, policyARNs={}", roleName, detachedPolicyARNs);
+        detachedPolicyARNs.forEach(policyARN ->
+            iam.detachRolePolicy(new DetachRolePolicyRequest().withRoleName(roleName).withPolicyArn(policyARN)));
+
     }
 
     public List<Role> listRoles(String path) {

@@ -10,6 +10,7 @@ import core.aws.util.Encodings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author mort
@@ -79,8 +80,11 @@ public class RoleHelper {
             && principle1.getProvider().equals(principal2.getProvider());
     }
 
-    boolean attachedPolicyChanged(List<String> managedPolicyARNs, List<String> remoteManagedPolicyARNs) {
-        if (managedPolicyARNs.size() != remoteManagedPolicyARNs.size()) return true;
-        return managedPolicyARNs.stream().anyMatch(localPolicy -> !remoteManagedPolicyARNs.contains(localPolicy));
+    List<String> findDetachedPolicyARNs(List<String> attachedPolicyARNs, List<String> remoteAttachedPolicyARNs) {
+        return remoteAttachedPolicyARNs.stream().filter(policyARN -> !attachedPolicyARNs.contains(policyARN)).collect(Collectors.toList());
+    }
+
+    List<String> findAttachedPolicyARNs(List<String> attachedPolicyARNs, List<String> remoteAttachedPolicyARNs) {
+        return attachedPolicyARNs.stream().filter(policyARN -> !remoteAttachedPolicyARNs.contains(policyARN)).collect(Collectors.toList());
     }
 }
