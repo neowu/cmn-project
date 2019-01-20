@@ -78,12 +78,11 @@ public class Role extends Resource {
 
     @Override
     protected void deleteTasks(Tasks tasks) {
-        List<String> detachedPolicyARNs = AWS.getIam().listAttachedRolePolicyARNs(name);
-        if (detachedPolicyARNs.isEmpty()) {
+        if (remoteAttachedPolicyARNs.isEmpty()) {
             tasks.add(new DeleteRoleTask(this));
         } else {
             DeleteRoleTask deleteRoleTask = tasks.add(new DeleteRoleTask(this));
-            DetachRolePolicyTask detachRolePolicyTask = tasks.add(new DetachRolePolicyTask(this, detachedPolicyARNs));
+            DetachRolePolicyTask detachRolePolicyTask = tasks.add(new DetachRolePolicyTask(this, remoteAttachedPolicyARNs));
             deleteRoleTask.dependsOn(detachRolePolicyTask);
         }
     }
