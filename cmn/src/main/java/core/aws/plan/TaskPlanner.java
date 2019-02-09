@@ -1,6 +1,7 @@
 package core.aws.plan;
 
 import core.aws.plan.as.ASGroupTaskPlanner;
+import core.aws.plan.ec2.RoleTaskPlanner;
 import core.aws.plan.ec2.InstanceTaskPlanner;
 import core.aws.plan.ec2.SGTaskPlanner;
 import core.aws.plan.elb.ELBTaskPlanner;
@@ -16,6 +17,7 @@ import core.aws.workflow.Tasks;
  */
 public class TaskPlanner {
     public void plan(Tasks tasks) {
+        new RoleTaskPlanner(tasks).plan();
         new SGTaskPlanner(tasks).plan();
         new InstanceTaskPlanner(tasks).plan();
         new SubnetTaskPlanner(tasks).plan();

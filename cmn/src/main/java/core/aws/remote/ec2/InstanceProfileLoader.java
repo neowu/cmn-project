@@ -4,6 +4,7 @@ import core.aws.client.AWS;
 import core.aws.env.Environment;
 import core.aws.resource.Resources;
 import core.aws.resource.ec2.InstanceProfile;
+import core.aws.resource.iam.Role;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class InstanceProfileLoader {
     }
 
     public void load() {
-        List<com.amazonaws.services.identitymanagement.model.InstanceProfile> instanceProfiles = AWS.getIam().listInstanceProfiles(InstanceProfile.instanceProfilePath(env));
+        List<com.amazonaws.services.identitymanagement.model.InstanceProfile> instanceProfiles = AWS.getIam().listInstanceProfiles("/");
 
         String prefix = env.name + "-";
         for (com.amazonaws.services.identitymanagement.model.InstanceProfile remoteInstanceProfile : instanceProfiles) {
@@ -29,10 +30,16 @@ public class InstanceProfileLoader {
             String resourceId = name.substring(env.name.length() + 1);
 
             InstanceProfile instanceProfile = resources.find(InstanceProfile.class, resourceId)
-                                                       .orElseGet(() -> resources.add(new InstanceProfile(resourceId)));
+                .orElseGet(() -> resources.add(new InstanceProfile(resourceId)));
             instanceProfile.name = remoteInstanceProfile.getInstanceProfileName();
             instanceProfile.remoteInstanceProfile = remoteInstanceProfile;
             instanceProfile.foundInRemote();
+
+            com.amazonaws.services.identitymanagement.model.Role remoteRole = AWS.getIam().getRole(name);
+            Role role = resources.find(Role.class, resourceId).orElseGet(() -> resources.add(new Role(resourceId)));
+            role.remoteRole = remoteRole;
+            role.remoteAttachedPolicyARNs = AWS.getIam().listAttachedRolePolicyARNs(name);
+            role.foundInRemote();
         }
     }
 }

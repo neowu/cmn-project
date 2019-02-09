@@ -7,17 +7,19 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
-import com.amazonaws.services.identitymanagement.model.AddRoleToInstanceProfileRequest;
 import com.amazonaws.services.identitymanagement.model.AttachRolePolicyRequest;
 import com.amazonaws.services.identitymanagement.model.AttachedPolicy;
 import com.amazonaws.services.identitymanagement.model.CreateInstanceProfileRequest;
 import com.amazonaws.services.identitymanagement.model.CreateRoleRequest;
 import com.amazonaws.services.identitymanagement.model.CreateRoleResult;
+import com.amazonaws.services.identitymanagement.model.DeleteRolePolicyRequest;
 import com.amazonaws.services.identitymanagement.model.DeleteRoleRequest;
 import com.amazonaws.services.identitymanagement.model.DeleteServerCertificateRequest;
 import com.amazonaws.services.identitymanagement.model.DetachRolePolicyRequest;
 import com.amazonaws.services.identitymanagement.model.GetRolePolicyRequest;
 import com.amazonaws.services.identitymanagement.model.GetRolePolicyResult;
+import com.amazonaws.services.identitymanagement.model.GetRoleRequest;
+import com.amazonaws.services.identitymanagement.model.GetRoleResult;
 import com.amazonaws.services.identitymanagement.model.GetServerCertificateRequest;
 import com.amazonaws.services.identitymanagement.model.InstanceProfile;
 import com.amazonaws.services.identitymanagement.model.ListAttachedRolePoliciesRequest;
@@ -95,38 +97,15 @@ public class IAM {
     }
 
     public InstanceProfile createInstanceProfile(String path, String name, String policyJSON) {
-        return createInstanceProfile(path, name, null, policyJSON);
-    }
-
-    public InstanceProfile createInstanceProfile(String path, String name, List<String> managedPolices, String policyJSON) {
         CreateInstanceProfileRequest request = new CreateInstanceProfileRequest()
             .withPath(path)
             .withInstanceProfileName(name);
 
         logger.info("create instance profile, path={}, name={}", path, name);
-        InstanceProfile instanceProfile = iam.createInstanceProfile(request).getInstanceProfile();
-
-        logger.info("create role, name={}", name);
-        iam.createRole(new CreateRoleRequest()
-            .withRoleName(name)
-            .withPath(path)
-            .withAssumeRolePolicyDocument(assumeEC2RolePolicyDocument()));
-
-        // attach role to instance before creating policy, if policy failed, at least profile/role are ready, and policy can be fixed thru AWS console
-        iam.addRoleToInstanceProfile(new AddRoleToInstanceProfileRequest()
-            .withInstanceProfileName(name)
-            .withRoleName(name));
-
-        createRolePolicy(name, name, policyJSON);
-
-        if (managedPolices != null && !managedPolices.isEmpty()) {
-            attachRolePolicies(name, managedPolices);
-        }
-
-        return instanceProfile;
+        return iam.createInstanceProfile(request).getInstanceProfile();
     }
 
-    String assumeEC2RolePolicyDocument() {
+    public String assumeEC2RolePolicyDocument() {
         String service = Strings.format("ec2.{}", region.getDomain());
 
         return "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"" + service + "\"},\"Action\":\"sts:AssumeRole\"}]}";
@@ -158,12 +137,22 @@ public class IAM {
             .withPolicyDocument(policyJSON));
     }
 
-    public Role createRole(String path, String roleName, String assumeRolePolicyDocument) {
+    public Role createRole(String path, String roleName, String policyJSON, String assumeRolePolicyJSON) {
         logger.info("create role, name={}, path={}", roleName, path);
         CreateRoleResult result = iam.createRole(new CreateRoleRequest()
             .withRoleName(roleName)
             .withPath(path)
-            .withAssumeRolePolicyDocument(assumeRolePolicyDocument(assumeRolePolicyDocument)));
+            .withAssumeRolePolicyDocument(assumeRolePolicyDocument(assumeRolePolicyJSON)));
+
+        if (!Strings.notEmpty(policyJSON)) {
+            createRolePolicy(roleName, roleName, policyJSON);
+        }
+
+        return result.getRole();
+    }
+
+    public Role getRole(String roleName) {
+        GetRoleResult result = iam.getRole(new GetRoleRequest().withRoleName(roleName));
         return result.getRole();
     }
 
@@ -180,6 +169,7 @@ public class IAM {
 
     public void deleteRole(String roleName, String path) {
         logger.info("delete role, name={}, path={}", roleName, path);
+        iam.deleteRolePolicy(new DeleteRolePolicyRequest().withRoleName(roleName).withPolicyName(roleName));
         iam.deleteRole(new DeleteRoleRequest().withRoleName(roleName));
     }
 
@@ -187,7 +177,6 @@ public class IAM {
         logger.info("detach role policy, name={}, policyARNs={}", roleName, detachedPolicyARNs);
         detachedPolicyARNs.forEach(policyARN ->
             iam.detachRolePolicy(new DetachRolePolicyRequest().withRoleName(roleName).withPolicyArn(policyARN)));
-
     }
 
     public List<Role> listRoles(String path) {
@@ -198,6 +187,7 @@ public class IAM {
     }
 
     public List<String> listAttachedRolePolicyARNs(String roleName) {
+        logger.info("list attached role policy arns, roleName={}", roleName);
         ListAttachedRolePoliciesResult result = iam.listAttachedRolePolicies(new ListAttachedRolePoliciesRequest().withRoleName(roleName).withMaxItems(1000));
         Asserts.isFalse(result.isTruncated(), "result is truncated, update to support more attached policies");
         return result.getAttachedPolicies().stream().map(AttachedPolicy::getPolicyArn).collect(Collectors.toList());

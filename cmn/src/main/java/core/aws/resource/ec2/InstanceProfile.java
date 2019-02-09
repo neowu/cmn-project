@@ -19,6 +19,7 @@ public class InstanceProfile extends Resource {
     }
 
     public String name;
+    public String path;
     public String policy;
     public com.amazonaws.services.identitymanagement.model.InstanceProfile remoteInstanceProfile;
 

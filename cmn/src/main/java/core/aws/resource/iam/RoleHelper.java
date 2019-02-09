@@ -31,7 +31,7 @@ public class RoleHelper {
         return policyChanged(localPolicyJSON, remoteRole);
     }
 
-    private boolean policyChanged(String localPolicyJSON, com.amazonaws.services.identitymanagement.model.Role remoteRole) {
+    boolean policyChanged(String localPolicyJSON, com.amazonaws.services.identitymanagement.model.Role remoteRole) {
         String policyJSON = Encodings.decodeURL(remoteRole.getAssumeRolePolicyDocument());
         Optional<Policy> remotePolicy = Optional.of(Policy.fromJson(policyJSON));
 

@@ -1,5 +1,6 @@
 package core.aws.task.iam;
 
+import com.amazonaws.services.identitymanagement.model.AddRoleToInstanceProfileRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.resource.iam.Role;
@@ -17,6 +18,15 @@ public class CreateRoleTask extends Task<Role> {
 
     @Override
     public void execute(Context context) throws Exception {
-        resource.remoteRole = AWS.getIam().createRole(resource.path, resource.name, resource.assumeRolePolicyDocument);
+        String roleName = resource.name;
+        resource.remoteRole = AWS.getIam().createRole(resource.path, roleName, resource.policy, resource.assumeRolePolicy);
+        if (!resource.policyARNs.isEmpty()) {
+            AWS.getIam().attachRolePolicies(roleName, resource.policyARNs);
+        }
+        if (resource.instanceProfile != null) {
+            AWS.getIam().iam.addRoleToInstanceProfile(new AddRoleToInstanceProfileRequest()
+                .withInstanceProfileName(resource.instanceProfile.name)
+                .withRoleName(roleName));
+        }
     }
 }
