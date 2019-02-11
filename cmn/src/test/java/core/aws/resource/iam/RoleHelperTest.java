@@ -12,11 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author mort
  */
 class RoleHelperTest {
+    core.aws.resource.iam.Role role;
     RoleHelper roleHelper;
 
     @BeforeEach
     void createRoleHelper() {
-        this.roleHelper = new RoleHelper();
+        role = new core.aws.resource.iam.Role("test");
+        this.roleHelper = new RoleHelper(role);
     }
 
     @Test

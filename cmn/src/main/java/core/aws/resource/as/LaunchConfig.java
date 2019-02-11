@@ -18,6 +18,7 @@ public class LaunchConfig {
     public String instanceType;
     public SecurityGroup securityGroup;
     public InstanceProfile instanceProfile;
+    public String userData;
 
     public boolean changed() {
         if (!remoteLaunchConfig.getImageId().equals(ami.imageId())) return true;

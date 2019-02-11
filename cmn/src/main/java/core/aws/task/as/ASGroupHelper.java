@@ -12,6 +12,7 @@ import core.aws.resource.ec2.EBS;
 import core.aws.resource.vpc.SubnetType;
 import core.aws.util.Encodings;
 import core.aws.util.Randoms;
+import core.aws.util.Strings;
 
 /**
  * @author neo
@@ -33,8 +34,13 @@ public class ASGroupHelper {
             .withKeyName(launchConfig.keyPair.remoteKeyPair.getKeyName())
             .withInstanceType(launchConfig.instanceType)
             .withImageId(launchConfig.ami.imageId())
-            .withSecurityGroups(launchConfig.securityGroup.remoteSecurityGroup.getGroupId())
-            .withUserData(Encodings.base64(userData(asGroup)));
+            .withSecurityGroups(launchConfig.securityGroup.remoteSecurityGroup.getGroupId());
+
+        if (Strings.notEmpty(launchConfig.userData)) {
+            request.withUserData(Encodings.base64(launchConfig.userData));
+        } else {
+            request.withUserData(Encodings.base64(userData(asGroup)));
+        }
 
         if (EBS.enableEBSOptimized(launchConfig.instanceType)) {    // this is not necessary since m4/c4 are EBS optimized enable by default, but there is bug in AWS console, we need to set this in order to display correct value
             request.withEbsOptimized(true);

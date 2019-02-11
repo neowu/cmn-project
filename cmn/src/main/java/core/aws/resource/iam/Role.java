@@ -45,13 +45,11 @@ public class Role extends Resource {
 
     @Override
     protected void updateTasks(Tasks tasks) {
-        RoleHelper helper = new RoleHelper();
-        tasks.add(new UpdateRoleTask(this,
-            new UpdateRoleTask.Request()
-                .essentialChanged(helper.essentialChanged(path, assumeRolePolicy, remoteRole))
-                .policyChanged(helper.policyChanged(policy, remoteRole))
-                .attachedPolicyARNs(helper.findAttachedPolicyARNs(policyARNs, remoteAttachedPolicyARNs))
-                .detachedPolicyARNs(helper.findDetachedPolicyARNs(policyARNs, remoteAttachedPolicyARNs))));
+        RoleHelper helper = new RoleHelper(this);
+        UpdateRoleTask.Request request = helper.updateRequest();
+        if (request.changed()) {
+            new UpdateRoleTask(this, request);
+        }
     }
 
     @Override
@@ -67,12 +65,11 @@ public class Role extends Resource {
     @Override
     public void validate(Resources resources) {
         if ((status == ResourceStatus.LOCAL_ONLY || status == ResourceStatus.LOCAL_REMOTE) && (Strings.notEmpty(assumeRolePolicy) || Strings.notEmpty(policy))) {
-            RoleHelper helper = new RoleHelper();
             if (Strings.notEmpty(assumeRolePolicy)) {
-                helper.validatePolicyDocument(assumeRolePolicy);
+                RoleHelper.validatePolicyDocument(assumeRolePolicy);
             }
             if (Strings.notEmpty(policy)) {
-                helper.validatePolicyDocument(policy);
+                RoleHelper.validatePolicyDocument(policy);
             }
         }
     }

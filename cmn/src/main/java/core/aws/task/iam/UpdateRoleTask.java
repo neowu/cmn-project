@@ -94,5 +94,9 @@ public class UpdateRoleTask extends Task<Role> {
             this.detachedPolicyARNs = detachedPolicyARNs;
             return this;
         }
+
+        public boolean changed() {
+            return essentialChanged || policyChanged || !attachedPolicyARNs.isEmpty() || !detachedPolicyARNs.isEmpty();
+        }
     }
 }

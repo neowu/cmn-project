@@ -4,6 +4,7 @@ import com.amazonaws.auth.policy.Action;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Principal;
 import com.amazonaws.auth.policy.Statement;
+import core.aws.task.iam.UpdateRoleTask;
 import core.aws.util.Asserts;
 import core.aws.util.Encodings;
 
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
  * @author mort
  */
 public class RoleHelper {
-    void validatePolicyDocument(String policyJSON) {
+    static void validatePolicyDocument(String policyJSON) {
         Policy policy = Policy.fromJson(policyJSON);
         Asserts.isFalse(policy.getVersion().isEmpty(), "version is required");
         Asserts.isFalse(policy.getStatements().isEmpty(), "statement is required");
@@ -24,6 +25,21 @@ public class RoleHelper {
             Asserts.isFalse(statement.getPrincipals().isEmpty(), "principal is required");
             Asserts.isFalse(statement.getActions().isEmpty(), "action is required");
         }
+    }
+
+    private final Role role;
+
+    public RoleHelper(Role role) {
+        this.role = role;
+    }
+
+    UpdateRoleTask.Request updateRequest() {
+        UpdateRoleTask.Request request = new UpdateRoleTask.Request();
+        request.essentialChanged(essentialChanged(role.path, role.assumeRolePolicy, role.remoteRole))
+            .policyChanged(policyChanged(role.policy, role.remoteRole))
+            .attachedPolicyARNs(findAttachedPolicyARNs(role.policyARNs, role.remoteAttachedPolicyARNs))
+            .detachedPolicyARNs(findDetachedPolicyARNs(role.policyARNs, role.remoteAttachedPolicyARNs));
+        return request;
     }
 
     boolean essentialChanged(String path, String localPolicyJSON, com.amazonaws.services.identitymanagement.model.Role remoteRole) {

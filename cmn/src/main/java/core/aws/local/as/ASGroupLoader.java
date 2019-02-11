@@ -16,6 +16,8 @@ import core.aws.resource.elb.ELB;
 import core.aws.resource.elb.v2.TargetGroup;
 import core.aws.resource.vpc.Subnet;
 import core.aws.util.Asserts;
+import core.aws.util.Files;
+import core.aws.util.Maps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ public class ASGroupLoader implements LocalResourceLoader {
         Optional<String> elbId = node.getString("elb");
         Optional<String> targetGroupId = node.getString("target-group");
         Optional<String> instanceProfileId = node.getString("instance-profile");
+        Optional<String> userData = node.getString("user-data");
 
         ASGroup asGroup = resources.add(new ASGroup(node.id));
         asGroup.launchConfig.instanceType = instanceType;
@@ -52,6 +55,7 @@ public class ASGroupLoader implements LocalResourceLoader {
         asGroup.minSize = minSize;
         asGroup.maxSize = maxSize;
         asGroup.desiredSize = desiredSize;
+        userData.ifPresent(data -> asGroup.launchConfig.userData = Files.text(env.envDir.resolve(data)));
 
         resolvers.add(node, () -> {
             asGroup.launchConfig.securityGroup = resources.get(SecurityGroup.class, securityGroupId);
@@ -70,6 +74,8 @@ public class ASGroupLoader implements LocalResourceLoader {
             resources.add(policy);
             policy.asGroup = asGroup;
         }
+
+        asGroup.tags = loadTags(node);
     }
 
     @SuppressWarnings("unchecked")
@@ -111,5 +117,14 @@ public class ASGroupLoader implements LocalResourceLoader {
         Asserts.isTrue(adjustment.endsWith("%"), "adjustment should be like 15%");
         policy.adjustmentPercentage = Integer.parseInt(adjustment.substring(0, adjustment.length() - 1));
         return policy;
+    }
+
+    Map<String, String> loadTags(ResourceNode node) {
+        Map<String, String> tags = Maps.newHashMap();
+        Map<String, Object> customTags = node.mapField("tag");
+        if (customTags != null) {
+            customTags.forEach((key, value) -> tags.put(key, value.toString()));
+        }
+        return tags;
     }
 }
