@@ -20,7 +20,6 @@ public class InstanceProfileLoader implements LocalResourceLoader {
     public void load(ResourceNode node, Resources resources, DependencyResolvers resolvers, Environment env) {
         final InstanceProfile instanceProfile = resources.add(new InstanceProfile(node.id));
         instanceProfile.name = env.name + "-" + node.id;
-        instanceProfile.policy = Files.text(env.envDir.resolve(node.requiredString("policy")));
         instanceProfile.path = node.getString("path").orElse(InstanceProfile.instanceProfilePath(env));
         Role role = loadRole(node, resources, env);
         role.instanceProfile = instanceProfile;

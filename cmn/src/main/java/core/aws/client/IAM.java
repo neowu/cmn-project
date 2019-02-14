@@ -96,7 +96,7 @@ public class IAM {
         return result.getInstanceProfiles();
     }
 
-    public InstanceProfile createInstanceProfile(String path, String name, String policyJSON) {
+    public InstanceProfile createInstanceProfile(String path, String name) {
         CreateInstanceProfileRequest request = new CreateInstanceProfileRequest()
             .withPath(path)
             .withInstanceProfileName(name);
@@ -108,7 +108,7 @@ public class IAM {
     public String assumeEC2RolePolicyDocument() {
         String service = Strings.format("ec2.{}", region.getDomain());
 
-        return "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"" + service + "\"},\"Action\":\"sts:AssumeRole\"}]}";
+        return "{\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"" + service + "\"},\"Action\":\"sts:AssumeRole\"}]}";
     }
 
     public ServerCertificate getServerCert(String serverCertName) {
@@ -144,7 +144,7 @@ public class IAM {
             .withPath(path)
             .withAssumeRolePolicyDocument(assumeRolePolicyDocument(assumeRolePolicyJSON)));
 
-        if (!Strings.notEmpty(policyJSON)) {
+        if (Strings.notEmpty(policyJSON)) {
             createRolePolicy(roleName, roleName, policyJSON);
         }
 

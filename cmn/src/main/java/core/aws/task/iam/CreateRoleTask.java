@@ -28,5 +28,7 @@ public class CreateRoleTask extends Task<Role> {
                 .withInstanceProfileName(resource.instanceProfile.name)
                 .withRoleName(roleName));
         }
+
+        context.output(String.format("role/%s/path", resource.id), resource.path);
     }
 }

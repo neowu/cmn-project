@@ -20,8 +20,8 @@ public class RoleLoader implements LocalResourceLoader {
         final Role role = resources.add(new Role(node.id));
         role.name = env.name + "-" + node.id;
         role.path = node.getString("path").orElse(Role.defaultPath(env));
+        role.policy = Files.text(env.envDir.resolve(node.requiredString("policy")));
         role.assumeRolePolicy = Files.text(env.envDir.resolve(node.requiredString("assume-role-policy")));
-        node.getString("policy").ifPresent(policy -> role.policy = Files.text(env.envDir.resolve(policy)));
         if (node.listField("managed-policy-arns") != null) {
             role.policyARNs = (List<String>) node.listField("managed-policy-arns");
         }

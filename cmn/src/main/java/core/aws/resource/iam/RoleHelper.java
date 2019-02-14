@@ -4,9 +4,11 @@ import com.amazonaws.auth.policy.Action;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Principal;
 import com.amazonaws.auth.policy.Statement;
+import core.aws.client.AWS;
 import core.aws.task.iam.UpdateRoleTask;
 import core.aws.util.Asserts;
 import core.aws.util.Encodings;
+import core.aws.util.Strings;
 
 import java.util.Collection;
 import java.util.List;
@@ -17,12 +19,20 @@ import java.util.stream.Collectors;
  * @author mort
  */
 public class RoleHelper {
-    static void validatePolicyDocument(String policyJSON) {
+    static void validateAssumeRolePolicyDocument(String policyJSON) {
         Policy policy = Policy.fromJson(policyJSON);
         Asserts.isFalse(policy.getVersion().isEmpty(), "version is required");
         Asserts.isFalse(policy.getStatements().isEmpty(), "statement is required");
         for (Statement statement : policy.getStatements()) {
             Asserts.isFalse(statement.getPrincipals().isEmpty(), "principal is required");
+            Asserts.isFalse(statement.getActions().isEmpty(), "action is required");
+        }
+    }
+
+    static void validatePolicyDocument(String policyJSON) {
+        Policy policy = Policy.fromJson(policyJSON);
+        Asserts.isFalse(policy.getStatements().isEmpty(), "statement is required");
+        for (Statement statement : policy.getStatements()) {
             Asserts.isFalse(statement.getActions().isEmpty(), "action is required");
         }
     }
@@ -44,16 +54,20 @@ public class RoleHelper {
 
     boolean essentialChanged(String path, String localPolicyJSON, com.amazonaws.services.identitymanagement.model.Role remoteRole) {
         if (!path.equals(remoteRole.getPath())) return true;
-        return policyChanged(localPolicyJSON, remoteRole);
+
+        String policyJSON = Encodings.decodeURL(remoteRole.getAssumeRolePolicyDocument());
+        Optional<Policy> remotePolicy = Optional.of(Policy.fromJson(policyJSON));
+        Policy localPolicy = Policy.fromJson(localPolicyJSON);
+        return policyChanged(localPolicy, remotePolicy.get());
     }
 
     boolean policyChanged(String localPolicyJSON, com.amazonaws.services.identitymanagement.model.Role remoteRole) {
-        String policyJSON = Encodings.decodeURL(remoteRole.getAssumeRolePolicyDocument());
-        Optional<Policy> remotePolicy = Optional.of(Policy.fromJson(policyJSON));
-
-        Policy localPolicy = Policy.fromJson(localPolicyJSON);
-
-        return policyChanged(localPolicy, remotePolicy.get());
+        Optional<Policy> remotePolicy = AWS.getIam().findRolePolicy(remoteRole.getRoleName(), remoteRole.getRoleName());
+        if (Strings.notEmpty(localPolicyJSON) && remotePolicy.isPresent()) {
+            Policy localPolicy = Policy.fromJson(localPolicyJSON);
+            return policyChanged(localPolicy, remotePolicy.get());
+        }
+        return true;
     }
 
     boolean policyChanged(Policy policy1, Policy policy2) {

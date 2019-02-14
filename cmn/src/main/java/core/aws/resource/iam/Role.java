@@ -48,7 +48,7 @@ public class Role extends Resource {
         RoleHelper helper = new RoleHelper(this);
         UpdateRoleTask.Request request = helper.updateRequest();
         if (request.changed()) {
-            new UpdateRoleTask(this, request);
+            tasks.add(new UpdateRoleTask(this, request));
         }
     }
 
@@ -64,13 +64,11 @@ public class Role extends Resource {
 
     @Override
     public void validate(Resources resources) {
-        if ((status == ResourceStatus.LOCAL_ONLY || status == ResourceStatus.LOCAL_REMOTE) && (Strings.notEmpty(assumeRolePolicy) || Strings.notEmpty(policy))) {
+        if (status == ResourceStatus.LOCAL_ONLY || status == ResourceStatus.LOCAL_REMOTE) {
             if (Strings.notEmpty(assumeRolePolicy)) {
-                RoleHelper.validatePolicyDocument(assumeRolePolicy);
+                RoleHelper.validateAssumeRolePolicyDocument(assumeRolePolicy);
             }
-            if (Strings.notEmpty(policy)) {
-                RoleHelper.validatePolicyDocument(policy);
-            }
+            RoleHelper.validatePolicyDocument(policy);
         }
     }
 
@@ -78,8 +76,8 @@ public class Role extends Resource {
     public String toString() {
         return new ToStringHelper(this)
             .add(id)
-            .add(status)
             .add("path", path)
+            .add(status)
             .toString();
     }
 }

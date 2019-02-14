@@ -4,6 +4,7 @@ import com.amazonaws.services.identitymanagement.model.RemoveRoleFromInstancePro
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.resource.iam.Role;
+import core.aws.util.Strings;
 import core.aws.util.ToStringHelper;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
@@ -32,6 +33,8 @@ public class DeleteRoleTask extends Task<Role> {
                 .withRoleName(name));
         }
         AWS.getIam().deleteRole(name, resource.remoteRole.getPath());
+
+        context.output("role/%s" + resource.id, Strings.format("deletedRole={}/{}", resource.name, resource.path));
     }
 
     @Override
