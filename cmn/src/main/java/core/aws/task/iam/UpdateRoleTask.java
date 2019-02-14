@@ -27,7 +27,7 @@ public class UpdateRoleTask extends Task<Role> {
     public void execute(Context context) throws Exception {
         String name = resource.remoteRole.getRoleName();
         if (request.essentialChanged) {
-            recreate(name);
+            recreate(context, name);
             return;
         }
         if (request.policyChanged) {
@@ -41,7 +41,7 @@ public class UpdateRoleTask extends Task<Role> {
         }
     }
 
-    private void recreate(String name) {
+    private void recreate(Context context, String name) {
         // aws role not support updating path and assume role policy doc, so we delete the role first and re-create it with new data
         List<String> detachedPolicyARNs = AWS.getIam().listAttachedRolePolicyARNs(name);
         if (!detachedPolicyARNs.isEmpty()) {
@@ -67,6 +67,8 @@ public class UpdateRoleTask extends Task<Role> {
                 .withInstanceProfileName(resource.instanceProfile.name)
                 .withRoleName(name));
         }
+
+        context.output(String.format("role/%s/path", resource.id), resource.path);
     }
 
     public static class Request {

@@ -1,8 +1,6 @@
 package core.aws.task.ec2;
 
 import com.amazonaws.services.identitymanagement.model.DeleteInstanceProfileRequest;
-import com.amazonaws.services.identitymanagement.model.DeleteRolePolicyRequest;
-import com.amazonaws.services.identitymanagement.model.DeleteRoleRequest;
 import com.amazonaws.services.identitymanagement.model.RemoveRoleFromInstanceProfileRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
@@ -32,8 +30,6 @@ public class DeleteInstanceProfileTask extends Task<InstanceProfile> {
             AWS.getIam().iam.removeRoleFromInstanceProfile(new RemoveRoleFromInstanceProfileRequest()
                 .withInstanceProfileName(name)
                 .withRoleName(name));
-            AWS.getIam().iam.deleteRolePolicy(new DeleteRolePolicyRequest().withRoleName(name).withPolicyName(name));
-            AWS.getIam().iam.deleteRole(new DeleteRoleRequest().withRoleName(name));
         }
         AWS.getIam().iam.deleteInstanceProfile(new DeleteInstanceProfileRequest().withInstanceProfileName(name));
     }

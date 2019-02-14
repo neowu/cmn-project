@@ -1,6 +1,5 @@
 package core.aws.task.iam;
 
-import com.amazonaws.services.identitymanagement.model.RemoveRoleFromInstanceProfileRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.resource.iam.Role;
@@ -27,14 +26,9 @@ public class DeleteRoleTask extends Task<Role> {
         if (!detachedPolicyARNs.isEmpty()) {
             AWS.getIam().detachRolePolicies(name, detachedPolicyARNs);
         }
-        if (resource.instanceProfile != null) {
-            AWS.getIam().iam.removeRoleFromInstanceProfile(new RemoveRoleFromInstanceProfileRequest()
-                .withInstanceProfileName(resource.instanceProfile.name)
-                .withRoleName(name));
-        }
         AWS.getIam().deleteRole(name, resource.remoteRole.getPath());
 
-        context.output("role/%s" + resource.id, Strings.format("deletedRole={}/{}", resource.name, resource.path));
+        context.output("role/%s" + resource.id, Strings.format("deletedRole={}:{}", name, resource.remoteRole.getPath()));
     }
 
     @Override

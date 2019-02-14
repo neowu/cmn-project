@@ -22,10 +22,12 @@ public class RoleTaskPlanner extends Planner {
     }
 
     private void linkDeleteTasks() {
-        for (DeleteRoleTask roleTask : all(DeleteRoleTask.class)) {
-            if (roleTask.resource.instanceProfile != null) {
-                find(DeleteInstanceProfileTask.class, roleTask.resource.instanceProfile)
-                    .ifPresent(roleTask::dependsOn);
+        for (DeleteInstanceProfileTask deleteInstanceProfileTask : all(DeleteInstanceProfileTask.class)) {
+            if (!deleteInstanceProfileTask.resource.remoteInstanceProfile.getRoles().isEmpty()) {
+                String remoteRoleId = deleteInstanceProfileTask.resource.remoteInstanceProfile.getRoles().get(0).getRoleId();
+                all(DeleteRoleTask.class).stream()
+                    .filter(task -> task.resource.remoteRole.getRoleId().equals(remoteRoleId))
+                    .findAny().ifPresent(task -> task.dependsOn(deleteInstanceProfileTask));
             }
         }
     }
