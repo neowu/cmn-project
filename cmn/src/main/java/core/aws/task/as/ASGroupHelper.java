@@ -68,7 +68,7 @@ public class ASGroupHelper {
             + "name=" + instanceName(asGroup);
     }
 
-    Tag nameTag(ASGroup asGroup) {
+    public Tag nameTag(ASGroup asGroup) {
         return new Tag().withKey("Name").withValue(instanceName(asGroup)).withPropagateAtLaunch(true);
     }
 

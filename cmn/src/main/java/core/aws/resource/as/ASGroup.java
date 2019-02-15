@@ -1,6 +1,6 @@
 package core.aws.resource.as;
 
-import com.amazonaws.services.autoscaling.model.TagDescription;
+import com.amazonaws.services.autoscaling.model.Tag;
 import core.aws.resource.Resource;
 import core.aws.resource.Resources;
 import core.aws.resource.ServerResource;
@@ -17,14 +17,11 @@ import core.aws.task.as.StopASGroupTask;
 import core.aws.task.as.UpdateASGroupTask;
 import core.aws.task.as.UploadTask;
 import core.aws.util.Asserts;
-import core.aws.util.Maps;
+import core.aws.util.Lists;
 import core.aws.util.ToStringHelper;
 import core.aws.workflow.Tasks;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author neo
@@ -40,7 +37,7 @@ public class ASGroup extends Resource implements ServerResource {
     public int maxSize;
     public int desiredSize;
     public Subnet subnet;
-    public Map<String, String> tags = Maps.newHashMap();
+    public List<Tag> tags = Lists.newArrayList();
 
     public ASGroup(String id) {
         super(id);
@@ -66,10 +63,11 @@ public class ASGroup extends Resource implements ServerResource {
     @Override
     protected void updateTasks(Tasks tasks) {
         boolean essentialChanged = changed() || launchConfig.changed();
-        List<TagDescription> detachedTags = detachedTags();
-        Map<String, String> attachedTags = attachedTags();
-        if (essentialChanged || !detachedTags.isEmpty() || !attachedTags.isEmpty()) {
-            tasks.add(new UpdateASGroupTask(this, new UpdateASGroupTask.Request().essentialChanged(essentialChanged).attachedTags(attachedTags).detachedTags(detachedTags)));
+        List<Tag> deletedTags = ASGroupTagHelper.findDeletedTags(this);
+        List<Tag> addedTags = ASGroupTagHelper.findAddedTags(this);
+        if (essentialChanged || !deletedTags.isEmpty() || !addedTags.isEmpty()) {
+            tasks.add(new UpdateASGroupTask(this,
+                new UpdateASGroupTask.Request().essentialChanged(essentialChanged).addedTags(addedTags).deletedTags(deletedTags)));
         }
     }
 
@@ -81,20 +79,6 @@ public class ASGroup extends Resource implements ServerResource {
         List<String> terminationPolicies = remoteASGroup.getTerminationPolicies();
         return terminationPolicies.size() != 1
             || !TERMINATE_POLICY_OLDEST_INSTANCE.equals(terminationPolicies.get(0));
-    }
-
-    private List<TagDescription> detachedTags() {
-        return remoteASGroup.getTags().stream().filter(tagDescription -> !tagDescription.getKey().equals("Name")
-            && !tagDescription.getKey().equals("cloud-manager:env") && !tags.containsKey(tagDescription.getKey())).collect(Collectors.toList());
-    }
-
-    private Map<String, String> attachedTags() {
-        Set<String> remoteTagKeys = remoteASGroup.getTags().stream().collect(Collectors.toMap(TagDescription::getKey, TagDescription::getValue)).keySet();
-        Map<String, String> newTags = Maps.newHashMap();
-        tags.forEach((key, value) -> {
-            if (!remoteTagKeys.contains(key)) newTags.put(key, value);
-        });
-        return newTags;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package core.aws.local.ec2;
 
 import com.amazonaws.services.ec2.model.IpRange;
+import com.amazonaws.services.ec2.model.Tag;
 import core.aws.env.Environment;
 import core.aws.local.DependencyResolvers;
 import core.aws.local.LocalResourceLoader;
@@ -8,7 +9,9 @@ import core.aws.local.ResourceNode;
 import core.aws.resource.Resources;
 import core.aws.resource.ec2.Protocol;
 import core.aws.resource.ec2.SecurityGroup;
+import core.aws.task.ec2.EC2TagHelper;
 import core.aws.util.Asserts;
+import core.aws.util.Lists;
 import core.aws.util.Randoms;
 
 import java.util.ArrayList;
@@ -60,6 +63,21 @@ public class SGLoader implements LocalResourceLoader {
 
         resolvers.add(node, () -> ingressRules.forEach((protocol, sources) ->
             sources.forEach(source -> addIngressRule(securityGroup, protocol, source, resources))));
+
+        securityGroup.tags = loadTags(node, env);
+    }
+
+    private List<Tag> loadTags(ResourceNode node, Environment env) {
+        List<Tag> tags = Lists.newArrayList();
+        EC2TagHelper tagHelper = new EC2TagHelper(env);
+        tags.add(tagHelper.env());
+        tags.add(tagHelper.name(node.id));
+        tags.add(tagHelper.resourceId(node.id));
+        Map<String, Object> customTags = node.mapField("tag");
+        if (customTags != null) {
+            customTags.forEach((key, value) -> tags.add(new Tag(key, value.toString())));
+        }
+        return tags;
     }
 
     private void addIngressRule(SecurityGroup securityGroup, Protocol protocol, Source inputSource, Resources resources) {

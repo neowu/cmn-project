@@ -1,5 +1,6 @@
 package core.aws.local.as;
 
+import com.amazonaws.services.autoscaling.model.Tag;
 import com.amazonaws.services.cloudwatch.model.ComparisonOperator;
 import core.aws.env.Environment;
 import core.aws.local.DependencyResolvers;
@@ -8,6 +9,7 @@ import core.aws.local.ResourceNode;
 import core.aws.local.ec2.EBSBuilder;
 import core.aws.resource.Resources;
 import core.aws.resource.as.ASGroup;
+import core.aws.resource.as.ASGroupTagHelper;
 import core.aws.resource.as.AutoScalingPolicy;
 import core.aws.resource.ec2.InstanceProfile;
 import core.aws.resource.ec2.KeyPair;
@@ -17,7 +19,7 @@ import core.aws.resource.elb.v2.TargetGroup;
 import core.aws.resource.vpc.Subnet;
 import core.aws.util.Asserts;
 import core.aws.util.Files;
-import core.aws.util.Maps;
+import core.aws.util.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +69,8 @@ public class ASGroupLoader implements LocalResourceLoader {
             targetGroupId.ifPresent(id -> asGroup.targetGroup = resources.get(TargetGroup.class, id));
 
             asGroup.subnet = resources.get(Subnet.class, subnetId);
+
+            asGroup.tags = loadTags(asGroup, env, node.mapField("tag"));
         });
 
         List<AutoScalingPolicy> policies = loadPolicies(node);
@@ -74,8 +78,6 @@ public class ASGroupLoader implements LocalResourceLoader {
             resources.add(policy);
             policy.asGroup = asGroup;
         }
-
-        asGroup.tags = loadTags(node);
     }
 
     @SuppressWarnings("unchecked")
@@ -119,11 +121,11 @@ public class ASGroupLoader implements LocalResourceLoader {
         return policy;
     }
 
-    Map<String, String> loadTags(ResourceNode node) {
-        Map<String, String> tags = Maps.newHashMap();
-        Map<String, Object> customTags = node.mapField("tag");
+    private List<Tag> loadTags(ASGroup asGroup, Environment env, Map<String, Object> customTags) {
+        ASGroupTagHelper helper = new ASGroupTagHelper(env);
+        List<Tag> tags = Lists.newArrayList(helper.envTag(), helper.nameTag(asGroup));
         if (customTags != null) {
-            customTags.forEach((key, value) -> tags.put(key, value.toString()));
+            customTags.forEach((key, value) -> tags.add(helper.tag(key, value.toString(), env.name + "-" + asGroup.id)));
         }
         return tags;
     }

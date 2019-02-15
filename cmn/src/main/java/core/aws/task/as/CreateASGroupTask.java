@@ -1,7 +1,6 @@
 package core.aws.task.as;
 
 import com.amazonaws.services.autoscaling.model.CreateAutoScalingGroupRequest;
-import com.amazonaws.services.autoscaling.model.Tag;
 import com.amazonaws.services.ec2.model.Subnet;
 import core.aws.client.AWS;
 import core.aws.env.Context;
@@ -34,13 +33,8 @@ public class CreateASGroupTask extends Task<ASGroup> {
             .withMaxSize(resource.maxSize)
             .withDefaultCooldown(60)
             .withHealthCheckGracePeriod(300)    // give 5 mins for server and application startup
-            .withTerminationPolicies(ASGroup.TERMINATE_POLICY_OLDEST_INSTANCE);      // always remove oldest instance, OldestLaunchConfiguration should not be used due to during deployment the old LaunchConfig can be deleted first, the ASG may fail to compare, and terminate unwanted instance
-
-        List<Tag> tags = Lists.newArrayList(new Tag().withKey("cloud-manager:env").withValue(context.env.name).withPropagateAtLaunch(true), helper.nameTag(resource));
-        if (!resource.tags.isEmpty()) {
-            resource.tags.forEach((key, value) -> tags.add(new Tag().withKey(key).withValue(value).withPropagateAtLaunch(true)));
-        }
-        request.withTags(tags);
+            .withTerminationPolicies(ASGroup.TERMINATE_POLICY_OLDEST_INSTANCE)      // always remove oldest instance, OldestLaunchConfiguration should not be used due to during deployment the old LaunchConfig can be deleted first, the ASG may fail to compare, and terminate unwanted instance
+            .withTags(resource.tags);
 
         if (resource.elb != null) {
             request.withHealthCheckType("ELB")

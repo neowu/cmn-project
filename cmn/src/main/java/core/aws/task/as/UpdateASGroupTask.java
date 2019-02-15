@@ -3,19 +3,16 @@ package core.aws.task.as;
 import com.amazonaws.services.autoscaling.model.CreateOrUpdateTagsRequest;
 import com.amazonaws.services.autoscaling.model.DeleteTagsRequest;
 import com.amazonaws.services.autoscaling.model.Tag;
-import com.amazonaws.services.autoscaling.model.TagDescription;
 import com.amazonaws.services.autoscaling.model.UpdateAutoScalingGroupRequest;
 import core.aws.client.AWS;
 import core.aws.env.Context;
 import core.aws.resource.as.ASGroup;
 import core.aws.util.Lists;
-import core.aws.util.Maps;
+import core.aws.util.ToStringHelper;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author neo
@@ -31,19 +28,15 @@ public class UpdateASGroupTask extends Task<ASGroup> {
 
     @Override
     public void execute(Context context) throws Exception {
-        String asGroupName = resource.remoteASGroup.getAutoScalingGroupName();
-
         if (request.essentialChanged) {
+            String asGroupName = resource.remoteASGroup.getAutoScalingGroupName();
             updateASGroup(context, asGroupName);
         }
-        if (!request.detachedTags.isEmpty()) {
-            List<Tag> tags = request.detachedTags.stream().map(tagDescription -> autoScalingGroupTag(asGroupName, tagDescription.getKey(), tagDescription.getValue())).collect(Collectors.toList());
-            AWS.getAs().autoScaling.deleteTags(new DeleteTagsRequest().withTags(tags));
+        if (!request.deletedTags.isEmpty()) {
+            AWS.getAs().autoScaling.deleteTags(new DeleteTagsRequest().withTags(request.deletedTags));
         }
-        if (!request.attachedTags.isEmpty()) {
-            List<Tag> tags = Lists.newArrayList();
-            request.attachedTags.forEach((key, value) -> tags.add(autoScalingGroupTag(asGroupName, key, value)));
-            AWS.getAs().autoScaling.createOrUpdateTags(new CreateOrUpdateTagsRequest().withTags(tags));
+        if (!request.addedTags.isEmpty()) {
+            AWS.getAs().autoScaling.createOrUpdateTags(new CreateOrUpdateTagsRequest().withTags(request.addedTags));
         }
     }
 
@@ -70,27 +63,35 @@ public class UpdateASGroupTask extends Task<ASGroup> {
         }
     }
 
-    private Tag autoScalingGroupTag(String asGroupName, String key, String value) {
-        return new Tag().withKey(key).withValue(value).withResourceType("auto-scaling-group").withResourceId(asGroupName).withPropagateAtLaunch(true);
+    @Override
+    public String toString() {
+        ToStringHelper helper = new ToStringHelper(this).add(resource);
+        if (!request.addedTags.isEmpty()) {
+            helper.add("add-tags", request.addedTags);
+        }
+        if (!request.deletedTags.isEmpty()) {
+            helper.add("delete-tags", request.deletedTags);
+        }
+        return helper.toString();
     }
 
     public static class Request {
         boolean essentialChanged = false;
-        Map<String, String> attachedTags = Maps.newHashMap();
-        List<TagDescription> detachedTags = Lists.newArrayList();
+        List<Tag> addedTags = Lists.newArrayList();
+        List<Tag> deletedTags = Lists.newArrayList();
 
         public Request essentialChanged(boolean essentialChanged) {
             this.essentialChanged = essentialChanged;
             return this;
         }
 
-        public Request attachedTags(Map<String, String> tags) {
-            this.attachedTags = tags;
+        public Request addedTags(List<Tag> tags) {
+            this.addedTags = tags;
             return this;
         }
 
-        public Request detachedTags(List<TagDescription> tags) {
-            this.detachedTags = tags;
+        public Request deletedTags(List<Tag> tags) {
+            this.deletedTags = tags;
             return this;
         }
     }

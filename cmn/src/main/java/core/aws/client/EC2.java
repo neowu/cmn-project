@@ -16,6 +16,7 @@ import com.amazonaws.services.ec2.model.CreateTagsRequest;
 import com.amazonaws.services.ec2.model.DeleteKeyPairRequest;
 import com.amazonaws.services.ec2.model.DeleteSecurityGroupRequest;
 import com.amazonaws.services.ec2.model.DeleteSnapshotRequest;
+import com.amazonaws.services.ec2.model.DeleteTagsRequest;
 import com.amazonaws.services.ec2.model.DeregisterImageRequest;
 import com.amazonaws.services.ec2.model.DescribeAvailabilityZonesResult;
 import com.amazonaws.services.ec2.model.DescribeImagesRequest;
@@ -194,6 +195,18 @@ public class EC2 {
             .run(() -> {
                 logger.info("create tags, request={}", request);
                 ec2.createTags(request);
+                return null;
+            });
+    }
+
+    public void deleteTags(final DeleteTagsRequest request) throws Exception {
+        new Runner<>()
+            .retryInterval(Duration.ofSeconds(5))
+            .maxAttempts(3)
+            .retryOn(e -> e instanceof AmazonServiceException)
+            .run(() -> {
+                logger.info("delete tags, request={}", request);
+                ec2.deleteTags(request);
                 return null;
             });
     }

@@ -2,6 +2,7 @@ package core.aws.resource.ec2;
 
 import com.amazonaws.services.ec2.model.IpPermission;
 import com.amazonaws.services.ec2.model.IpRange;
+import com.amazonaws.services.ec2.model.Tag;
 import core.aws.resource.Resource;
 import core.aws.resource.ResourceStatus;
 import core.aws.resource.Resources;
@@ -11,7 +12,9 @@ import core.aws.task.ec2.CreateSGTask;
 import core.aws.task.ec2.DeleteSGRuleTask;
 import core.aws.task.ec2.DeleteSGTask;
 import core.aws.task.ec2.DescribeSGTask;
+import core.aws.task.ec2.UpdateSGTagTask;
 import core.aws.util.Asserts;
+import core.aws.util.Lists;
 import core.aws.util.ToStringHelper;
 import core.aws.workflow.Tasks;
 
@@ -29,6 +32,7 @@ public class SecurityGroup extends Resource {
     public com.amazonaws.services.ec2.model.SecurityGroup remoteSecurityGroup;
     public String name;
     public VPC vpc;
+    public List<Tag> tags = Lists.newArrayList();
 
     public SecurityGroup(String id) {
         super(id);
@@ -66,6 +70,13 @@ public class SecurityGroup extends Resource {
         Map<Protocol, List<Source>> addedIngressRules = helper.findAddedIngressRules();
         if (!addedIngressRules.isEmpty()) {
             tasks.add(new CreateSGRuleTask(this, addedIngressRules));
+        }
+
+        SecurityGroupTagHelper tagHelper = new SecurityGroupTagHelper(tags, remoteSecurityGroup.getTags());
+        List<Tag> addedTags = tagHelper.findAddedTags();
+        List<Tag> deletedTags = tagHelper.findDeletedTags();
+        if (!addedTags.isEmpty() || !deletedTags.isEmpty()) {
+            tasks.add(new UpdateSGTagTask(this, addedTags, deletedTags));
         }
     }
 
