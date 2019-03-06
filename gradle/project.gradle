@@ -3,6 +3,8 @@ import java.time.Instant
 defaultTasks 'clean', 'build'
 
 subprojects {
+    if (!childProjects.isEmpty()) return    // ignore parent project
+
     apply plugin: 'java'
     apply plugin: 'maven'
 
@@ -20,22 +22,29 @@ subprojects {
         mavenLocal()
     }
 
-    buildDir = "${rootDir}/build/${name}"
+    buildDir = "${rootDir}/build/${rootDir.relativePath(projectDir)}"
 
-    test {
+    tasks.named('test') {
         useJUnitPlatform()
         failFast = true
         testLogging.exceptionFormat 'full'
+    }
+
+    tasks.named('jar') {
+        // put parent name in final jar name, to resolve collision of child projects with same name under different parents
+        if (parent.depth > 0) {
+            archiveBaseName = "${parent.name}-${archiveBaseName.get()}"
+        }
     }
 
     afterEvaluate {
         tasks.withType(Jar).configureEach {
             manifest {
                 attributes 'Implementation-Title': project.name,
-                        'Implementation-Version': project.version,
-                        'Created-By': "${System.getProperty('java.version')} (${System.getProperty('java.vendor')})",
-                        'Built-With': "gradle ${project.gradle.gradleVersion}",
-                        'Build-Time': Instant.now().toString()
+                    'Implementation-Version': project.version,
+                    'Created-By': "${System.getProperty('java.version')} (${System.getProperty('java.vendor')})",
+                    'Built-With': "gradle ${project.gradle.gradleVersion}",
+                    'Build-Time': Instant.now().toString()
             }
         }
     }
@@ -48,6 +57,6 @@ allprojects {
     idea.module.inheritOutputDirs = true
 }
 
-wrapper {
-    gradleVersion = '4.10.2'
+tasks.named('wrapper') {
+    gradleVersion = '5.2.1'
 }

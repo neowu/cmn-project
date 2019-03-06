@@ -51,7 +51,7 @@ public class TargetGroup extends Resource {
         if (protocol != null && !protocol.equalsIgnoreCase(remoteTG.getProtocol())) {
             return Boolean.TRUE;
         }
-        if (port != null && Integer.compare(port, remoteTG.getPort()) != 0) {
+        if (port != null && !port.equals(remoteTG.getPort())) {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;

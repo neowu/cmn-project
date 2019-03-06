@@ -1,5 +1,9 @@
 ## Change log
 
+### 1.9.8 (2/21/2019 - )
+* aws: update to version 1.11.502
+* gradle: update to version 5.2.1
+
 ### 1.9.7 (10/10/2018 - 10/12/2018) ¡Requires JDK11!
 * log-processor: update role to version 6.6.4
 * kibana: update role to version 6.3.2

@@ -5,11 +5,11 @@ sourceSets {    // add compileOnly to test scope to make simplify test dependenc
     test.runtimeClasspath += configurations.compileOnly
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
+tasks.register("sourcesJar", Jar) {
     from sourceSets.main.allSource
-    classifier 'sources'
+    archiveClassifier = 'sources'
 }
 
 artifacts {
-    archives sourcesJar
+    archives tasks.named('sourcesJar')
 }
