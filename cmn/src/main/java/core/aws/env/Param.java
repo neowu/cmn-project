@@ -7,6 +7,7 @@ public enum Param {
     ENV_PATH("env"),
     RESOURCE_ID("id"),
     SSH_TUNNEL_RESOURCE_ID("tunnel"),
+    SSH_USER("user"),
     EXECUTE_COMMAND("cmd"),
     EXECUTE_SCRIPT("script"),
     PACKAGE_DIR("package-dir"),

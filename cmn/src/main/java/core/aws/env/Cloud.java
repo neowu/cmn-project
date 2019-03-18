@@ -65,7 +65,8 @@ public class Cloud {
         String resourceId = context.requiredParam(Param.RESOURCE_ID);
         String instanceIndex = context.param(Param.INSTANCE_INDEX);
         String tunnelResourceId = context.param(Param.SSH_TUNNEL_RESOURCE_ID);
-        SSHRunner runner = new SSHRunner(context.env, resourceId, instanceIndex == null ? null : Integer.parseInt(instanceIndex), tunnelResourceId);
+        String user = context.param(Param.SSH_USER);
+        SSHRunner runner = new SSHRunner(context.env, resourceId, instanceIndex == null ? null : Integer.parseInt(instanceIndex), tunnelResourceId, user);
         runner.run();
     }
 

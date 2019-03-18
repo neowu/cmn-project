@@ -28,15 +28,18 @@ import java.util.stream.Collectors;
  * @author neo
  */
 public class SSHRunner {
+    private static final String UBUNTU_USER = "ubuntu";
     private final Logger logger = LoggerFactory.getLogger(SSHRunner.class);
 
     private final Environment env;
     private final String resourceId;
     private final Integer instanceIndex;
     private final String tunnelResourceId;
+    private final String user;
 
-    public SSHRunner(Environment env, String resourceId, Integer instanceIndex, String tunnelResourceId) {
+    public SSHRunner(Environment env, String resourceId, Integer instanceIndex, String tunnelResourceId, String user) {
         this.env = env;
+        this.user = Strings.notEmpty(user) ? user : UBUNTU_USER;
         this.resourceId = resourceId;
         this.instanceIndex = instanceIndex;
         this.tunnelResourceId = tunnelResourceId;
@@ -60,7 +63,7 @@ public class SSHRunner {
             Process process = null;
             try {
                 Path keyPath = KeyPair.keyFile(tunnelInstance.getKeyName(), env);
-                String userAndHost = "ubuntu@" + hostName(tunnelInstance);
+                String userAndHost = user + "@" + hostName(tunnelInstance);
                 String portBinding = Strings.format("{}:{}:22", localPort, instance.getPrivateIpAddress());
                 List<String> command = tunnelCommand(keyPath, userAndHost, portBinding);
                 logger.info("tunnel command => {}", String.join(" ", command));
@@ -124,8 +127,8 @@ public class SSHRunner {
     private void ssh(Instance instance, Integer tunnelPort) throws IOException, InterruptedException {
         Path keyPath = KeyPair.keyFile(instance.getKeyName(), env);
         String userAndHost;
-        if (tunnelPort != null) userAndHost = "ubuntu@localhost";
-        else userAndHost = "ubuntu@" + hostName(instance);
+        if (tunnelPort != null) userAndHost = user + "@localhost";
+        else userAndHost = user + "@" + hostName(instance);
         List<String> command = command(keyPath, userAndHost, tunnelPort);
         logger.info("command => {}", String.join(" ", command));
         Process process = new ProcessBuilder().inheritIO().command(command).start();
