@@ -8,10 +8,10 @@
   apt_key: url=https://artifacts.elastic.co/GPG-KEY-elasticsearch
 
 - name: add elasticsearch repo
-  apt_repository: repo='deb https://artifacts.elastic.co/packages/6.x/apt stable main'
+  apt_repository: repo='deb https://artifacts.elastic.co/packages/7.x/apt stable main'
 
 - name: install elasticsearch
-  apt: name=elasticsearch=6.3.2
+  apt: name=elasticsearch=7.0.0
 
 - name: update /etc/elasticsearch/elasticsearch.yml
   template: src=etc/elasticsearch/elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml
