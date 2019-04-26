@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -24,12 +25,15 @@ public class Context {
     public Environment env;
 
     public void output(String key, Object value) {
-        lock.lock();
         try {
-            newOutputs.computeIfAbsent(key, k -> new ArrayList<>())
-                      .add(String.valueOf(value));
+            if (lock.tryLock(5, TimeUnit.MILLISECONDS)) {
+                newOutputs.computeIfAbsent(key, k -> new ArrayList<>())
+                    .add(String.valueOf(value));
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         } finally {
-            lock.unlock();
+            if (lock.isHeldByCurrentThread()) lock.unlock();
         }
     }
 

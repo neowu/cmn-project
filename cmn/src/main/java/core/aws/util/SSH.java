@@ -28,7 +28,7 @@ import static java.nio.file.Files.walkFileTree;
  * @author neo
  */
 public final class SSH implements Closeable {
-    final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Logger messageLogger = LoggerFactory.getLogger("message");
 
     private final String host;
@@ -126,7 +126,7 @@ public final class SSH implements Closeable {
             jsch.addIdentity(privateKey.toAbsolutePath().toString());
             session = jsch.getSession(user, host, 22);
             Properties config = new Properties();
-            config.put("StrictHostKeyChecking", "no");
+            config.setProperty("StrictHostKeyChecking", "no");
             session.setConfig(config);
             logger.info("ssh connect to {}", host);
             session.connect();

@@ -1,6 +1,5 @@
 package core.aws.util;
 
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -29,18 +28,12 @@ public final class Asserts {
         return text;
     }
 
-    public static <T> List<T> notEmpty(List<T> list, String message, Object... params) {
-        notNull(list, message, params);
-        if (list.isEmpty()) throw new AssertionError(Strings.format(message, params));
-        return list;
-    }
-
     @SuppressWarnings("PMD.SuspiciousEqualsMethodName")
     public static <T> void equals(T object1, T object2, String message, Object... params) {
         if (!Objects.equals(object1, object2)) throw new AssertionError(Strings.format(message, params));
     }
 
-    public static <T> T fail(String message, Object... params) {
+    public static <T> void fail(String message, Object... params) {
         throw new AssertionError(Strings.format(message, params));
     }
 }

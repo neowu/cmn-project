@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * @author neo
@@ -36,11 +37,11 @@ public class ResourceNode {
         return Optional.of((String) result);
     }
 
-    public Optional<Integer> getInt(String field) {
+    public OptionalInt getInt(String field) {
         Object result = field(field);
-        if (result == null) return Optional.empty();
+        if (result == null) return OptionalInt.empty();
         Asserts.isTrue(result instanceof Integer, "value is not int, field={}, value={}", field, result);
-        return Optional.of((Integer) result);
+        return OptionalInt.of((Integer) result);
     }
 
     public String requiredString(String field) {

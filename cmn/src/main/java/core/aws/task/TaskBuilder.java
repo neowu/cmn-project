@@ -8,13 +8,14 @@ import core.aws.resource.Resources;
 import core.aws.resource.ServerResource;
 import core.aws.resource.image.Image;
 import core.aws.util.Exceptions;
-import core.aws.util.Lists;
 import core.aws.workflow.Tasks;
+import org.apache.commons.compress.utils.Sets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author neo
@@ -22,7 +23,7 @@ import java.util.Optional;
 public class TaskBuilder {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final List<Goal> serverGoals = Lists.newArrayList(Goal.START, Goal.STOP, Goal.EXEC, Goal.PROVISION, Goal.UPLOAD, Goal.DEPLOY);
+    private final Set<Goal> serverGoals = Sets.newHashSet(Goal.START, Goal.STOP, Goal.EXEC, Goal.PROVISION, Goal.UPLOAD, Goal.DEPLOY);
     private final Goal goal;
     private final Resources resources;
     private final Context context;

@@ -86,7 +86,7 @@ public abstract class Task<T extends Resource> implements Callable<Void> {
             }
 
             state = TaskState.DONE;
-            backwardDependencies.forEach(core.aws.workflow.Task::runIfReady);
+            backwardDependencies.forEach(Task::runIfReady);
         } catch (Throwable e) {
             logger.error("failed to execute task, error={}", e.getMessage(), e);
             state = TaskState.FAILED;

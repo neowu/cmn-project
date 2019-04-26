@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -37,7 +38,7 @@ public class DeployASGroupTask extends Task<ASGroup> {
 
     String oldLaunchConfigName;
     String asGroupName;
-    List<String> oldInstanceIds;
+    Set<String> oldInstanceIds;
 
     public DeployASGroupTask(ASGroup resource) {
         super(resource);
@@ -106,10 +107,10 @@ public class DeployASGroupTask extends Task<ASGroup> {
             .withMaxSize(targetMaxSize));
     }
 
-    private List<String> listOldInstances() {
+    private Set<String> listOldInstances() {
         asGroupName = resource.remoteASGroup.getAutoScalingGroupName();
         List<Instance> oldInstances = resource.remoteASGroup.getInstances();
-        List<String> oldInstanceIds = oldInstances.stream().map(Instance::getInstanceId).collect(Collectors.toList());
+        Set<String> oldInstanceIds = oldInstances.stream().map(Instance::getInstanceId).collect(Collectors.toSet());
         logger.info("old instances => {}", oldInstanceIds);
         return oldInstanceIds;
     }

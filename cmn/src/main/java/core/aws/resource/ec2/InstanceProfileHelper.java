@@ -73,7 +73,7 @@ class InstanceProfileHelper {
             && actions1.stream().allMatch(action1 -> actions2.stream().anyMatch(action2 -> action1.getActionName().equals(action2.getActionName())));
         if (!actionMatches) return false;
 
-        boolean effectMatches = statement1.getEffect().equals(statement2.getEffect());
+        boolean effectMatches = statement1.getEffect() == statement2.getEffect();
         if (!effectMatches) return false;
 
         List<Resource> resources1 = statement1.getResources();
@@ -92,9 +92,7 @@ class InstanceProfileHelper {
         List<Principal> principals2 = statement2.getPrincipals();
         boolean principleMatches = principals1.size() == principals2.size()
             && principals1.stream().allMatch(principle1 -> principals2.stream().anyMatch(principal2 -> principleEquals(principle1, principal2)));
-        if (!principleMatches) return false;
-
-        return true;
+        return principleMatches;
     }
 
     private boolean principleEquals(Principal principle1, Principal principal2) {

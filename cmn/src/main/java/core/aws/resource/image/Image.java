@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,7 @@ public class Image extends Resource implements AMI {
     }
 
     public int nextVersion() {
-        return version().get() + 1;
+        return version().orElse(0) + 1;
     }
 
     @Override
@@ -56,9 +57,9 @@ public class Image extends Resource implements AMI {
     }
 
     @Override
-    public Optional<Integer> version() {
-        if (remoteImages.isEmpty()) return Optional.of(0);
-        return Optional.of(remoteImages.lastKey());
+    public OptionalInt version() {
+        if (remoteImages.isEmpty()) return OptionalInt.of(0);
+        return OptionalInt.of(remoteImages.lastKey());
     }
 
     public String name() {
@@ -123,7 +124,7 @@ public class Image extends Resource implements AMI {
         return new ToStringHelper(this)
             .add(id)
             .add("imageId", imageId())
-            .add("version", version().get())
+            .add("version", version().orElse(0))
             .toString();
     }
 }

@@ -1,6 +1,6 @@
 package core.aws.resource.image;
 
-import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * @author neo
@@ -10,5 +10,5 @@ public interface AMI {
 
     String imageId();
 
-    Optional<Integer> version();
+    OptionalInt version();
 }

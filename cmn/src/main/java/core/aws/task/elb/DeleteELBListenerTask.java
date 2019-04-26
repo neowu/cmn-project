@@ -9,7 +9,9 @@ import core.aws.workflow.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author neo
@@ -17,11 +19,11 @@ import java.util.List;
 @Action("delete-elb-listener")
 public class DeleteELBListenerTask extends Task<ELB> {
     private final Logger logger = LoggerFactory.getLogger(DeleteELBListenerTask.class);
-    private final List<String> deletedProtocols;
+    private final Set<String> deletedProtocols;
 
     public DeleteELBListenerTask(ELB elb, List<String> deletedProtocols) {
         super(elb);
-        this.deletedProtocols = deletedProtocols;
+        this.deletedProtocols = new HashSet<>(deletedProtocols);
     }
 
     @Override

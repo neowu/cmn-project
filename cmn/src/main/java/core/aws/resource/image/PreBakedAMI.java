@@ -2,7 +2,7 @@ package core.aws.resource.image;
 
 import core.aws.util.ToStringHelper;
 
-import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * @author neo
@@ -27,8 +27,8 @@ public class PreBakedAMI implements AMI {
     }
 
     @Override
-    public Optional<Integer> version() {
-        return Optional.empty();
+    public OptionalInt version() {
+        return OptionalInt.empty();
     }
 
     @Override

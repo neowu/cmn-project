@@ -5,7 +5,7 @@ After=network.target zookeeper.service
 [Service]
 User=kafka
 Environment="KAFKA_HEAP_OPTS={{kafka_java_opts}}"
-ExecStart=/opt/kafka_2.12-2.0.0/bin/kafka-server-start.sh /opt/kafka_2.12-2.0.0/config/server.properties
+ExecStart=/opt/kafka_2.12-2.2.0/bin/kafka-server-start.sh /opt/kafka_2.12-2.2.0/config/server.properties
 
 [Install]
 WantedBy=multi-user.target

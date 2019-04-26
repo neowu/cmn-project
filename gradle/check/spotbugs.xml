@@ -487,7 +487,6 @@
             SCA_SUSPICIOUS_CLONE_ALGORITHM,
             WEM_OBSCURING_EXCEPTION,
             LO_LOGGER_LOST_EXCEPTION_STACK_TRACE,
-            LO_SUSPECT_LOG_CLASS,
             LO_SUSPECT_LOG_PARAMETER,
             LO_INVALID_FORMATTING_ANCHOR,
             LO_INCORRECT_NUMBER_OF_ANCHOR_PARAMETERS,
@@ -605,5 +604,7 @@
 
     fb-contrib:
     PCOA_PARTIALLY_CONSTRUCTED_OBJECT_ACCESS
+
+    Ignore LO_SUSPECT_LOG_CLASS due that we want to share logger between multiple classes
     -->
 </FindBugsFilter>

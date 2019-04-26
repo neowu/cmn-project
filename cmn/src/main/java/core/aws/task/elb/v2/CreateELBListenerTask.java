@@ -11,16 +11,18 @@ import core.aws.workflow.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Action("create-elb-listener")
 public class CreateELBListenerTask extends Task<ELB> {
     private final Logger logger = LoggerFactory.getLogger(CreateELBListenerTask.class);
-    private final List<String> addedProtocols;
+    private final Set<String> addedProtocols;
 
     public CreateELBListenerTask(ELB resource, List<String> addedProtocols) {
         super(resource);
-        this.addedProtocols = addedProtocols;
+        this.addedProtocols = new HashSet<>(addedProtocols);
     }
 
     @Override

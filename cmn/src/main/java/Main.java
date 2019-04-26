@@ -41,8 +41,8 @@ public final class Main {
     }
 
     private void parseParams(Context context) {
-        for (int i = 1,
-             length = args.length; i < length; i++) {
+        var length = args.length;
+        for (int i = 1; i < length; i++) {
             String arg = args[i];
             Asserts.isTrue(arg.startsWith("--") && arg.contains("="), "arg must be in --{name}={value} format, arg={}", arg);
             int index = arg.indexOf('=');

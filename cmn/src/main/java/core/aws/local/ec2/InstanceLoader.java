@@ -13,6 +13,7 @@ import core.aws.resource.elb.ELB;
 import core.aws.resource.vpc.Subnet;
 
 import java.util.Optional;
+import java.util.OptionalInt;
 
 /**
  * @author neo
@@ -22,7 +23,7 @@ public class InstanceLoader implements LocalResourceLoader {
     public void load(ResourceNode node, Resources resources, DependencyResolvers resolvers, Environment env) {
         String imageId = node.requiredString("ami");
         String instanceType = node.requiredString("instance-type");
-        Optional<Integer> count = node.getInt("count");
+        OptionalInt count = node.getInt("count");
         String securityGroupId = node.requiredString("security-group");
         String subnetId = node.requiredString("subnet");
         Optional<String> elbId = node.getString("elb");
