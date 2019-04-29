@@ -169,6 +169,6 @@ public class AutoScaling {
         logger.info("delete auto scaling group, name={}", asGroupName);
         autoScaling.deleteAutoScalingGroup(new DeleteAutoScalingGroupRequest()
             .withAutoScalingGroupName(asGroupName)
-            .withForceDelete(true));
+            .withForceDelete(Boolean.TRUE));
     }
 }

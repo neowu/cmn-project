@@ -99,7 +99,7 @@ public class CreateInstanceTask extends Task<Instance> {
             .withUserData(Base64.encodeBase64String(Strings.bytes(userData(context.env))));
 
         if (EBS.enableEBSOptimized(resource.instanceType)) {
-            request.withEbsOptimized(true);
+            request.withEbsOptimized(Boolean.TRUE);
         }
 
         if (resource.instanceProfile != null)

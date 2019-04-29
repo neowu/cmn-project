@@ -61,7 +61,7 @@ public class CreateSubnetTask extends Task<Subnet> {
             for (String subnetId : subnetIds) {
                 AWS.getVpc().ec2.modifySubnetAttribute(new ModifySubnetAttributeRequest()
                     .withSubnetId(subnetId)
-                    .withMapPublicIpOnLaunch(true));
+                    .withMapPublicIpOnLaunch(Boolean.TRUE));
             }
         }
 

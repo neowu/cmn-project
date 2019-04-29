@@ -37,11 +37,11 @@ public class ASGroupHelper {
             .withUserData(Encodings.base64(userData(asGroup)));
 
         if (EBS.enableEBSOptimized(launchConfig.instanceType)) {    // this is not necessary since m4/c4 are EBS optimized enable by default, but there is bug in AWS console, we need to set this in order to display correct value
-            request.withEbsOptimized(true);
+            request.withEbsOptimized(Boolean.TRUE);
         }
 
         if (asGroup.subnet.type == SubnetType.PUBLIC) {
-            request.withAssociatePublicIpAddress(true);
+            request.withAssociatePublicIpAddress(Boolean.TRUE);
         }
 
         if (launchConfig.instanceProfile != null)
@@ -63,7 +63,7 @@ public class ASGroupHelper {
     }
 
     Tag nameTag(ASGroup asGroup) {
-        return new Tag().withKey("Name").withValue(instanceName(asGroup)).withPropagateAtLaunch(true);
+        return new Tag().withKey("Name").withValue(instanceName(asGroup)).withPropagateAtLaunch(Boolean.TRUE);
     }
 
     String instanceName(ASGroup asGroup) {

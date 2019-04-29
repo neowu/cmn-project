@@ -61,7 +61,7 @@ public class EnvTag {
     }
 
     public Integer version() {
-        return Integer.parseInt(fields.get("version"));
+        return Integer.valueOf(fields.get("version"));
     }
 
     @Override

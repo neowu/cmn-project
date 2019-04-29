@@ -71,28 +71,27 @@ class InstanceProfileHelper {
         List<Action> actions2 = statement2.getActions();
         boolean actionMatches = actions1.size() == actions2.size()
             && actions1.stream().allMatch(action1 -> actions2.stream().anyMatch(action2 -> action1.getActionName().equals(action2.getActionName())));
-        if (!actionMatches) return false;
+        if (!actionMatches) return Boolean.FALSE;
 
         boolean effectMatches = statement1.getEffect() == statement2.getEffect();
-        if (!effectMatches) return false;
+        if (!effectMatches) return Boolean.FALSE;
 
         List<Resource> resources1 = statement1.getResources();
         List<Resource> resources2 = statement2.getResources();
         boolean resourceMatches = resources1.size() == resources2.size()
             && resources1.stream().allMatch(resource1 -> resources2.stream().anyMatch(resource2 -> resource1.getId().equals(resource2.getId())));
-        if (!resourceMatches) return false;
+        if (!resourceMatches) return Boolean.FALSE;
 
         List<Condition> conditions1 = statement1.getConditions();
         List<Condition> conditions2 = statement2.getConditions();
         boolean conditionMatches = conditions1.size() == conditions2.size()
             && conditions1.stream().allMatch(condition1 -> conditions2.stream().anyMatch(condition2 -> conditionEquals(condition1, condition2)));
-        if (!conditionMatches) return false;
+        if (!conditionMatches) return Boolean.FALSE;
 
         List<Principal> principals1 = statement1.getPrincipals();
         List<Principal> principals2 = statement2.getPrincipals();
-        boolean principleMatches = principals1.size() == principals2.size()
+        return principals1.size() == principals2.size()
             && principals1.stream().allMatch(principle1 -> principals2.stream().anyMatch(principal2 -> principleEquals(principle1, principal2)));
-        return principleMatches;
     }
 
     private boolean principleEquals(Principal principle1, Principal principal2) {

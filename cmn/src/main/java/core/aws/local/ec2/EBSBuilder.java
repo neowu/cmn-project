@@ -20,6 +20,6 @@ public class EBSBuilder {
     Integer parseSize(String size) {
         if (size == null) return null;
         Asserts.isTrue(size.endsWith("G"), "size only supports format like 30G");
-        return Integer.parseInt(size.substring(0, size.length() - 1));
+        return Integer.valueOf(size.substring(0, size.length() - 1));
     }
 }

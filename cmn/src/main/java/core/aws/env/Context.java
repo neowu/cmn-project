@@ -31,9 +31,9 @@ public class Context {
                     .add(String.valueOf(value));
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            throw new RuntimeException("could not acquire thread lock", e);
         } finally {
-            if (lock.isHeldByCurrentThread()) lock.unlock();
+            lock.unlock();
         }
     }
 
@@ -57,14 +57,17 @@ public class Context {
     }
 
     void printOutputs() {
-        lock.lock();
         try {
-            if (newOutputs.isEmpty()) {
-                messageLogger.info("\nno outputs\n");
-                return;
+            if (lock.tryLock(5, TimeUnit.MILLISECONDS)) {
+                if (newOutputs.isEmpty()) {
+                    messageLogger.info("\nno outputs\n");
+                    return;
+                }
+                messageLogger.info("\noutputs:\n");
+                newOutputs.forEach((key, values) -> values.forEach(value -> messageLogger.info("{} => {}\n", key, value)));
             }
-            messageLogger.info("\noutputs:\n");
-            newOutputs.forEach((key, values) -> values.forEach(value -> messageLogger.info("{} => {}\n", key, value)));
+        } catch (InterruptedException e) {
+            throw new RuntimeException("could not acquire thread lock", e);
         } finally {
             lock.unlock();
         }

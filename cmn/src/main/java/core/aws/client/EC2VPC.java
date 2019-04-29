@@ -90,7 +90,7 @@ public class EC2VPC {
     private void enableVPCDNS(String vpcId) {
         logger.info("enable VPC DNS support, vpcId={}", vpcId);
         ec2.modifyVpcAttribute(new ModifyVpcAttributeRequest().withVpcId(vpcId)
-                                                              .withEnableDnsHostnames(true));
+                                                              .withEnableDnsHostnames(Boolean.TRUE));
     }
 
     public String assignEIP(final String instanceId) throws Exception {

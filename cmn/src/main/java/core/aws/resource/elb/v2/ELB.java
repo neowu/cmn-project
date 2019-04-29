@@ -100,7 +100,7 @@ public class ELB extends Resource {
     private boolean httpsCertChanged() {
         Optional<Listener> remoteHTTPSListener = findRemoteHTTPSListener();
 
-        if (!listenHTTPS || !remoteHTTPSListener.isPresent()) return Boolean.FALSE;
+        if (!listenHTTPS || remoteHTTPSListener.isEmpty()) return false;
         String remoteCertARN = remoteHTTPSListener.get().getCertificates().get(0).getCertificateArn();
 
         if (cert != null) {    // cert files

@@ -47,7 +47,7 @@ public class TargetGroup extends Resource {
         }
     }
 
-    private boolean changed() {
+    private Boolean changed() {
         if (protocol != null && !protocol.equalsIgnoreCase(remoteTG.getProtocol())) {
             return Boolean.TRUE;
         }

@@ -35,7 +35,7 @@ public class CreateASGroupTask extends Task<ASGroup> {
             .withDefaultCooldown(60)
             .withHealthCheckGracePeriod(300)    // give 5 mins for server and application startup
             .withTerminationPolicies(ASGroup.TERMINATE_POLICY_OLDEST_INSTANCE)      // always remove oldest instance, OldestLaunchConfiguration should not be used due to during deployment the old LaunchConfig can be deleted first, the ASG may fail to compare, and terminate unwanted instance
-            .withTags(new Tag().withKey("cloud-manager:env").withValue(context.env.name).withPropagateAtLaunch(true),
+            .withTags(new Tag().withKey("cloud-manager:env").withValue(context.env.name).withPropagateAtLaunch(Boolean.TRUE),
                 helper.nameTag(resource));
 
         if (resource.elb != null) {

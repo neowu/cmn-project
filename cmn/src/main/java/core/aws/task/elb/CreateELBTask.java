@@ -71,11 +71,11 @@ public class CreateELBTask extends Task<ELB> {
 
     private void configureELB(Regions region) {
         LoadBalancerAttributes attributes = new LoadBalancerAttributes()
-            .withConnectionDraining(new ConnectionDraining().withEnabled(true).withTimeout(30));
+            .withConnectionDraining(new ConnectionDraining().withEnabled(Boolean.TRUE).withTimeout(30));
 
         // enable cross zone load balance for multi-az
         if (resource.subnet != null && resource.subnet.cidrs.size() > 1) {
-            attributes.setCrossZoneLoadBalancing(new CrossZoneLoadBalancing().withEnabled(true));
+            attributes.setCrossZoneLoadBalancing(new CrossZoneLoadBalancing().withEnabled(Boolean.TRUE));
         }
 
         if (resource.accessLogBucket != null) {
@@ -93,7 +93,7 @@ public class CreateELBTask extends Task<ELB> {
         AWS.getS3().s3.setBucketPolicy(new SetBucketPolicyRequest(bucketName, builder.policyText(region, bucketName)));
 
         attributes.withAccessLog(new AccessLog()
-            .withEnabled(true)
+            .withEnabled(Boolean.TRUE)
             .withS3BucketName(bucketName)
             .withS3BucketPrefix("elb/" + resource.id));
     }
