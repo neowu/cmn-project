@@ -87,7 +87,10 @@
 #
 #action.destructive_requires_name: true
 
+node.name: ${HOSTNAME}
 cluster.name: {{elasticsearch_cluster_name}}
+cluster.initial_master_nodes:
+  - ${HOSTNAME}
 network.publish_host: _site_
 network.bind_host: 0.0.0.0
 path.data: /var/lib/elasticsearch
