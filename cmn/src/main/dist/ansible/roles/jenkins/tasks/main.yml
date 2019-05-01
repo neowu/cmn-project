@@ -13,9 +13,14 @@
 - name: add /etc/sudoers.d/10-jenkins
   copy: src=etc/sudoers.d/10-jenkins dest=/etc/sudoers.d/10-jenkins owner=root group=root mode=0440
 
+- name: replace /etc/default/jenkins
+  copy: src=etc/default/jenkins dest=/etc/default/jenkins owner=root group=root mode=0644
+
 - name: enable jenkins service
   service: name=jenkins enabled=yes
 
 - name: install jenkins plugins
   get_url: url=http://updates.jenkins-ci.org/latest/{{item}}.hpi dest=/var/lib/jenkins/plugins/{{item}}.jpi timeout=60 owner=jenkins group=jenkins
   with_items: "{{jenkins_plugins}}"
+
+
