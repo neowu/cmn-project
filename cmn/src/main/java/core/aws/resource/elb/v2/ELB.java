@@ -33,7 +33,7 @@ public class ELB extends Resource {
     public String amazonCertARN;
     public SecurityGroup securityGroup;
     public TargetGroup targetGroup;
-    public Subnet subnet;
+    public List<Subnet> subnets;
     public Optional<String> scheme = Optional.empty();   // currently only allowed value is "internal"
 
     public ELB(String id) {
@@ -42,8 +42,9 @@ public class ELB extends Resource {
 
     @Override
     public void validate(Resources resources) {
-        if (status == ResourceStatus.LOCAL_ONLY && subnet.type == SubnetType.PRIVATE) {
-            Asserts.isFalse(scheme.isPresent(), "ELB in private subnet doesn't need scheme, it will be internal by default");
+        boolean isPrivateSubnet = subnets.stream().anyMatch(subnet -> subnet.type == SubnetType.PRIVATE);
+        if (isPrivateSubnet && status == ResourceStatus.LOCAL_ONLY) {
+            Asserts.isFalse(scheme.isPresent(), "ELB in private subnets doesn't need scheme, it will be internal by default");
         }
 
         if (status == ResourceStatus.LOCAL_ONLY) {
@@ -60,7 +61,6 @@ public class ELB extends Resource {
     protected void createTasks(Tasks tasks) {
         tasks.add(new CreateELBTask(this));
     }
-
 
     @Override
     protected void updateTasks(Tasks tasks) {

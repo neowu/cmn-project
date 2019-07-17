@@ -22,8 +22,8 @@ public class TargetGroupLoader {
             String tgName = remoteTG.getTargetGroupName();
             String prefix = env.name + "-";
             if (tgName.startsWith(prefix)) {
-                String resouceId = tgName.substring(prefix.length());
-                TargetGroup tg = resources.find(TargetGroup.class, resouceId).orElseGet(() -> resources.add(new TargetGroup(resouceId)));
+                String resourceId = tgName.substring(prefix.length());
+                TargetGroup tg = resources.find(TargetGroup.class, resourceId).orElseGet(() -> resources.add(new TargetGroup(resourceId)));
                 tg.name = tgName;
                 tg.remoteTG = remoteTG;
                 tg.protocol = remoteTG.getProtocol();

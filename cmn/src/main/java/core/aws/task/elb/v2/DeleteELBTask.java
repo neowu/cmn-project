@@ -15,8 +15,8 @@ import java.time.Duration;
 public class DeleteELBTask extends Task<ELB> {
     private final Logger logger = LoggerFactory.getLogger(DeleteELBTask.class);
 
-    public DeleteELBTask(ELB resource) {
-        super(resource);
+    public DeleteELBTask(ELB elb) {
+        super(elb);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package core.aws.remote.elb.v2;
 
+import com.amazonaws.services.elasticloadbalancingv2.model.AvailabilityZone;
 import com.amazonaws.services.elasticloadbalancingv2.model.DescribeTagsRequest;
 import com.amazonaws.services.elasticloadbalancingv2.model.LoadBalancer;
 import com.amazonaws.services.elasticloadbalancingv2.model.Tag;
@@ -7,6 +8,8 @@ import core.aws.client.AWS;
 import core.aws.env.Environment;
 import core.aws.resource.Resources;
 import core.aws.resource.elb.v2.ELB;
+import core.aws.resource.vpc.Subnet;
+import core.aws.util.Lists;
 
 import java.util.List;
 
@@ -29,6 +32,9 @@ public class ELBLoader {
                 ELB elb = resources.find(ELB.class, resourceId).orElseGet(() -> resources.add(new ELB(resourceId)));
                 elb.name = elbName;
                 elb.remoteELB = remoteELB;
+                List<Subnet> subnets = Lists.newArrayList();
+                remoteELB.getAvailabilityZones().stream().map(AvailabilityZone::getSubnetId).forEach(subnetId -> resources.find(Subnet.class, subnetId).ifPresent(subnets::add));
+                elb.subnets = subnets;
                 elb.foundInRemote();
             }
         }

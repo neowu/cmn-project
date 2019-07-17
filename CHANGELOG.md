@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.9.9 (7/16/2019 - 7/17/2019)
+* bug: fix NPE on DeleteELBTask workflow
+
 ### 1.9.8 (2/21/2019 - 4/26/2019)
 * aws: update to version 1.11.540
 * gradle: update to version 5.4

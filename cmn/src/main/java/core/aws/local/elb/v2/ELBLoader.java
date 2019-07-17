@@ -31,7 +31,7 @@ public class ELBLoader implements LocalResourceLoader {
         boolean listenHTTPS = listenProtocols.contains("https");
         Optional<String> serverCertId = node.getString("cert");
         String securityGroupId = node.requiredString("security-group");
-        String subnetId = node.requiredString("subnet");
+        String subnetId = node.requiredString("subnets");
         String targetGroupId = node.requiredString("target-group");
         Optional<String> scheme = node.getString("scheme");
 
@@ -49,7 +49,7 @@ public class ELBLoader implements LocalResourceLoader {
                     elb.cert = resources.get(ServerCert.class, id);
                 }
             });
-            elb.subnet = resources.get(Subnet.class, subnetId);
+            elb.subnets = List.of(resources.get(Subnet.class, subnetId));
             elb.securityGroup = resources.get(SecurityGroup.class, securityGroupId);
             elb.targetGroup = resources.get(TargetGroup.class, targetGroupId);
         });

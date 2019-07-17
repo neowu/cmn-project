@@ -1,6 +1,5 @@
 package core.aws.plan.elb.v2;
 
-import com.amazonaws.services.ec2.model.Subnet;
 import core.aws.plan.Planner;
 import core.aws.task.ec2.CreateSGTask;
 import core.aws.task.ec2.DeleteSGTask;
@@ -15,9 +14,10 @@ import core.aws.task.elb.v2.UpdateELBSGTask;
 import core.aws.task.vpc.CreateSubnetTask;
 import core.aws.task.vpc.DeleteSubnetTask;
 import core.aws.workflow.Tasks;
+import org.apache.commons.compress.utils.Sets;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class ELBTaskPlanner extends Planner {
     public ELBTaskPlanner(Tasks tasks) {
@@ -54,7 +54,8 @@ public class ELBTaskPlanner extends Planner {
 
     private void linkDeleteTasks() {
         for (DeleteELBTask elbTask : all(DeleteELBTask.class)) {
-            final List<String> subnets = elbTask.resource.subnet.remoteSubnets.stream().map(Subnet::getSubnetId).collect(Collectors.toList());
+            final Set<String> subnets = Sets.newHashSet();
+            elbTask.resource.subnets.forEach(subnet -> subnet.remoteSubnets.forEach(remoteSubnet -> subnets.add(remoteSubnet.getSubnetId())));
             if (!subnets.isEmpty()) {
                 all(DeleteSubnetTask.class).stream()
                     .filter(subnetTask -> subnetTask.resource.remoteSubnets.stream().anyMatch(remoteSubnet -> subnets.contains(remoteSubnet.getSubnetId())))
@@ -77,9 +78,8 @@ public class ELBTaskPlanner extends Planner {
 
     private void linkCreateTasks() {
         for (CreateELBTask elbTask : all(CreateELBTask.class)) {
-            if (elbTask.resource.subnet != null) {
-                find(CreateSubnetTask.class, elbTask.resource.subnet)
-                    .ifPresent(elbTask::dependsOn);
+            if (elbTask.resource.subnets != null) {
+                elbTask.resource.subnets.forEach(subnet -> find(CreateSubnetTask.class, subnet).ifPresent(elbTask::dependsOn));
             }
 
             if (elbTask.resource.securityGroup != null) {

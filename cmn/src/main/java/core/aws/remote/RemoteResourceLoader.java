@@ -48,8 +48,8 @@ public class RemoteResourceLoader {
         new SubnetLoader(resources, tags).load();
         new ServerCertLoader(resources, env).load();
         new TargetGroupLoader(resources, env).load();
-        new ELBLoader(resources, env).load();
         new core.aws.remote.elb.v2.ELBLoader(resources, env).load();
+        new ELBLoader(resources, env).load();
         new ASGroupLoader(resources, env).load();
 
         new S3Loader(resources, env).load();

@@ -1,6 +1,5 @@
 package core.aws.task.elb.v2;
 
-import com.amazonaws.services.ec2.model.Subnet;
 import com.amazonaws.services.elasticloadbalancingv2.model.ActionTypeEnum;
 import com.amazonaws.services.elasticloadbalancingv2.model.AddTagsRequest;
 import com.amazonaws.services.elasticloadbalancingv2.model.Certificate;
@@ -14,8 +13,9 @@ import core.aws.env.Context;
 import core.aws.resource.elb.v2.ELB;
 import core.aws.workflow.Action;
 import core.aws.workflow.Task;
+import org.apache.commons.compress.utils.Sets;
 
-import java.util.stream.Collectors;
+import java.util.Set;
 
 /**
  * @author gabo
@@ -40,9 +40,11 @@ public class CreateELBTask extends Task<ELB> {
                 new Tag().withKey("cloud-manager:elb-version").withValue("2")
             );
 
-        if (resource.subnet != null) {
+        if (resource.subnets != null) {
+            final Set<String> subnets = Sets.newHashSet();
+            resource.subnets.forEach(subnet -> subnet.remoteSubnets.forEach(remoteSubnet -> subnets.add(remoteSubnet.getSubnetId())));
             request.withSecurityGroups(resource.securityGroup.remoteSecurityGroup.getGroupId())
-                .withSubnets(resource.subnet.remoteSubnets.stream().map(Subnet::getSubnetId).collect(Collectors.toList()));
+                .withSubnets(subnets);
         }
 
         resource.remoteELB = AWS.getElbV2().createELB(request);

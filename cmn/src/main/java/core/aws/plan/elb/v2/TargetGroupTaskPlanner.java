@@ -22,7 +22,7 @@ public class TargetGroupTaskPlanner extends Planner {
     private void linkDeleteTasks() {
         for (DeleteTargetGroupTask task : all(DeleteTargetGroupTask.class)) {
             all(DeleteELBTask.class).stream()
-                .filter(elbTask -> elbTask.resource.targetGroup.name.equals(task.resource.name))
+                .filter(elbTask -> task.resource.remoteTG.getLoadBalancerArns().contains(elbTask.resource.remoteELB.getLoadBalancerArn()))
                 .forEach(task::dependsOn);
             all(DeleteELBListenerTask.class).stream()
                 .filter(listenerTask -> listenerTask.resource.targetGroup.name.equals(task.resource.name))
