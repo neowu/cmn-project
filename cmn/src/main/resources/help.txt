@@ -1,4 +1,4 @@
-cmn, v1.9.9
+cmn, v1.9.9.1
 USAGE: cmn ${goal} --{key}={value} --{key}={value}
 
 GOALS:

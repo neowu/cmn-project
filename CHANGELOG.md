@@ -1,5 +1,8 @@
 ## Change log
 
+### 1.9.9.1 (7/23/2019 - 7/23/2019)
+* bug: fix subnets parameter typo
+
 ### 1.9.9 (7/16/2019 - 7/17/2019)
 * bug: fix NPE on DeleteELBTask workflow
 

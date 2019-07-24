@@ -33,7 +33,7 @@ public class ASGroupLoader implements LocalResourceLoader {
         String imageId = node.requiredString("ami");
         String instanceType = node.requiredString("instance-type");
         String securityGroupId = node.requiredString("security-group");
-        String subnetId = node.requiredString("subnets");
+        String subnetId = node.requiredString("subnet");
 
         Map<String, Object> capacity = node.mapField("capacity");
         int minSize = (int) Asserts.notNull(capacity.get("min"), "min is required for capacity");
