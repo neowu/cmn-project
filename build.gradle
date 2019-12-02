@@ -7,7 +7,7 @@ subprojects {
     version = '1.9.9.1'
 }
 
-def awsVersion = '1.11.592'
+def awsVersion = '1.11.683'
 def junitVersion = '5.4.2'
 
 project(':cmn') {
@@ -24,24 +24,24 @@ project(':cmn') {
     }
 
     dependencies {
-        compile "com.amazonaws:aws-java-sdk-autoscaling:${awsVersion}"
-        compile "com.amazonaws:aws-java-sdk-ec2:${awsVersion}"
-        compile "com.amazonaws:aws-java-sdk-elasticloadbalancing:${awsVersion}"
-        compile "com.amazonaws:aws-java-sdk-elasticloadbalancingv2:${awsVersion}"
-        compile "com.amazonaws:aws-java-sdk-cloudwatch:${awsVersion}"
-        compile "com.amazonaws:aws-java-sdk-iam:${awsVersion}"
-        compile "com.amazonaws:aws-java-sdk-s3:${awsVersion}"
-        compile "com.amazonaws:aws-java-sdk-ecr:${awsVersion}"
-        compile "org.slf4j:slf4j-api:1.7.26"
-        compile 'org.slf4j:jcl-over-slf4j:1.7.26'
-        compile 'ch.qos.logback:logback-classic:1.2.3'
-        compile 'com.jcraft:jsch:0.1.55'
-        compile 'org.apache.commons:commons-compress:1.18'
-        compile 'org.yaml:snakeyaml:1.24'
+        implementation "com.amazonaws:aws-java-sdk-autoscaling:${awsVersion}"
+        implementation "com.amazonaws:aws-java-sdk-ec2:${awsVersion}"
+        implementation "com.amazonaws:aws-java-sdk-elasticloadbalancing:${awsVersion}"
+        implementation "com.amazonaws:aws-java-sdk-elasticloadbalancingv2:${awsVersion}"
+        implementation "com.amazonaws:aws-java-sdk-cloudwatch:${awsVersion}"
+        implementation "com.amazonaws:aws-java-sdk-iam:${awsVersion}"
+        implementation "com.amazonaws:aws-java-sdk-s3:${awsVersion}"
+        implementation "com.amazonaws:aws-java-sdk-ecr:${awsVersion}"
+        implementation "org.slf4j:slf4j-api:1.7.26"
+        implementation 'org.slf4j:jcl-over-slf4j:1.7.26'
+        implementation 'ch.qos.logback:logback-classic:1.2.3'
+        implementation 'com.jcraft:jsch:0.1.55'
+        implementation 'org.apache.commons:commons-compress:1.18'
+        implementation 'org.yaml:snakeyaml:1.24'
 
-        testCompile "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
-        testCompile 'org.mockito:mockito-core:2.19.0'
-        testCompile 'org.assertj:assertj-core:3.10.0'
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitVersion}"
+        testImplementation 'org.mockito:mockito-core:2.19.0'
+        testImplementation 'org.assertj:assertj-core:3.10.0'
 
         testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitVersion}"
     }

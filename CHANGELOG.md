@@ -1,5 +1,9 @@
 ## Change log
 
+### 1.9.10 (11/29/2019 - 11/29/2019)
+* java: update to JDK13
+* aws: update to version 1.11.
+
 ### 1.9.9.1 (7/23/2019 - 7/23/2019)
 * bug: fix subnets parameter typo
 

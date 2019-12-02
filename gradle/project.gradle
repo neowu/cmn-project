@@ -6,10 +6,9 @@ subprojects {
     if (!childProjects.isEmpty()) return    // ignore parent project
 
     apply plugin: 'java'
-    apply plugin: 'maven'
 
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
+    sourceCompatibility = JavaVersion.VERSION_13
+    targetCompatibility = JavaVersion.VERSION_13
 
     tasks.withType(JavaCompile).configureEach {
         options.encoding = 'UTF-8'
@@ -27,6 +26,7 @@ subprojects {
     tasks.named('test') {
         useJUnitPlatform()
         failFast = true
+        testLogging.showStandardStreams = true
         testLogging.exceptionFormat 'full'
     }
 
@@ -34,6 +34,15 @@ subprojects {
         // put parent name in final jar name, to resolve collision of child projects with same name under different parents
         if (parent.depth > 0) {
             archiveBaseName = "${parent.name}-${archiveBaseName.get()}"
+        }
+    }
+
+    tasks.register('mkdir') {
+        group = 'build setup'
+        description = 'Create project directories.'
+        doLast {
+            sourceSets*.java.srcDirs*.each { it.mkdirs() }
+            sourceSets*.resources.srcDirs*.each { it.mkdirs() }
         }
     }
 
@@ -63,5 +72,5 @@ allprojects {
 }
 
 tasks.named('wrapper') {
-    gradleVersion = '5.4'
+    gradleVersion = '6.0.1'
 }
